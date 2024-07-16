@@ -1,4 +1,4 @@
-import {TouchableOpacity} from 'react-native';
+import {ActivityIndicator, TouchableOpacity} from 'react-native';
 import React, {FC} from 'react';
 import CustomText from '../text/CustomText';
 import {Colors} from '../../utils/colors/colors';
@@ -16,6 +16,7 @@ const CustomButton: FC<CustomButtonPropsTypes> = ({
   paddingVerticle,
   fontWeight,
   lineHeight,
+  isLoader,
 }) => {
   return (
     <TouchableOpacity
@@ -33,13 +34,17 @@ const CustomButton: FC<CustomButtonPropsTypes> = ({
         },
         style,
       ]}>
-      <CustomText
-        lineHeight={lineHeight}
-        text={text}
-        size={16}
-        fontWeight={fontWeight}
-        color={textColor || Colors.white}
-      />
+      {isLoader ? (
+        <ActivityIndicator color={'white'} size={'small'} />
+      ) : (
+        <CustomText
+          lineHeight={lineHeight}
+          text={text}
+          size={16}
+          fontWeight={fontWeight}
+          color={textColor || Colors.white}
+        />
+      )}
     </TouchableOpacity>
   );
 };

@@ -4,6 +4,7 @@ import {persistedStore, Store} from './src/Redux/Store';
 import {Provider} from 'react-redux';
 import {PersistGate} from 'redux-persist/integration/react';
 import Routes from './src/navigators/Routes/Routes';
+import Toast from 'react-native-toast-message';
 
 function App(): React.JSX.Element {
   const isDarkMode = useColorScheme() === 'dark';
@@ -20,6 +21,7 @@ function App(): React.JSX.Element {
             backgroundColor={backgroundStyle.backgroundColor}
           />
           <Routes />
+          <Toast />
         </SafeAreaView>
       </PersistGate>
     </Provider>

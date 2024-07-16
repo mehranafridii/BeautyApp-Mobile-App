@@ -1,4 +1,5 @@
 import {
+  Alert,
   Image,
   ScrollView,
   StyleSheet,
@@ -17,14 +18,52 @@ import {screenWidth} from '../../../utils/dimensions';
 import PhoneInput from 'react-native-phone-number-input';
 import strings from '../../../utils/strings/strings';
 import {Colors} from '../../../utils/colors/colors';
+import {useSignUpMutation} from '../../../Redux/services/auth/AuthApi';
+import AppToast from '../../../components/appToast/AppToast';
 
 const SignupUser = () => {
+  // API initialization
+  const [signUpApi, {isLoading}] = useSignUpMutation();
   const navigation: any = useNavigation();
   const phoneRef: any = useRef(null);
   const [toggleCheckBox, setToggleCheckBox] = useState(false);
   const [numSignup, setNumSignup] = useState<number>(0);
   const [value, setValue] = useState('');
   const [formattedValue, setFormattedValue] = useState('');
+  const [inputsDetails, setinputsDetails] = useState({
+    name: '',
+    email: '',
+    password: ' ',
+    password_confirmation: '',
+    contact: '',
+  });
+
+  const handleSignup = async () => {
+    const keys = Object.keys(inputsDetails);
+    console.log(keys, 'KEYSHDHF');
+    const formData = new FormData();
+    for (let i of keys) {
+      formData.append(i, inputsDetails[i]);
+    }
+
+    console.log(formData, 'jkdsfjkdsjfkƒnnn');
+
+    await signUpApi(formData)
+      .unwrap()
+      .then(res => {
+        console.log(res, 'skdjfksdjfkdsjf');
+        AppToast({type: 'success', message: 'Registered Successfully'});
+      })
+      .catch(error => {
+        console.log(error, 'skdjfkdERR');
+      });
+    // navigation.navigate(strings.locationscreen);
+  };
+  // Functions
+  const handleInputs = (key: string) => (value: string) => {
+    setinputsDetails(prevState => ({...prevState, [key]: value}));
+  };
+  //Main return
   return (
     <View style={styles.container}>
       <TouchableOpacity
@@ -47,22 +86,34 @@ const SignupUser = () => {
                 style={{marginVertical: 8}}
                 placeholder={strings.jhon}
                 label={strings.name}
+                onChangeText={handleInputs('name')}
               />
               <CustomInput
                 style={{marginVertical: 8}}
                 placeholder={strings.num}
                 label={strings.phonenum}
+                // dropdown={true}
+                onChangeText={handleInputs('contact')}
               />
               <CustomInput
                 style={{marginVertical: 8}}
                 placeholder={strings.expemail}
                 label={strings.email}
+                onChangeText={handleInputs('email')}
               />
               <CustomInput
                 style={{marginTop: 8}}
                 password={true}
                 placeholder={strings.pass}
                 label={strings.password}
+                onChangeText={handleInputs('password')}
+              />
+              <CustomInput
+                style={{marginTop: 8}}
+                password={true}
+                placeholder={strings.pass}
+                label={strings.password}
+                onChangeText={handleInputs('password_confirmation')}
               />
             </>
           ) : (
@@ -113,8 +164,9 @@ const SignupUser = () => {
             />
           </View>
           <CustomButton
-            onPress={() => navigation.navigate(strings.locationscreen)}
+            onPress={() => handleSignup()}
             text={strings.signup}
+            isLoader={isLoading}
           />
           {numSignup === 0 && (
             <TouchableOpacity

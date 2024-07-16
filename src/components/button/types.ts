@@ -7,5 +7,6 @@ export interface CustomButtonPropsTypes {
   onPress?: any;
   paddingVerticle?: number;
   fontWeight?: string;
-  lineHeight?:number
+  lineHeight?: number;
+  isLoader?: boolean;
 }

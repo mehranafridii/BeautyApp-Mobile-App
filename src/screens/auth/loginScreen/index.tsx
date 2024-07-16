@@ -1,5 +1,5 @@
 import {ScrollView, StyleSheet, TouchableOpacity, View} from 'react-native';
-import React from 'react';
+import React, {useState} from 'react';
 import {Colors} from '../../../utils/colors/colors';
 import CustomInput from '../../../components/input/CustomInput';
 import {screenHeight, screenWidth} from '../../../utils/dimensions';
@@ -9,9 +9,54 @@ import CustomButton from '../../../components/button/CustomButton';
 import SocialButton from '../../../components/socialButton/SocialButton';
 import {Images} from '../../../assets/images';
 import {useNavigation} from '@react-navigation/native';
+import {useLoginMutation} from '../../../Redux/services/auth/AuthApi';
+import {setDataInLocalStorage} from '../../../utils/mmkv/MMKV';
+import {MMKV_KEYS} from '../../../constants/MMKV_KEY';
+import AppToast from '../../../components/appToast/AppToast';
 
 const Login = () => {
   const navigation: any = useNavigation();
+  // API initialization
+  const [loginApi, {isLoading}] = useLoginMutation();
+  const [inputsDetails, setinputsDetails] = useState({
+    email: '',
+    password: '',
+  });
+  const handleLogin = async () => {
+    const keys = Object.keys(inputsDetails);
+    console.log(keys, 'KEYSHDHF');
+    const formData = new FormData();
+    for (let i of keys) {
+      formData.append(i, inputsDetails[i]);
+    }
+
+    console.log(formData, 'jkdsfjkdsjfkƒnnn');
+
+    await loginApi(formData)
+      .unwrap()
+      .then(response => {
+        const {data} = response;
+        const {token} = data;
+        console.log(response, data, token, 'skdjfksdjfkdsjfNNN');
+        response
+          ? (setDataInLocalStorage(MMKV_KEYS.AUTH_TOKEN, token),
+            setDataInLocalStorage(MMKV_KEYS.USER_DATA, data))
+          : null;
+        navigation.navigate(strings.bottomTab);
+      })
+      .catch(errorResponse => {
+        const {data} = errorResponse?.data;
+        const {error} = data;
+        console.log(errorResponse, data, error, 'skdjfkdERR');
+        AppToast({type: 'error', message: error});
+      });
+    // navigation.navigate(strings.locationscreen);
+  };
+  // Functions
+  const handleInputs = (key: string) => (value: string) => {
+    setinputsDetails(prevState => ({...prevState, [key]: value}));
+  };
+  // main return
   return (
     <View style={styles.container}>
       <ScrollView>
@@ -23,12 +68,17 @@ const Login = () => {
             color={Colors.lightGrey}
             text={strings?.welcomeback}
           />
-          <CustomInput placeholder={strings.email} label={strings.email} />
+          <CustomInput
+            placeholder={strings.email}
+            label={strings.email}
+            onChangeText={handleInputs('email')}
+          />
           <CustomInput
             style={styles.password}
             placeholder={strings.password}
             password={true}
             label={strings.password}
+            onChangeText={handleInputs('password')}
           />
           <CustomText
             style={styles.forget}
@@ -36,8 +86,9 @@ const Login = () => {
             text={strings?.forgotpassword}
           />
           <CustomButton
-            onPress={() => navigation.navigate(strings.bottomTab)}
+            onPress={() => handleLogin()}
             text={strings.signin}
+            isLoader={isLoading}
           />
           <View style={styles.orsign}>
             <View style={styles.divider} />

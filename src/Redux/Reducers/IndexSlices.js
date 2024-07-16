@@ -1,10 +1,10 @@
 import {combineReducers} from '@reduxjs/toolkit';
-import {User_Reducer} from './UserReducer';
-import {Type_Reducer} from './TypeReducer';
 import {baseApi} from '../services/api';
+import UserSlice from './UserSlice';
+import {Type_Reducer} from './TypeReducer';
 
 const IndexReducer = combineReducers({
-  User_Reducer,
+  user: UserSlice.reducer,
   Type_Reducer,
   [baseApi.reducerPath]: baseApi.reducer,
 });

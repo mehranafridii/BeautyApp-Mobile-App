@@ -16,8 +16,11 @@ import CheckBox from '@react-native-community/checkbox';
 import CustomButton from '../../../components/button/CustomButton';
 import {screenWidth} from '../../../utils/dimensions';
 import SocialButton from '../../../components/socialButton/SocialButton';
+import {useSignUpMutation} from '../../../Redux/services/auth/AuthApi';
 
 const Signup = () => {
+  // API initialization
+  const [signUpApi, {isLoading}] = useSignUpMutation();
   const navigation: any = useNavigation();
   const [toggleCheckBox, setToggleCheckBox] = useState(false);
   const [open, setOpen] = useState(false);
@@ -28,6 +31,38 @@ const Signup = () => {
     {label: 'Pear', value: 'pear'},
   ]);
 
+  const [inputsDetails, setinputsDetails] = useState({
+    name: '',
+    email: '',
+    password: ' ',
+    password_confirmation: '',
+    contact: '',
+  });
+  const handleSignup = async () => {
+    const keys = Object.keys(inputsDetails);
+    console.log(keys, 'KEYSHDHF');
+    const formData = new FormData();
+    for (let i of keys) {
+      formData.append(i, inputsDetails[i]);
+    }
+
+    console.log(formData, 'jkdsfjkdsjfkƒnnn');
+
+    await signUpApi(formData)
+      .unwrap()
+      .then(res => {
+        console.log(res, 'skdjfksdjfkdsjf');
+      })
+      .catch(error => {
+        console.log(error, 'skdjfkdERR');
+      });
+    // navigation.navigate(strings.locationscreen);
+  };
+  // Functions
+  const handleInputs = (key: string) => (value: string) => {
+    setinputsDetails(prevState => ({...prevState, [key]: value}));
+  };
+  //Main Return
   return (
     <View style={styles.container}>
       <TouchableOpacity onPress={() => navigation.goBack()}>
@@ -155,6 +190,7 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.white,
     paddingHorizontal: 20,
     paddingVertical: 15,
+    // textAlign: 'right',
   },
   contentContainer: {
     paddingTop: 16,

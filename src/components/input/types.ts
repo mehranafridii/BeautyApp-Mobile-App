@@ -17,5 +17,6 @@ export interface CustomInputPropsTypes {
   placeHolderTextColor?: any;
   width?: number;
   labelSize?: any;
-  changeText?:boolean
+  changeText?: boolean;
+  onChangeText?: Function;
 }

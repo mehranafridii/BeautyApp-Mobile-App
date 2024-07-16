@@ -1,4 +1,5 @@
 import {
+  Alert,
   Image,
   StyleSheet,
   TextInput,
@@ -33,12 +34,13 @@ const CustomInput: FC<CustomInputPropsTypes> = ({
   width,
   labelSize,
   changeText,
+  onChangeText = () => {},
 }) => {
   const [visible, setVisible] = useState(false);
 
   return (
     <View style={style}>
-      <CustomText text={label} size={labelSize} />
+      <CustomText text={label} size={labelSize} style={styles.labelTestStyle} />
       <View
         style={{
           borderColor: Colors.grey100,
@@ -81,6 +83,9 @@ const CustomInput: FC<CustomInputPropsTypes> = ({
             secureTextEntry={password && !visible}
             placeholder={placeholder}
             placeholderTextColor={placeHolderTextColor || Colors.lightGrey}
+            value={value}
+            // onChange={}
+            onChangeText={onChangeText}
           />
         )}
         {changeText && (
@@ -101,4 +106,9 @@ const CustomInput: FC<CustomInputPropsTypes> = ({
 
 export default CustomInput;
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  labelTestStyle: {
+    textAlign: 'left',
+    // backgroundColor: 'red',
+  },
+});
