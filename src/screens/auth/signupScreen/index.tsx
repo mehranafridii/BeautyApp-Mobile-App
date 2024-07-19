@@ -16,11 +16,15 @@ import CheckBox from '@react-native-community/checkbox';
 import CustomButton from '../../../components/button/CustomButton';
 import {screenWidth} from '../../../utils/dimensions';
 import SocialButton from '../../../components/socialButton/SocialButton';
-import {useSignUpMutation} from '../../../Redux/services/auth/AuthApi';
+import {
+  useSignUpArtistMutation,
+  useSignUpMutation,
+} from '../../../Redux/services/auth/AuthApi';
+import AppToast from '../../../components/appToast/AppToast';
 
 const Signup = () => {
   // API initialization
-  const [signUpApi, {isLoading}] = useSignUpMutation();
+  const [signupArtistApi, {isLoading}] = useSignUpArtistMutation();
   const navigation: any = useNavigation();
   const [toggleCheckBox, setToggleCheckBox] = useState(false);
   const [open, setOpen] = useState(false);
@@ -33,30 +37,54 @@ const Signup = () => {
 
   const [inputsDetails, setinputsDetails] = useState({
     name: '',
+    business_name: '',
     email: '',
+    business_email: '',
     password: ' ',
     password_confirmation: '',
-    contact: '',
+    phone: '',
+    category: '1',
+    address: '',
+    business_brand: '',
+    services: '',
+    business_payment_account: '',
+    gender: 'male',
+    dob: '12-09-2015',
+    image: 'none',
   });
   const handleSignup = async () => {
-    const keys = Object.keys(inputsDetails);
-    console.log(keys, 'KEYSHDHF');
-    const formData = new FormData();
-    for (let i of keys) {
-      formData.append(i, inputsDetails[i]);
-    }
+    const isFieldsFilled = Object.values(inputsDetails)?.every(
+      val => val?.trim('') !== '',
+    );
+    if (isFieldsFilled) {
+      const keys = Object.keys(inputsDetails);
+      console.log(keys, 'KEYSHDHF');
+      const formData = new FormData();
+      for (let i of keys) {
+        formData.append(i, inputsDetails[i]);
+      }
 
-    console.log(formData, 'jkdsfjkdsjfkƒnnn');
-
-    await signUpApi(formData)
-      .unwrap()
-      .then(res => {
-        console.log(res, 'skdjfksdjfkdsjf');
-      })
-      .catch(error => {
-        console.log(error, 'skdjfkdERR');
+      console.log(formData, 'jkdsfjkdsjfkƒnnn');
+      // return;
+      await signupArtistApi(formData)
+        .unwrap()
+        .then(res => {
+          console.log(res, 'skdjfksdjfkdsjf');
+          navigation.navigate(strings.locationscreen);
+          AppToast({
+            type: 'success',
+            message: 'Artist Registered Sucessfully',
+          });
+        })
+        .catch(error => {
+          console.log(error, 'skdjfkdERR');
+        });
+    } else {
+      AppToast({
+        type: 'error',
+        message: 'All fields are required',
       });
-    // navigation.navigate(strings.locationscreen);
+    }
   };
   // Functions
   const handleInputs = (key: string) => (value: string) => {
@@ -81,16 +109,19 @@ const Signup = () => {
             style={{marginVertical: 8}}
             placeholder={strings.jhon}
             label={strings.name}
+            onChangeText={handleInputs('name')}
           />
           <CustomInput
             style={{marginVertical: 8}}
             placeholder={strings.num}
             label={strings.phonenum}
+            onChangeText={handleInputs('phone')}
           />
           <CustomInput
             style={{marginVertical: 8}}
             placeholder={strings.expemail}
             label={strings.email}
+            onChangeText={handleInputs('email')}
           />
           <CustomInput
             dropdown
@@ -102,42 +133,57 @@ const Signup = () => {
             setItems={setItems}
             dropdownPlaceholder={strings.selectCategory}
             label={strings.category}
+            onChangeText={handleInputs('category')}
           />
           <CustomInput
             style={{marginVertical: 8}}
             placeholder={strings.address}
             label={strings.address}
+            onChangeText={handleInputs('address')}
           />
           <CustomInput
             style={{marginVertical: 8}}
             placeholder={strings.expemail}
             label={strings.businessemail}
+            onChangeText={handleInputs('business_email')}
           />
           <CustomInput
             style={{marginVertical: 8}}
             placeholder={strings.businessname}
             label={strings.businessname}
+            onChangeText={handleInputs('business_name')}
           />
           <CustomInput
             style={{marginVertical: 8}}
             placeholder={strings.Businessbrand}
             label={strings.Businessbrand}
+            onChangeText={handleInputs('business_brand')}
           />
           <CustomInput
             style={{marginVertical: 8}}
             placeholder={strings.services}
             label={strings.services}
+            onChangeText={handleInputs('services')}
           />
           <CustomInput
             style={{marginVertical: 8}}
             placeholder={strings.ibannum}
             label={strings.businesspayment}
+            onChangeText={handleInputs('business_payment_account')}
           />
           <CustomInput
             style={{marginTop: 8}}
             password={true}
             placeholder={strings.pass}
             label={strings.password}
+            onChangeText={handleInputs('password')}
+          />
+          <CustomInput
+            style={{marginTop: 8}}
+            password={true}
+            placeholder={strings.pass}
+            label={strings.password}
+            onChangeText={handleInputs('password_confirmation')}
           />
           <View style={styles.check}>
             <CheckBox
@@ -153,10 +199,7 @@ const Signup = () => {
             />
             <CustomText style={styles.terms} text={strings.agreewithterms} />
           </View>
-          <CustomButton
-            onPress={() => navigation.navigate(strings.locationscreen)}
-            text={strings.signup}
-          />
+          <CustomButton onPress={() => handleSignup()} text={strings.signup} />
           <View style={styles.orsign}>
             <View style={styles.divider} />
             <CustomText

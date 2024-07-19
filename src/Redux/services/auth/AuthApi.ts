@@ -11,6 +11,16 @@ const signUp = (body: Object) => {
     },
   };
 };
+const signUpArtist = (body: Object) => {
+  return {
+    url: Endpoints.signUpArtist,
+    method: apiMethods.post,
+    body,
+    headers: {
+      'Content-type': 'application/json',
+    },
+  };
+};
 const login = (body: Object) => {
   return {
     url: Endpoints.login,
@@ -26,10 +36,14 @@ export const AuthApi = baseApi.injectEndpoints({
     signUp: build.mutation({
       query: signUp,
     }),
+    signUpArtist: build.mutation({
+      query: signUpArtist,
+    }),
     login: build.mutation({
       query: login,
     }),
   }),
 });
 
-export const {useSignUpMutation, useLoginMutation} = AuthApi;
+export const {useSignUpMutation, useSignUpArtistMutation, useLoginMutation} =
+  AuthApi;

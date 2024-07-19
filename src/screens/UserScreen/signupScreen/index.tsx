@@ -39,25 +39,33 @@ const SignupUser = () => {
   });
 
   const handleSignup = async () => {
-    const keys = Object.keys(inputsDetails);
-    console.log(keys, 'KEYSHDHF');
-    const formData = new FormData();
-    for (let i of keys) {
-      formData.append(i, inputsDetails[i]);
+    const isFieldsFilled = Object.values(inputsDetails)?.every(
+      val => val?.trim('') !== '',
+    );
+    if (isFieldsFilled) {
+      const keys = Object.keys(inputsDetails);
+      console.log(keys, 'KEYSHDHF');
+      const formData = new FormData();
+      for (let i of keys) {
+        formData.append(i, inputsDetails[i]);
+      }
+
+      console.log(formData, 'jkdsfjkdsjfkƒnnn');
+
+      await signUpApi(formData)
+        .unwrap()
+        .then(res => {
+          console.log(res, 'skdjfksdjfkdsjf');
+          // navigation.navigate(strings.locationscreen);
+
+          AppToast({type: 'success', message: 'Registered Successfully'});
+        })
+        .catch(error => {
+          console.log(error, 'skdjfkdERR');
+        });
+    } else {
+      AppToast({type: 'error', message: 'All fields required'});
     }
-
-    console.log(formData, 'jkdsfjkdsjfkƒnnn');
-
-    await signUpApi(formData)
-      .unwrap()
-      .then(res => {
-        console.log(res, 'skdjfksdjfkdsjf');
-        AppToast({type: 'success', message: 'Registered Successfully'});
-      })
-      .catch(error => {
-        console.log(error, 'skdjfkdERR');
-      });
-    // navigation.navigate(strings.locationscreen);
   };
   // Functions
   const handleInputs = (key: string) => (value: string) => {
