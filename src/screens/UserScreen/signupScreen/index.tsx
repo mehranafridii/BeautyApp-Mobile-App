@@ -20,6 +20,7 @@ import strings from '../../../utils/strings/strings';
 import {Colors} from '../../../utils/colors/colors';
 import {useSignUpMutation} from '../../../Redux/services/auth/AuthApi';
 import AppToast from '../../../components/appToast/AppToast';
+import Utility from '../../../utils/utility/Utility';
 
 const SignupUser = () => {
   // API initialization
@@ -33,43 +34,57 @@ const SignupUser = () => {
   const [inputsDetails, setinputsDetails] = useState({
     name: '',
     email: '',
-    password: ' ',
+    password: '',
+    password_confirmation: '',
+    contact: '',
+  });
+  const [errors, setErrors] = useState({
+    name: '',
+    email: '',
+    password: '',
     password_confirmation: '',
     contact: '',
   });
 
   const handleSignup = async () => {
-    const isFieldsFilled = Object.values(inputsDetails)?.every(
-      val => val?.trim('') !== '',
+    // const isFieldsFilled = Object.values(inputsDetails)?.every(
+    //   val => val?.trim('') !== '',
+    // );
+    const validate = Utility.signupCustomerValidation(
+      inputsDetails,
+      handleErrors,
     );
-    if (isFieldsFilled) {
+
+    if (validate === true) {
       const keys = Object.keys(inputsDetails);
-      console.log(keys, 'KEYSHDHF');
       const formData = new FormData();
       for (let i of keys) {
         formData.append(i, inputsDetails[i]);
       }
 
-      console.log(formData, 'jkdsfjkdsjfkƒnnn');
-
       await signUpApi(formData)
         .unwrap()
         .then(res => {
-          console.log(res, 'skdjfksdjfkdsjf');
+          console.log(res, 'skdjfksdjfkdsjfdfd');
           // navigation.navigate(strings.locationscreen);
 
-          AppToast({type: 'success', message: 'Registered Successfully'});
+          AppToast({type: 'success', message: strings.registerSuccessfully});
         })
         .catch(error => {
           console.log(error, 'skdjfkdERR');
         });
-    } else {
-      AppToast({type: 'error', message: 'All fields required'});
     }
+    //  else {
+    //   AppToast({type: 'error', message: 'All fields required'});
+    // }
   };
   // Functions
-  const handleInputs = (key: string) => (value: string) => {
+  const handleInputs = (key: string) => (error: string) => (value: string) => {
     setinputsDetails(prevState => ({...prevState, [key]: value}));
+    handleErrors(error, key);
+  };
+  const handleErrors = (errorMessage: string, input: string) => {
+    setErrors(prevState => ({...prevState, [input]: errorMessage}));
   };
   //Main return
   return (
@@ -94,34 +109,39 @@ const SignupUser = () => {
                 style={{marginVertical: 8}}
                 placeholder={strings.jhon}
                 label={strings.name}
-                onChangeText={handleInputs('name')}
+                onChangeText={handleInputs('name')('')}
+                errorIndicator={errors?.name}
               />
               <CustomInput
                 style={{marginVertical: 8}}
                 placeholder={strings.num}
                 label={strings.phonenum}
                 // dropdown={true}
-                onChangeText={handleInputs('contact')}
+                onChangeText={handleInputs('contact')('')}
+                errorIndicator={errors?.contact}
               />
               <CustomInput
                 style={{marginVertical: 8}}
                 placeholder={strings.expemail}
                 label={strings.email}
-                onChangeText={handleInputs('email')}
+                onChangeText={handleInputs('email')('')}
+                errorIndicator={errors?.email}
               />
               <CustomInput
                 style={{marginTop: 8}}
                 password={true}
                 placeholder={strings.pass}
                 label={strings.password}
-                onChangeText={handleInputs('password')}
+                onChangeText={handleInputs('password')('')}
+                errorIndicator={errors?.password}
               />
               <CustomInput
                 style={{marginTop: 8}}
                 password={true}
                 placeholder={strings.pass}
                 label={strings.password}
-                onChangeText={handleInputs('password_confirmation')}
+                onChangeText={handleInputs('password_confirmation')('')}
+                errorIndicator={errors?.password_confirmation}
               />
             </>
           ) : (
