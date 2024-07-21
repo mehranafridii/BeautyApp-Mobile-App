@@ -15,9 +15,10 @@ import CustomButton from '../../../components/button/CustomButton';
 import CustomInput from '../../../components/input/CustomInput';
 import {useNavigation} from '@react-navigation/native';
 import {useSelector} from 'react-redux';
+import {getUserType} from '../../../Redux/Reducers/UserTypeSlice';
 
 const Location = () => {
-  const checkType = useSelector((state: any) => state?.Type_Reducer);
+  const checkType = useSelector(getUserType);
   const navigation: any = useNavigation();
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState(null);

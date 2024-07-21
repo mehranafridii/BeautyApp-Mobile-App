@@ -14,10 +14,12 @@ import {screenWidth} from '../../../utils/dimensions';
 import CustomText from '../../../components/text/CustomText';
 import {useNavigation} from '@react-navigation/native';
 import {useSelector} from 'react-redux';
+import {getUserType} from '../../../Redux/Reducers/UserTypeSlice';
 
 const ManualLocation = () => {
-  const checkType = useSelector((state: any) => state?.Type_Reducer);
+  const checkType = useSelector(getUserType);
 
+  console.log(checkType, 'kfdjdkfj');
   const navigation: any = useNavigation();
 
   return (

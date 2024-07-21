@@ -1,4 +1,5 @@
 import {
+  Alert,
   ImageBackground,
   StyleSheet,
   TouchableOpacity,
@@ -11,23 +12,26 @@ import CustomText from '../../../components/text/CustomText';
 import strings from '../../../utils/strings/strings';
 import CustomButton from '../../../components/button/CustomButton';
 import {useNavigation} from '@react-navigation/native';
-import {useDispatch} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {typeStore} from '../../../Redux/Actions/TypeStoreAction';
+import {getUserType, setUserType} from '../../../Redux/Reducers/UserTypeSlice';
 
 const Welcome = () => {
   const navigation: any = useNavigation();
   const dispatch = useDispatch();
+  const currentUser = useSelector(getUserType);
 
-  const setUserType = (type: 'business' | 'user') => {
+  const handleUserType = (type: 'business' | 'user') => {
     if (type === 'business') {
-      dispatch(typeStore(type));
+      dispatch(setUserType(type));
       navigation.navigate(strings.signupscreen);
     } else if (type === 'user') {
-      dispatch(typeStore(type));
+      dispatch(setUserType(type));
       navigation.navigate('UserStack', {screen: strings.signupscreen});
     }
   };
 
+  console.log(currentUser, 'currentUsercurrentUser');
   return (
     <ImageBackground style={styles.container} source={Images.welcome}>
       <View style={styles.contentContainer}>
@@ -38,12 +42,12 @@ const Welcome = () => {
           text={strings.register}
         />
         <CustomButton
-          onPress={() => setUserType('business')}
+          onPress={() => handleUserType('business')}
           style={styles.button}
           text={strings.bussiness}
         />
         <CustomButton
-          onPress={() => setUserType('user')}
+          onPress={() => handleUserType('user')}
           style={styles.button}
           bgColor="transparent"
           text={strings.user}
