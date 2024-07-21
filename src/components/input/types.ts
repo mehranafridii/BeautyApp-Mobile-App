@@ -19,4 +19,7 @@ export interface CustomInputPropsTypes {
   labelSize?: any;
   changeText?: boolean;
   onChangeText?: Function;
+  additionalInputTextStyle: object;
+  additionalContainerStyle: object;
+  errorIndicator: any;
 }

@@ -234,7 +234,7 @@ const Utility = {
         ]
       : !obj?.business_brand
       ? [
-          handleErrors(strings.nameIsRequired, 'business_name'),
+          handleErrors(strings.nameIsRequired, 'business_brand'),
           AppToast({
             type: 'error',
             message: strings.nameIsRequired,

@@ -1,4 +1,20 @@
 export default {
+  ///
+  emailIsRequired: 'البريد الالكتروني مطلوب',
+  invalidEmail: 'بريد إلكتروني خاطئ',
+  passwordIsRequired: 'كلمة المرور مطلوبة',
+  invalidPassword: 'رمز مرور خاطئ',
+  confirmPasswordIsRequired: 'تأكيد كلمة المرور مطلوب',
+  invalidConfirmPassword: 'تأكيد كلمة المرور غير صالحة',
+  passwordsDontMatch: 'كلمات المرور غير متطابقة',
+  contactIsRequired: 'الاتصال مطلوب',
+  invalidcontact: 'اتصال غير صالح',
+  nameIsRequired: 'مطلوب اسم',
+
+  ///
+
+  registerSuccessfully: 'مسجل بنجاح',
+  /////
   splashscreen: 'Splash Screen',
   skip: 'يتخطى',
   professional: 'المتخصص المحترف قريب',
