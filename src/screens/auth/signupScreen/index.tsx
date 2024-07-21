@@ -21,6 +21,7 @@ import {
   useSignUpMutation,
 } from '../../../Redux/services/auth/AuthApi';
 import AppToast from '../../../components/appToast/AppToast';
+import Utility from '../../../utils/utility/Utility';
 
 const Signup = () => {
   // API initialization
@@ -37,17 +38,34 @@ const Signup = () => {
 
   const [inputsDetails, setinputsDetails] = useState({
     name: '',
-    business_name: '',
-    email: '',
-    business_email: '',
-    password: ' ',
-    password_confirmation: '',
     phone: '',
+    email: '',
     category: '1',
     address: '',
+    business_email: '',
+    business_name: '',
     business_brand: '',
     services: '',
     business_payment_account: '',
+    password: '',
+    password_confirmation: '',
+    gender: 'male',
+    dob: '12-09-2015',
+    image: 'none',
+  });
+  const [errors, setErrors] = useState({
+    name: '',
+    phone: '',
+    email: '',
+    category: '1',
+    address: '',
+    business_email: '',
+    business_name: '',
+    business_brand: '',
+    services: '',
+    business_payment_account: '',
+    password: '',
+    password_confirmation: '',
     gender: 'male',
     dob: '12-09-2015',
     image: 'none',
@@ -56,6 +74,12 @@ const Signup = () => {
     const isFieldsFilled = Object.values(inputsDetails)?.every(
       val => val?.trim('') !== '',
     );
+    const validate = Utility.signupArtistValidation(
+      inputsDetails,
+      handleErrors,
+    );
+    console.log(validate, 'sdfdskfjk');
+    return;
     if (isFieldsFilled) {
       const keys = Object.keys(inputsDetails);
       console.log(keys, 'KEYSHDHF');
@@ -87,8 +111,12 @@ const Signup = () => {
     }
   };
   // Functions
-  const handleInputs = (key: string) => (value: string) => {
+  const handleInputs = (key: string) => (error: string) => (value: string) => {
     setinputsDetails(prevState => ({...prevState, [key]: value}));
+    handleErrors(error, key);
+  };
+  const handleErrors = (errorMessage: string, input: string) => {
+    setErrors(prevState => ({...prevState, [input]: errorMessage}));
   };
   //Main Return
   return (
@@ -109,19 +137,22 @@ const Signup = () => {
             style={{marginVertical: 8}}
             placeholder={strings.jhon}
             label={strings.name}
-            onChangeText={handleInputs('name')}
+            onChangeText={handleInputs('name')('')}
+            errorIndicator={errors.name}
           />
           <CustomInput
             style={{marginVertical: 8}}
             placeholder={strings.num}
             label={strings.phonenum}
-            onChangeText={handleInputs('phone')}
+            onChangeText={handleInputs('phone')('')}
+            errorIndicator={errors.phone}
           />
           <CustomInput
             style={{marginVertical: 8}}
             placeholder={strings.expemail}
             label={strings.email}
-            onChangeText={handleInputs('email')}
+            onChangeText={handleInputs('email')('')}
+            errorIndicator={errors.email}
           />
           <CustomInput
             dropdown
@@ -133,57 +164,66 @@ const Signup = () => {
             setItems={setItems}
             dropdownPlaceholder={strings.selectCategory}
             label={strings.category}
-            onChangeText={handleInputs('category')}
+            onChangeText={handleInputs('category')('')}
+            errorIndicator={errors.category}
           />
           <CustomInput
             style={{marginVertical: 8}}
             placeholder={strings.address}
             label={strings.address}
-            onChangeText={handleInputs('address')}
+            onChangeText={handleInputs('address')('')}
+            errorIndicator={errors.address}
           />
           <CustomInput
             style={{marginVertical: 8}}
             placeholder={strings.expemail}
             label={strings.businessemail}
-            onChangeText={handleInputs('business_email')}
+            onChangeText={handleInputs('business_email')('')}
+            errorIndicator={errors.business_email}
           />
           <CustomInput
             style={{marginVertical: 8}}
             placeholder={strings.businessname}
             label={strings.businessname}
-            onChangeText={handleInputs('business_name')}
+            onChangeText={handleInputs('business_name')('')}
+            errorIndicator={errors.business_name}
           />
           <CustomInput
             style={{marginVertical: 8}}
             placeholder={strings.Businessbrand}
             label={strings.Businessbrand}
-            onChangeText={handleInputs('business_brand')}
+            onChangeText={handleInputs('business_brand')('')}
+            errorIndicator={errors.business_brand}
           />
           <CustomInput
             style={{marginVertical: 8}}
             placeholder={strings.services}
             label={strings.services}
-            onChangeText={handleInputs('services')}
+            onChangeText={handleInputs('services')('')}
+            errorIndicator={errors.services}
           />
           <CustomInput
             style={{marginVertical: 8}}
             placeholder={strings.ibannum}
             label={strings.businesspayment}
-            onChangeText={handleInputs('business_payment_account')}
+            onChangeText={handleInputs('business_payment_account')('')}
+            errorIndicator={errors.business_payment_account}
           />
           <CustomInput
             style={{marginTop: 8}}
             password={true}
             placeholder={strings.pass}
             label={strings.password}
-            onChangeText={handleInputs('password')}
+            onChangeText={handleInputs('password')('')}
+            errorIndicator={errors.password}
           />
           <CustomInput
             style={{marginTop: 8}}
             password={true}
             placeholder={strings.pass}
             label={strings.password}
-            onChangeText={handleInputs('password_confirmation')}
+            onChangeText={handleInputs('password_confirmation')('')}
+            errorIndicator={errors.password_confirmation}
           />
           <View style={styles.check}>
             <CheckBox
