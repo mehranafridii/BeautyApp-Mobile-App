@@ -35,25 +35,16 @@ const CustomInput: FC<CustomInputPropsTypes> = ({
   labelSize,
   changeText,
   onChangeText = () => {},
+  additionalInputTextStyle,
+  additionalContainerStyle,
+  errorIndicator,
 }) => {
   const [visible, setVisible] = useState(false);
 
   return (
     <View style={style}>
       <CustomText text={label} size={labelSize} style={styles.labelTestStyle} />
-      <View
-        style={{
-          borderColor: Colors.grey100,
-          borderWidth: 1,
-          borderRadius: 10,
-          marginTop: 7,
-          flexDirection: 'row',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          paddingHorizontal: 10,
-          height: heigth || 50,
-          width: width || screenWidth / 1.2,
-        }}>
+      <View style={[styles.containerStyle(heigth, width, errorIndicator)]}>
         {dropdown ? (
           <View style={{left: 0, position: 'absolute'}}>
             <DropDownPicker
@@ -74,12 +65,10 @@ const CustomInput: FC<CustomInputPropsTypes> = ({
           </View>
         ) : (
           <TextInput
-            style={{
-              width: screenWidth / 1.47,
-              textAlign: 'right',
-              paddingBottom: paddingBottom || null,
-              color: Colors.black,
-            }}
+            style={[
+              styles.inputTextContainer(paddingBottom),
+              {...additionalInputTextStyle},
+            ]}
             secureTextEntry={password && !visible}
             placeholder={placeholder}
             placeholderTextColor={placeHolderTextColor || Colors.lightGrey}
@@ -109,6 +98,24 @@ export default CustomInput;
 const styles = StyleSheet.create({
   labelTestStyle: {
     textAlign: 'left',
-    // backgroundColor: 'red',
   },
+  containerStyle: (height: number, width: number, errorIndicator: boolean) => ({
+    borderColor: errorIndicator ? Colors.textColorRed : Colors.grey100,
+    borderWidth: 1,
+    borderRadius: 10,
+    marginTop: 7,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 10,
+    height: height || 50,
+    width: width || screenWidth / 1.2,
+  }),
+  inputTextContainer: (paddingBottom: number) => ({
+    width: screenWidth / 1.47,
+    height: '100%',
+    textAlign: 'right',
+    paddingBottom: paddingBottom || null,
+    color: Colors.black,
+  }),
 });
