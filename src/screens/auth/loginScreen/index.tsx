@@ -1,4 +1,10 @@
-import {ScrollView, StyleSheet, TouchableOpacity, View} from 'react-native';
+import {
+  Alert,
+  ScrollView,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import React, {useState} from 'react';
 import {Colors} from '../../../utils/colors/colors';
 import CustomInput from '../../../components/input/CustomInput';
@@ -13,6 +19,7 @@ import {useLoginMutation} from '../../../Redux/services/auth/AuthApi';
 import {setDataInLocalStorage} from '../../../utils/mmkv/MMKV';
 import {MMKV_KEYS} from '../../../constants/MMKV_KEY';
 import AppToast from '../../../components/appToast/AppToast';
+import Utility from '../../../utils/utility/Utility';
 
 const Login = () => {
   const navigation: any = useNavigation();
@@ -22,39 +29,45 @@ const Login = () => {
     email: '',
     password: '',
   });
+  const [errors, setErrors] = useState({
+    email: '',
+    password: '',
+  });
   const handleLogin = async () => {
     const keys = Object.keys(inputsDetails);
-    console.log(keys, 'KEYSHDHF');
-    const formData = new FormData();
-    for (let i of keys) {
-      formData.append(i, inputsDetails[i]);
+    const validate = Utility.loginValidation(inputsDetails, handleErrors);
+    if (validate === true) {
+      const formData = new FormData();
+      for (let i of keys) {
+        formData.append(i, inputsDetails[i]);
+      }
+      await loginApi(formData)
+        .unwrap()
+        .then(response => {
+          response?.data
+            ? (setDataInLocalStorage(
+                MMKV_KEYS.AUTH_TOKEN,
+                response?.data?.token,
+              ),
+              setDataInLocalStorage(MMKV_KEYS.USER_DATA, response?.data))
+            : null;
+          navigation.navigate(strings.bottomTab);
+        })
+        .catch(errorResponse => {
+          const {data} = errorResponse?.data;
+          const {error} = data;
+          AppToast({type: 'error', message: error});
+        });
     }
-
-    console.log(formData, 'jkdsfjkdsjfkƒnnn');
-
-    await loginApi(formData)
-      .unwrap()
-      .then(response => {
-        const {data} = response;
-        const {token} = data;
-        console.log(response, data, token, 'skdjfksdjfkdsjfNNN');
-        response
-          ? (setDataInLocalStorage(MMKV_KEYS.AUTH_TOKEN, token),
-            setDataInLocalStorage(MMKV_KEYS.USER_DATA, data))
-          : null;
-        navigation.navigate(strings.bottomTab);
-      })
-      .catch(errorResponse => {
-        const {data} = errorResponse?.data;
-        const {error} = data;
-        console.log(errorResponse, data, error, 'skdjfkdERR');
-        AppToast({type: 'error', message: error});
-      });
     // navigation.navigate(strings.locationscreen);
   };
   // Functions
-  const handleInputs = (key: string) => (value: string) => {
+  const handleInputs = (key: string) => (error: string) => (value: string) => {
     setinputsDetails(prevState => ({...prevState, [key]: value}));
+    handleErrors(error, key);
+  };
+  const handleErrors = (errorMessage: string, input: string) => {
+    setErrors(prevState => ({...prevState, [input]: errorMessage}));
   };
   // main return
   return (
@@ -71,14 +84,16 @@ const Login = () => {
           <CustomInput
             placeholder={strings.email}
             label={strings.email}
-            onChangeText={handleInputs('email')}
+            onChangeText={handleInputs('email')('')}
+            errorIndicator={errors.email}
           />
           <CustomInput
             style={styles.password}
             placeholder={strings.password}
             password={true}
             label={strings.password}
-            onChangeText={handleInputs('password')}
+            onChangeText={handleInputs('password')('')}
+            errorIndicator={errors.password}
           />
           <CustomText
             style={styles.forget}
