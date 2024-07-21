@@ -12,6 +12,7 @@ const AppToast = ({
     position: position,
     text1: message,
     text2: title,
+    text1Style: {textAlign: 'left'},
     visibilityTime: 4000,
     autoHide: true,
     topOffset: topOffset ? topOffset : 50,
