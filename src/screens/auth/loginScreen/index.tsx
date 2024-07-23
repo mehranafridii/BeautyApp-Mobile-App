@@ -20,9 +20,14 @@ import {setDataInLocalStorage} from '../../../utils/mmkv/MMKV';
 import {MMKV_KEYS} from '../../../constants/MMKV_KEY';
 import AppToast from '../../../components/appToast/AppToast';
 import Utility from '../../../utils/utility/Utility';
+import {useDispatch, useSelector} from 'react-redux';
+import {getUserType, setUserType} from '../../../Redux/Reducers/UserTypeSlice';
+import {changeStack} from '../../../navigators/NavigationService';
 
 const Login = () => {
+  const dispatch = useDispatch();
   const navigation: any = useNavigation();
+  const userType = useSelector(getUserType);
   // API initialization
   const [loginApi, {isLoading}] = useLoginMutation();
   const [inputsDetails, setinputsDetails] = useState({
@@ -44,14 +49,15 @@ const Login = () => {
       await loginApi(formData)
         .unwrap()
         .then(response => {
-          response?.data
-            ? (setDataInLocalStorage(
-                MMKV_KEYS.AUTH_TOKEN,
-                response?.data?.token,
-              ),
-              setDataInLocalStorage(MMKV_KEYS.USER_DATA, response?.data))
-            : null;
-          navigation.navigate(strings.bottomTab);
+          if (response?.data) {
+            const userRole =
+              Number(response?.data?.role) === 0 ? 'user' : 'business';
+            dispatch(setUserType(userRole));
+            setDataInLocalStorage(MMKV_KEYS.AUTH_TOKEN, response?.data?.token);
+            setDataInLocalStorage(MMKV_KEYS.USER_DATA, response?.data);
+            console.log(userRole, 'USERLOGIROLE');
+            changeStack('AppStack');
+          }
         })
         .catch(errorResponse => {
           const {data} = errorResponse?.data;
@@ -119,7 +125,11 @@ const Login = () => {
             <SocialButton icon={Images.fb} />
           </View>
           <TouchableOpacity
-            onPress={() => navigation.navigate(strings.signupscreen)}
+            onPress={() =>
+              navigation.navigate(
+                userType === 'user' ? strings.signupUser : strings.signupArtist,
+              )
+            }
             activeOpacity={strings.buttonopacity}>
             <CustomText text={strings?.donthaveacc} />
           </TouchableOpacity>
