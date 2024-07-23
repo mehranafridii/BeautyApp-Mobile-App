@@ -71,16 +71,12 @@ const Signup = () => {
     image: 'none',
   });
   const handleSignup = async () => {
-    const isFieldsFilled = Object.values(inputsDetails)?.every(
-      val => val?.trim('') !== '',
-    );
     const validate = Utility.signupArtistValidation(
       inputsDetails,
       handleErrors,
     );
-    console.log(validate, 'sdfdskfjk');
-    return;
-    if (isFieldsFilled) {
+    console.log(validate, 'validatevalidatevalidate');
+    if (validate === true) {
       const keys = Object.keys(inputsDetails);
       console.log(keys, 'KEYSHDHF');
       const formData = new FormData();
@@ -88,26 +84,25 @@ const Signup = () => {
         formData.append(i, inputsDetails[i]);
       }
 
-      console.log(formData, 'jkdsfjkdsjfkƒnnn');
       // return;
       await signupArtistApi(formData)
         .unwrap()
         .then(res => {
-          console.log(res, 'skdjfksdjfkdsjf');
-          navigation.navigate(strings.locationscreen);
-          AppToast({
-            type: 'success',
-            message: 'Artist Registered Sucessfully',
-          });
+          console.log(res, 'sjdfjsdfk');
+          res?.status
+            ? (navigation.navigate(strings.locationscreen),
+              AppToast({
+                type: 'success',
+                message: 'Artist Registered Sucessfully',
+              }))
+            : AppToast({
+                type: 'success',
+                message: res?.email,
+              });
         })
         .catch(error => {
           console.log(error, 'skdjfkdERR');
         });
-    } else {
-      AppToast({
-        type: 'error',
-        message: 'All fields are required',
-      });
     }
   };
   // Functions
@@ -239,7 +234,11 @@ const Signup = () => {
             />
             <CustomText style={styles.terms} text={strings.agreewithterms} />
           </View>
-          <CustomButton onPress={() => handleSignup()} text={strings.signup} />
+          <CustomButton
+            isLoader={isLoading}
+            onPress={() => handleSignup()}
+            text={strings.signup}
+          />
           <View style={styles.orsign}>
             <View style={styles.divider} />
             <CustomText
