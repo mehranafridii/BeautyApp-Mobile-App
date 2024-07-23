@@ -9,8 +9,14 @@ import Profile from '../../screens/profile/profileScreen/Profile';
 import {Images} from '../../assets/images';
 import {Colors} from '../../utils/colors/colors';
 import ProfileNavigator from '../profileNavigator/ProfileNavigator';
+import {useSelector} from 'react-redux';
+import {getUserType} from '../../Redux/Reducers/UserTypeSlice';
+import UserHome from '../../screens/UserScreen/home/homeScreen/Home';
+import UserSearch from '../../screens/UserScreen/search/UserSearch';
 
 const BottomStack = () => {
+  const userType = useSelector(getUserType);
+  const isBusiness = userType === 'business' ? true : false;
   const Bottom = createBottomTabNavigator();
   return (
     <Bottom.Navigator
@@ -27,7 +33,7 @@ const BottomStack = () => {
       }}>
       <Bottom.Screen
         name="بيت"
-        component={Home}
+        component={userType === 'user' ? UserHome : Home}
         options={{
           tabBarActiveTintColor: Colors.primary,
           headerShown: false,
@@ -53,39 +59,9 @@ const BottomStack = () => {
           },
         }}
       />
-
       <Bottom.Screen
-        name="الأرباح"
-        component={Earnings}
-        options={{
-          headerShown: false,
-          tabBarActiveTintColor: Colors.primary,
-          tabBarIcon: ({focused}) => {
-            return (
-              <View>
-                {focused && (
-                  <Image
-                    style={{top: -7, marginLeft: 4}}
-                    source={Images.polygon}
-                  />
-                )}
-
-                <Image
-                  source={Images.earning2}
-                  style={{
-                    height: 27,
-                    width: 27,
-                    tintColor: focused ? Colors.primary : Colors.lightGrey,
-                  }}
-                />
-              </View>
-            );
-          },
-        }}
-      />
-      <Bottom.Screen
-        name="خدماتي"
-        component={MyService}
+        name={isBusiness ? 'الأرباح' : 'يبحث'}
+        component={isBusiness ? Earnings : UserSearch}
         options={{
           headerShown: false,
           tabBarActiveTintColor: Colors.primary,
@@ -99,11 +75,10 @@ const BottomStack = () => {
                   />
                 )}
                 <Image
-                  source={Images.service2}
+                  source={isBusiness ? Images.earning2 : Images.homeSearch}
                   style={{
                     height: 27,
                     width: 27,
-                    resizeMode: 'contain',
                     tintColor: focused ? Colors.primary : Colors.lightGrey,
                   }}
                 />
@@ -112,6 +87,68 @@ const BottomStack = () => {
           },
         }}
       />
+      {/* {userType === 'business' && (
+        <Bottom.Screen
+          name="الأرباح"
+          component={Earnings}
+          options={{
+            headerShown: false,
+            tabBarActiveTintColor: Colors.primary,
+            tabBarIcon: ({focused}) => {
+              return (
+                <View>
+                  {focused && (
+                    <Image
+                      style={{top: -7, marginLeft: 4}}
+                      source={Images.polygon}
+                    />
+                  )}
+
+                  <Image
+                    source={Images.earning2}
+                    style={{
+                      height: 27,
+                      width: 27,
+                      tintColor: focused ? Colors.primary : Colors.lightGrey,
+                    }}
+                  />
+                </View>
+              );
+            },
+          }}
+        />
+      )} */}
+      {isBusiness && (
+        <Bottom.Screen
+          name="خدماتي"
+          component={MyService}
+          options={{
+            headerShown: false,
+            tabBarActiveTintColor: Colors.primary,
+            tabBarIcon: ({focused}) => {
+              return (
+                <View>
+                  {focused && (
+                    <Image
+                      style={{top: -7, marginLeft: 4}}
+                      source={Images.polygon}
+                    />
+                  )}
+                  <Image
+                    source={Images.service2}
+                    style={{
+                      height: 27,
+                      width: 27,
+                      resizeMode: 'contain',
+                      tintColor: focused ? Colors.primary : Colors.lightGrey,
+                    }}
+                  />
+                </View>
+              );
+            },
+          }}
+        />
+      )}
 
       <Bottom.Screen
         name="الحجوزات"
