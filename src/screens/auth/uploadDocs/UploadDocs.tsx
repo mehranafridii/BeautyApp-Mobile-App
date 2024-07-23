@@ -1,4 +1,11 @@
-import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {
+  Image,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import React, {useState} from 'react';
 import {Colors} from '../../../utils/colors/colors';
 import CustomText from '../../../components/text/CustomText';
@@ -41,7 +48,11 @@ const UploadDocs = () => {
     }
   };
   return (
-    <View style={styles.container}>
+    <ScrollView
+      // style={styles.container}
+      contentContainerStyle={styles.container}
+      showsHorizontalScrollIndicator={false}
+      showsVerticalScrollIndicator={false}>
       <CustomText
         style={styles.alignleft}
         size={14}
@@ -100,17 +111,21 @@ const UploadDocs = () => {
         <CustomButton
           style={styles.button}
           text={strings.compsignup}
-          onPress={() => navigation.navigate(strings?.bottomTab)}
+          onPress={() => navigation.navigate(strings.loginscreen)}
         />
       </View>
-    </View>
+    </ScrollView>
   );
 };
 
 export default UploadDocs;
 
 const styles = StyleSheet.create({
-  container: {flex: 1, backgroundColor: Colors.white, padding: 15},
+  container: {
+    flexGrow: 1,
+    backgroundColor: Colors.white,
+    padding: 15,
+  },
   borderContainer: {
     justifyContent: 'center',
     marginHorizontal: 5,

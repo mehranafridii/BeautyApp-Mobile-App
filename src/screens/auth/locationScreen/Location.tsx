@@ -60,9 +60,7 @@ const Location = () => {
       <CustomButton
         onPress={() => {
           checkType == 'user'
-            ? navigation.navigate('UserStack', {
-                screen: strings.user_Bottom_Stack,
-              })
+            ? navigation.navigate(strings.loginscreen)
             : navigation.navigate(strings.uploaddocsscreen);
         }}
         style={{marginTop: 20}}

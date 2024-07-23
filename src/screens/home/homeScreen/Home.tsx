@@ -19,10 +19,13 @@ import {BookingData} from '../../../utils/dummyData';
 import HomeCards from '../../../components/HomeCard/HomeCards';
 import CustomeType from '../../../components/CustomType/CustomeType';
 import {useNavigation} from '@react-navigation/native';
+import {useSelector} from 'react-redux';
+import {getUserType} from '../../../Redux/Reducers/UserTypeSlice';
 
 const Home = () => {
   const navigation: any = useNavigation();
   const [open, setOpen] = useState(false);
+  const userType = useSelector(getUserType);
   const [toggleState, setToggleState] = useState(true);
   const [value, setValue] = useState(strings.newyork);
   const [items, setItems] = useState([
@@ -80,7 +83,13 @@ const Home = () => {
         </View>
         <TouchableOpacity
           activeOpacity={strings.buttonopacity}
-          onPress={() => navigation.navigate(strings.notify_screen)}
+          onPress={() =>
+            navigation.navigate(
+              userType === 'user'
+                ? strings.userNotificationsScreen
+                : strings.notification_screen,
+            )
+          }
           style={styling.bell}>
           <Image source={Images.bell} />
         </TouchableOpacity>

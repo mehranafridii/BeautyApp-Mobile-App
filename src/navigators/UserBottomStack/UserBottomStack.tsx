@@ -25,35 +25,6 @@ const UserBottomStack = () => {
           height: 55,
         },
       }}>
-      {/* <UserBottom.Screen
-        name="خدماتي"
-        component={MyService}
-        options={{
-          headerShown: false,
-          tabBarActiveTintColor: Colors.primary,
-          tabBarIcon: ({focused}) => {
-            return (
-              <View>
-                {focused && (
-                  <Image
-                    style={{top: -7, marginLeft: 4}}
-                    source={Images.polygon}
-                  />
-                )}
-                <Image
-                  source={Images.service2}
-                  style={{
-                    height: 27,
-                    width: 27,
-                    resizeMode: 'contain',
-                    tintColor: focused ? Colors.primary : Colors.lightGrey,
-                  }}
-                />
-              </View>
-            );
-          },
-        }}
-      /> */}
       <UserBottom.Screen
         name="بيت"
         component={UserHome}

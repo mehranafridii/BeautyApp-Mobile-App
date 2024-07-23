@@ -5,6 +5,9 @@ import {Images} from '../../../assets/images';
 import {useNavigation} from '@react-navigation/native';
 import strings from '../../../utils/strings/strings';
 import {default as RNRestart} from 'react-native-restart';
+import {getDataFromLocalStorage} from '../../../utils/mmkv/MMKV';
+import {changeStack} from '../../../navigators/NavigationService';
+import {MMKV_KEYS} from '../../../constants/MMKV_KEY';
 
 const Splash = () => {
   const navigation: any = useNavigation();
@@ -12,7 +15,11 @@ const Splash = () => {
     I18nManager.forceRTL(true);
     !I18nManager.isRTL && RNRestart.Restart();
     setTimeout(() => {
-      navigation.navigate(strings.onboardingscreen);
+      const isToken = getDataFromLocalStorage(MMKV_KEYS?.AUTH_TOKEN);
+      isToken
+        ? changeStack('AppStack')
+        : navigation.replace(strings.onboardingscreen);
+      // navigation.navigate(strings.onboardingscreen);
     }, 2000);
   }, []);
 

@@ -151,7 +151,6 @@ const Utility = {
     obj: SignupArtistObject,
     handleErrors: HandleErrorsFunction,
   ) {
-    console.log(obj, 'sdfjdskfj');
     let validation: any = !obj?.name
       ? [
           handleErrors(strings.nameIsRequired, 'name'),

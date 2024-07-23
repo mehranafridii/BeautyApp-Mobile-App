@@ -24,10 +24,10 @@ const Welcome = () => {
   const handleUserType = (type: 'business' | 'user') => {
     if (type === 'business') {
       dispatch(setUserType(type));
-      navigation.navigate(strings.signupscreen);
+      navigation.navigate(strings.signupArtist);
     } else if (type === 'user') {
       dispatch(setUserType(type));
-      navigation.navigate('UserStack', {screen: strings.signupscreen});
+      navigation.navigate(strings.signupUser);
     }
   };
 
