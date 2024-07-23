@@ -65,10 +65,16 @@ const SignupUser = () => {
       await signUpApi(formData)
         .unwrap()
         .then(res => {
-          console.log(res, 'skdjfksdjfkdsjfdfd');
-          // navigation.navigate(strings.locationscreen);
-
-          AppToast({type: 'success', message: strings.registerSuccessfully});
+          res?.status
+            ? (navigation.navigate(strings.locationscreen),
+              AppToast({
+                type: 'success',
+                message: 'User Registered Sucessfully',
+              }))
+            : AppToast({
+                type: 'success',
+                message: res?.email,
+              });
         })
         .catch(error => {
           console.log(error, 'skdjfkdERR');
