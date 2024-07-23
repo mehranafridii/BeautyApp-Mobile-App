@@ -1,4 +1,5 @@
 import {
+  Alert,
   Image,
   ScrollView,
   StyleSheet,
@@ -16,11 +17,23 @@ import {useNavigation} from '@react-navigation/native';
 import RBSheet from 'react-native-raw-bottom-sheet';
 import {screenHeight} from '../../../utils/dimensions';
 import FooterTwoButton from '../../../components/footerTwoButton/FooterTwoButton';
+import {useDispatch} from 'react-redux';
+import {changeStack} from '../../../navigators/NavigationService';
+import {localStorage} from '../../../utils/mmkv/MMKV';
 
 const Profile = () => {
+  const dispatch = useDispatch();
   const navigation: any = useNavigation();
   const bottomSheetRef = useRef<RBSheet>(null);
 
+  const handleLogOut = () => {
+    bottomSheetRef.current?.close();
+    setTimeout(() => {
+      localStorage?.clearAll();
+      changeStack('AuthStack');
+    }, 400);
+  };
+  // Main Return
   return (
     <ScrollView showsVerticalScrollIndicator={false} style={styles.container}>
       <Header heading={strings.profile} />
@@ -95,7 +108,7 @@ const Profile = () => {
         />
         <RBSheet
           ref={bottomSheetRef}
-          height={screenHeight / 5}
+          height={screenHeight / 3.5}
           openDuration={250}
           closeOnDragDown={true}
           customStyles={{
@@ -122,6 +135,8 @@ const Profile = () => {
                 marginTop={15}
                 textLeft={strings.cancle}
                 textRight={strings.yes_Logout}
+                onPressLeft={() => bottomSheetRef.current?.close()}
+                onPressRight={() => handleLogOut()}
               />
             </View>
           </View>
