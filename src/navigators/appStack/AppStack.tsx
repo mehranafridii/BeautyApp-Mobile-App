@@ -34,12 +34,25 @@ import YourProfile from '../../screens/profile/YourProfile/YourProfile';
 import PrivacyPolicy from '../../screens/PrivacyPolicy/PrivacyPolicy';
 import Notifications from '../../screens/home/NotificationScreen/Notifications';
 import UserNotifications from '../../screens/userNotificationScreen/UserNotifications';
+import {useSelector} from 'react-redux';
+import {getUserType} from '../../Redux/Reducers/UserTypeSlice';
+import {appRoutes} from './AppRoutes';
 
 const AppStack = () => {
   const Stack = createNativeStackNavigator();
+  const routes = appRoutes;
   return (
     <Stack.Navigator initialRouteName={strings?.splashscreen}>
-      <Stack.Screen
+      {routes?.map(route => (
+        <Stack.Screen
+          name={route?.name}
+          component={route?.component}
+          options={{title: route?.name, headerShown: false}}
+        />
+      ))}
+
+      {/* Previous Code */}
+      {/* <Stack.Screen
         name={strings.splashscreen}
         component={Splash}
         options={{title: strings.splashscreen, headerShown: false}}
@@ -207,7 +220,7 @@ const AppStack = () => {
           title: strings.notify_screen,
           headerShown: false,
         }}
-      />
+      /> */}
     </Stack.Navigator>
   );
 };
