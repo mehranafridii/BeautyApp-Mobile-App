@@ -34,7 +34,7 @@ export const reduxStorage = {
 const persistConfig = {
   key: 'root',
   storage: reduxStorage,
-  whitelist: ['User_Reducer'],
+  whitelist: ['auth', 'User_Reducer', 'userType'],
   autoMergeLevel2,
 };
 
