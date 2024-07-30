@@ -4,7 +4,7 @@ console.log(api.baseUrl, 'sdjfksdjfk');
 const baseQuery = fetchBaseQuery({
   baseUrl: api.baseUrl,
   prepareHeaders: (headers, {getState}) => {
-    const token = getState()?.auth?.token;
+    const token = getState()?.user?.token;
     console.log(token, 'AccessToken::  ');
     // const header = null;
     if (token) {
@@ -15,6 +15,14 @@ const baseQuery = fetchBaseQuery({
 });
 
 const baseQueryWithInterceptor = async (args, api, extraOptions) => {
+  console.log(
+    args,
+    'ARGS<<<>>>>',
+    api,
+    'API<<<<<<<',
+    extraOptions,
+    'KJDFKJDFK112321',
+  );
   let result = await baseQuery(args, api, extraOptions);
   if (result.error && result.error.status === 401) {
   }
