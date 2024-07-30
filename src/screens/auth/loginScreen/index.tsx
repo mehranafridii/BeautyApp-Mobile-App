@@ -23,6 +23,7 @@ import Utility from '../../../utils/utility/Utility';
 import {useDispatch, useSelector} from 'react-redux';
 import {getUserType, setUserType} from '../../../Redux/Reducers/UserTypeSlice';
 import {changeStack} from '../../../navigators/NavigationService';
+import {setToken, setUser} from '../../../Redux/Reducers/UserSlice';
 
 const Login = () => {
   const dispatch = useDispatch();
@@ -52,10 +53,15 @@ const Login = () => {
           if (response?.data) {
             const userRole =
               Number(response?.data?.role) === 0 ? 'user' : 'business';
+            // console.log(response?.data?.token, 'response?.data?.toke');
+            // console.log(response?.data, 'response?.data');
+            // console.log(userRole, 'USERLOGIROLE');
+
             dispatch(setUserType(userRole));
+            dispatch(setToken(response?.data?.token));
+            dispatch(setUser(response?.data));
             setDataInLocalStorage(MMKV_KEYS.AUTH_TOKEN, response?.data?.token);
             setDataInLocalStorage(MMKV_KEYS.USER_DATA, response?.data);
-            console.log(userRole, 'USERLOGIROLE');
             changeStack('AppStack');
           }
         })
