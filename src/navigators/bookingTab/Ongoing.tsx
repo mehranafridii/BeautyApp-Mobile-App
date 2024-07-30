@@ -1,4 +1,11 @@
-import {ScrollView, StyleSheet, Text, View} from 'react-native';
+import {
+  Alert,
+  FlatList,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
 import React, {useState} from 'react';
 import ProfileDetailBox from '../../components/ProfileDetailbox/ProfileDetailBox';
 import {Colors} from '../../utils/colors/colors';
@@ -6,22 +13,29 @@ import {Images} from '../../assets/images';
 import strings from '../../utils/strings/strings';
 import {useNavigation} from '@react-navigation/native';
 
-const Ongoing = () => {
+const Ongoing = ({data}: any) => {
+  if (!data) return null;
   const navigation: any = useNavigation();
   const [toggleState, setToggleState] = useState(true);
 
   const handleToggle = (isOn: boolean) => {
     setToggleState(isOn);
   };
-  return (
-    <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
+  const renderItem = ({item, index}) => {
+    return (
       <ProfileDetailBox
+        itemData={item}
         dateText={strings.aug_25}
         image={Images.addImage}
         isOn={toggleState}
         onToggle={handleToggle}
         onPress={() => navigation.navigate(strings.booking_Detail)}
       />
+    );
+  };
+  return (
+    <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
+      <FlatList data={data} renderItem={renderItem} />
     </ScrollView>
   );
 };
