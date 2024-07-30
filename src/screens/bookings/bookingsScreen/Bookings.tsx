@@ -147,7 +147,6 @@ const Bookings = () => {
       });
   };
   const GetCustomerCancelBookingAPI = () => {
-    Alert.alert(JSON.stringify(index));
     customerCancelApi('')
       .unwrap()
       ?.then(res => {
