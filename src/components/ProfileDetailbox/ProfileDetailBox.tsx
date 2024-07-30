@@ -12,6 +12,7 @@ import {ProfileDetailBoxPropsTypes} from './types';
 import {useNavigation} from '@react-navigation/native';
 import CustomButton from '../button/CustomButton';
 const ProfileDetailBox: FC<ProfileDetailBoxPropsTypes> = ({
+  itemData,
   dateText,
   hideToggle,
   isOn,
@@ -20,11 +21,23 @@ const ProfileDetailBox: FC<ProfileDetailBoxPropsTypes> = ({
   onToggle,
 }) => {
   const navigation: any = useNavigation();
+  // Destructuring Data
+  const {
+    address,
+    starttime,
+    endtime,
+    status,
+    travelcost,
+    total_price,
+    id,
+    artist,
+  } = itemData || {};
+  console.log(itemData, 'sdfkdfjdksfj');
   return (
     <View style={styles.boxContainer}>
       <View style={styles.toggleContainer}>
         {hideToggle ? (
-          <Text style={{color: 'transparent'}}>sss</Text>
+          <Text style={{color: 'transparent'}}></Text>
         ) : (
           <ToggleButton
             labelText={strings.remind_Me}
