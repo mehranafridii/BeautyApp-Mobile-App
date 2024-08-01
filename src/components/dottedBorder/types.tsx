@@ -4,8 +4,9 @@ export interface DottedBorderPropsTypes {
   width?: number;
   height?: number;
   borderWidth?: number;
-  onPress?: any;
+  onHandlePress?: Function;
   textColor?: string;
   bgColor?: string;
   marginBottom?: any;
+  imageSource: any;
 }

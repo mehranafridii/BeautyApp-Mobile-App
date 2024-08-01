@@ -16,4 +16,7 @@ export const Endpoints = {
   artistCancelBookings: 'Booking/Artist/Cancelbooking',
   customerBookings: 'Booking/Customer/Bookings',
   artistBookings: 'Booking/Artist/Bookings',
+
+  // Artist Services
+  artistAddService: 'Services/Store',
 };

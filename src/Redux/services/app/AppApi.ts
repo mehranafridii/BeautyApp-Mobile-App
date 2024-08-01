@@ -83,8 +83,18 @@ const artistBookings = () => {
     },
   };
 };
+const artistAddServices = (body: any) => {
+  return {
+    url: Endpoints.artistAddService,
+    method: apiMethods.post,
+    body,
+    headers: {
+      'Content-type': 'application/json',
+    },
+  };
+};
 ////
-export const AuthApi = baseApi.injectEndpoints({
+export const AppApi = baseApi.injectEndpoints({
   endpoints: build => ({
     customerBookingService: build.mutation({
       query: customerBookingService,
@@ -113,6 +123,9 @@ export const AuthApi = baseApi.injectEndpoints({
     artistBookings: build.query({
       query: artistBookings,
     }),
+    artistAddServices: build.mutation({
+      query: artistAddServices,
+    }),
   }),
 });
 
@@ -126,4 +139,6 @@ export const {
   useLazyCustomerCancelBookingsQuery,
   useLazyCustomerCompleteBookingsQuery,
   useLazyCustomerUpcomingBookingsQuery,
-} = AuthApi;
+  //
+  useArtistAddServicesMutation,
+} = AppApi;

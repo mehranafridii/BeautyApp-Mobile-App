@@ -21,7 +21,7 @@ const CustomButton: FC<CustomButtonPropsTypes> = ({
   return (
     <TouchableOpacity
       onPress={onPress}
-      activeOpacity={strings?.buttonopacity}
+      activeOpacity={0.7}
       style={[
         {
           backgroundColor: bgColor || Colors.primary,

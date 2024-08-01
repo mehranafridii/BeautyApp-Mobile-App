@@ -1,5 +1,5 @@
-import {ScrollView, StyleSheet, View} from 'react-native';
-import React from 'react';
+import {Alert, ScrollView, StyleSheet, View} from 'react-native';
+import React, {useCallback, useState} from 'react';
 import Header from '../../../components/header/Header';
 import strings from '../../../utils/strings/strings';
 import {Colors} from '../../../utils/colors/colors';
@@ -9,33 +9,119 @@ import {screenHeight, screenWidth} from '../../../utils/dimensions';
 import CustomInput from '../../../components/input/CustomInput';
 import CustomButton from '../../../components/button/CustomButton';
 import {useNavigation} from '@react-navigation/native';
+import {useArtistAddServicesMutation} from '../../../Redux/services/app/AppApi';
+import ImagePicker from 'react-native-image-crop-picker';
+import AppToast from '../../../components/appToast/AppToast';
 
 const AddServices = () => {
   const navigation: any = useNavigation();
+  // API initialization
+  const [artistAddServices] = useArtistAddServicesMutation();
+  const [title, setTitle] = useState('');
+  const [description, setDescription] = useState('');
+  const [rate, setRate] = useState([]);
+  const [serviceImages, setServiceImages] = useState([]);
+  const [paymentType, setPaymentType] = useState('Cash');
+  const [durations, setDurations] = useState('');
+  const AddServiceApi = () => {
+    const formData = new FormData();
+    formData.append('service', title);
+    formData.append('rates', rate);
+    formData.append('duration', durations);
+    formData.append('title', title);
+    formData.append('images', serviceImages);
+    formData.append('payment', paymentType);
+    formData.append('description', description);
 
+    artistAddServices(formData)
+      ?.unwrap()
+      .then(response => {
+        console.log(response, 'sdfdsjhf2343##');
+        navigation.navigate(strings?.Services);
+        AppToast({type: 'success', message: response?.status});
+      });
+  };
+
+  const uploadImages = (index: Number) => {
+    ImagePicker.openPicker({
+      cropping: true,
+      width: 300,
+      height: 400,
+      compressImageQuality: 0.4 || null,
+      mediaType: 'photo',
+      minFiles: 1,
+      smartAlbums: [
+        'UserLibrary',
+        'Favorites',
+        'Screenshots',
+        'RecentlyAdded',
+        'Regular',
+        'Generic',
+        'Importeds',
+        'SelfPortraits',
+        'PhotoStream',
+        'SyncedAlbum',
+      ],
+    }).then(image => {
+      let obj = {
+        uri: image?.path,
+        type: image?.mime,
+        name: image?.filename,
+        index: index,
+      };
+      setServiceImages(prev => {
+        const isIndexExist = prev.findIndex(item => item?.index === index);
+        return isIndexExist !== -1
+          ? prev.map((item, i) => (i === isIndexExist ? obj : item))
+          : [...prev, obj];
+      });
+    });
+  };
+
+  // UI for ServiceImages
+  const renderImagesUI = useCallback(() => {
+    return Array.from({length: 4}, (_, index) => {
+      const imagesObj = serviceImages?.find(item => item?.index === index);
+      return (
+        <DottedBorder
+          width={screenWidth / 5.3}
+          height={screenHeight / 11}
+          imageSource={imagesObj ? imagesObj?.uri : null}
+          onHandlePress={() => uploadImages(index)}
+        />
+      );
+    });
+  }, [serviceImages]);
+  // MAIN RETURN
   return (
     <View style={styles.container}>
       <Header heading={strings?.enteryourlocation} />
-      <ScrollView style={styles.scroolViewPadding}>
-        <CustomText text={strings?.add_Service_Photos} size={14} />
+      <ScrollView
+        style={styles.scroolViewPadding}
+        contentContainerStyle={styles.contentContainerStyle}
+        showsHorizontalScrollIndicator={false}
+        showsVerticalScrollIndicator={false}>
+        <CustomText
+          text={strings?.add_Service_Photos}
+          size={14}
+          style={{width: '100%', textAlign: 'left'}}
+        />
         <CustomText
           text={strings?.lorem_ipsum}
           size={14}
           color={Colors.lightGrey}
+          style={{width: '100%', textAlign: 'left'}}
         />
-        <View style={styles.dottedBorderContainer}>
-          <DottedBorder width={screenWidth / 5.3} height={screenHeight / 11} />
-          <DottedBorder width={screenWidth / 5.3} height={screenHeight / 11} />
-          <DottedBorder width={screenWidth / 5.3} height={screenHeight / 11} />
-          <DottedBorder width={screenWidth / 5.3} height={screenHeight / 11} />
-        </View>
+        <View style={styles.dottedBorderContainer}>{renderImagesUI()}</View>
         <CustomInput
           width={screenWidth / 1.1}
           paddingBottom={45}
+          style={{marginTop: 30}}
           heigth={screenHeight / 10}
           placeholder={strings.add_Service_Description}
           placeHolderTextColor={Colors.black}
           label={strings.service_Description}
+          onChangeText={text => setDescription(text)}
         />
         <CustomText
           style={styles.text}
@@ -49,6 +135,7 @@ const AddServices = () => {
           placeholder={strings.faux_hawk}
           label={strings.title}
           placeHolderTextColor={Colors.black}
+          onChangeText={text => setTitle(text)}
         />
         <CustomInput
           style={styles.inputMargin}
@@ -56,6 +143,7 @@ const AddServices = () => {
           placeholder={strings.SR_24}
           label={strings.rates}
           placeHolderTextColor={Colors.black}
+          onChangeText={text => setRate(text)}
         />
         <CustomInput
           style={styles.inputMargin}
@@ -63,6 +151,7 @@ const AddServices = () => {
           placeholder={strings.zero_One}
           label={strings.duration_Time}
           placeHolderTextColor={Colors.black}
+          onChangeText={text => setDurations(text)}
         />
         <CustomText
           style={styles.addMoreText}
@@ -75,28 +164,31 @@ const AddServices = () => {
           size={14}
           color={Colors.black}
           text={strings.payment_Mode}
+          style={styles.text}
         />
         <View style={styles.buttonContainer}>
           <CustomButton
             text={strings.Cash}
-            style={styles.cashButton}
-            paddingVerticle={5}
+            style={{
+              width: '30%',
+              paddingTop: 0,
+            }}
           />
           <CustomButton
             text={strings.credit_Card}
             textColor={Colors.lightGrey}
             bgColor={Colors.lightWhite}
-            paddingVerticle={5}
             style={{
-              width: screenWidth / 3.8,
+              width: '30%',
+              paddingTop: 0,
             }}
           />
         </View>
-        <View style={{marginBottom: 10}}>
+        <View style={{marginBottom: 10, width: '100%'}}>
           <CustomButton
             style={styles.button}
             text={strings.next}
-            onPress={() => navigation.navigate(strings?.Services)}
+            onPress={() => AddServiceApi()}
           />
         </View>
       </ScrollView>
@@ -107,20 +199,40 @@ const AddServices = () => {
 export default AddServices;
 
 const styles = StyleSheet.create({
-  container: {flex: 1, backgroundColor: Colors.white},
-  dottedBorderContainer: {flexDirection: 'row', alignItems: 'center'},
+  container: {
+    flex: 1,
+    backgroundColor: Colors.white,
+    // backgroundColor: Colors.green,
+  },
+  dottedBorderContainer: {
+    width: '100%',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginTop: 15,
+  },
   text: {
     marginVertical: '3%',
+    width: '100%',
+    textAlign: 'left',
   },
-  scroolViewPadding: {padding: 15},
+
+  contentContainerStyle: {
+    paddingHorizontal: 15,
+    alignItems: 'center',
+    // justifyContent: 'center',
+  },
   addMoreText: {
     textAlign: 'center',
   },
   button: {width: '100%', marginVertical: 10},
   buttonContainer: {
+    width: '100%',
     flexDirection: 'row',
+    justifyContent: 'flex-start',
     alignItems: 'center',
+    gap: 10,
   },
-  cashButton: {width: screenWidth / 5, margin: 5},
-  inputMargin: {marginVertical: 8},
+  // cashButton: {margin: 5},
+  inputMargin: {marginVertical: 0},
 });
