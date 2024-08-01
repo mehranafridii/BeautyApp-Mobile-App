@@ -11,12 +11,16 @@ import com.facebook.react.shell.MainReactPackage;
 import java.util.Arrays;
 import java.util.ArrayList;
 
+// @react-native-async-storage/async-storage
+import com.reactnativecommunity.asyncstorage.AsyncStoragePackage;
 // @react-native-community/checkbox
 import com.reactnativecommunity.checkbox.ReactCheckBoxPackage;
 // react-native-image-crop-picker
 import com.reactnative.ivpusic.imagepicker.PickerPackage;
 // react-native-maps
 import com.rnmaps.maps.MapsPackage;
+// react-native-mmkv
+import com.reactnativemmkv.MmkvPackage;
 // react-native-pager-view
 import com.reactnativepagerview.PagerViewPackage;
 // react-native-permissions
@@ -72,9 +76,11 @@ public class PackageList {
   public ArrayList<ReactPackage> getPackages() {
     return new ArrayList<>(Arrays.<ReactPackage>asList(
       new MainReactPackage(mConfig),
+      new AsyncStoragePackage(),
       new ReactCheckBoxPackage(),
       new PickerPackage(),
       new MapsPackage(),
+      new MmkvPackage(),
       new PagerViewPackage(),
       new RNPermissionsPackage(),
       new RestartPackage(),
