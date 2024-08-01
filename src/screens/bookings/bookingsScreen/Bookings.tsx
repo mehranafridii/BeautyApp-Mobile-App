@@ -46,17 +46,17 @@ const Bookings = () => {
   const isBusiness = userType === 'business' ? true : false;
   // States
   const [index, setIndex] = React.useState(0);
-  const [artistRoutes] = React.useState([
+  const [routes] = React.useState([
     {key: 'first', title: strings.upcoming},
     {key: 'second', title: strings.completed},
     {key: 'third', title: strings.onGoing},
     {key: 'fourth', title: strings.cancle},
   ]);
-  const [customerRoutes] = React.useState([
-    {key: 'first', title: strings.upcoming},
-    {key: 'second', title: strings.completed},
-    {key: 'third', title: strings.cancle},
-  ]);
+  // const [customerRoutes] = React.useState([
+  //   {key: 'first', title: strings.upcoming},
+  //   {key: 'second', title: strings.completed},
+  //   {key: 'third', title: strings.cancle},
+  // ]);
 
   /// APIs
   useEffect(() => {
@@ -170,8 +170,9 @@ const Bookings = () => {
   // UI functions below
   const renderCustomerScene = SceneMap({
     first: () => <Upcoming data={customerUpcomingData?.data} />,
-    second: () => <Completed data={customerCompletedData?.data} />,
-    third: () => <Cancle data={customerCancelData?.data} />,
+    second: () => <Ongoing data={customerUpcomingData?.data} />,
+    third: () => <Completed data={customerCompletedData?.data} />,
+    fourth: () => <Cancle data={customerCancelData?.data} />,
   });
   const renderArtistScene = SceneMap({
     first: () => <Upcoming data={artistUpcomingData?.data} />,
@@ -188,7 +189,7 @@ const Bookings = () => {
     />
   );
   // User TYPE RENDERING CONDITIONS
-  const Routes = isBusiness ? artistRoutes : customerRoutes;
+  // const Routes = isBusiness ? artistRoutes : customerRoutes;
   const renderScene = isBusiness ? renderArtistScene : renderCustomerScene;
 
   // MAIN RETURN
@@ -196,7 +197,7 @@ const Bookings = () => {
     <View style={styles.container}>
       <Header heading={strings?.booking} searchCircle={true} />
       <TabView
-        navigationState={{index, routes: Routes}}
+        navigationState={{index, routes}}
         renderScene={renderScene}
         onIndexChange={setIndex}
         renderTabBar={renderTabBar}
