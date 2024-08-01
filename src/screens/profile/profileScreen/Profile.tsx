@@ -20,6 +20,8 @@ import FooterTwoButton from '../../../components/footerTwoButton/FooterTwoButton
 import {useDispatch} from 'react-redux';
 import {changeStack} from '../../../navigators/NavigationService';
 import {localStorage} from '../../../utils/mmkv/MMKV';
+import {setUserType} from '../../../Redux/Reducers/UserTypeSlice';
+import {setToken, setUser} from '../../../Redux/Reducers/UserSlice';
 
 const Profile = () => {
   const dispatch = useDispatch();
@@ -30,6 +32,10 @@ const Profile = () => {
     bottomSheetRef.current?.close();
     setTimeout(() => {
       localStorage?.clearAll();
+      dispatch(setUserType(null));
+      dispatch(setToken(null));
+      dispatch(setUser(null));
+
       changeStack('AuthStack');
     }, 400);
   };

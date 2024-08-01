@@ -364,7 +364,7 @@ export default {
   toprated: 'الفنانين الأعلى تقييمًا',
   nearartist: 'بالقرب من الفنان',
   onlinestore: 'محلات نشطة',
-  onlinestorescreen: 'OnlineStore',
+  onlinestorescreen: 'OnlineStores',
   onlinestoresdetailcreen: 'OnlineStoreDetail',
   brand_Name: 'اسم العلامة التجارية',
   visiting_Site: 'زيارة الموقع',

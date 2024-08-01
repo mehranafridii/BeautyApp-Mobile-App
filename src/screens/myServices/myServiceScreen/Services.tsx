@@ -42,7 +42,7 @@ const Services = () => {
             width={screenWidth / 1.1}
             borderRadius={30}
             paddingVerticel={10}
-            onPress={() => navigation.navigate(strings.addService)}
+            onPress={() => navigation.navigate(strings.addServices)}
             text={strings.addService}
           />
         </View>

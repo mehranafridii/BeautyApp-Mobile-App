@@ -76,9 +76,7 @@ const UserHome = () => {
   const renderItemServices = (item: any, index: number) => {
     return (
       <TouchableOpacity
-        onPress={() =>
-          navigation.navigate('UserStack', {screen: strings.onlinestorescreen})
-        }
+        onPress={() => navigation.navigate(strings.onlinestorescreen)}
         activeOpacity={strings.buttonopacity}
         style={styling.iconView}>
         <Image style={{marginBottom: 5}} source={item?.img} />
@@ -109,7 +107,7 @@ const UserHome = () => {
             listMode="MODAL"
           />
           <TouchableOpacity
-            onPress={() => navigation.navigate(strings.notify_screen)}
+            onPress={() => navigation.navigate(strings.notification_screen)}
             activeOpacity={strings.buttonopacity}>
             <Image source={Images.bell} />
           </TouchableOpacity>
@@ -150,7 +148,7 @@ const UserHome = () => {
               renderItem={({item, index}) => renderItemServices(item, index)}
             />
             <ImageBackground
-              key={index}
+              // key={index}
               resizeMode="stretch"
               style={styling.bgImage}
               source={Images.tools}>
