@@ -5,13 +5,15 @@ import CustomText from '../text/CustomText';
 import {useNavigation} from '@react-navigation/native';
 import strings from '../../utils/strings/strings';
 
-const CircleImage = ({text}: {text?: any}) => {
+const CircleImage = ({text, image}: {text?: any; image?: any}) => {
   const navigation: any = useNavigation();
   return (
     <TouchableOpacity
-      onPress={() => navigation.navigate(strings.addServices)}
+      onPress={() =>
+        navigation.navigate(strings.addServices, {categoryType: text})
+      }
       style={{margin: 12, alignItems: 'center'}}>
-      <Image source={Images.men} />
+      <Image source={image} />
       <CustomText text={text} style={{margin: 12}} />
     </TouchableOpacity>
   );
