@@ -146,6 +146,7 @@ export default {
   artistdetailscreen: 'ArtistDetails',
   addServices: 'AddServices',
   Services: 'Services',
+  MyService: 'MyService',
   add_Service_Photos: 'إضافة صور الخدمة',
   lorem_ipsum: 'لوريم إيبسوم دولور الجلوس أميت كونسيكتور.',
   service_Description: 'وصف الخدمة',

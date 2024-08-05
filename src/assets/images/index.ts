@@ -136,4 +136,14 @@ export const Images = {
   primaryheart: require('../icons/pheart.png'),
   trash: require('../icons/trash.png'),
   notification: require('../icons/notfication.png'),
+
+  hairCuts: require('../images/hairCuts.png'),
+  makeUp: require('../images/makeUp.png'),
+  shavingBeard: require('../images/shavingBeard.png'),
+  hairDry: require('../images/hairDry.png'),
+  massage: require('../images/massage.png'),
+  henna: require('../images/henna.png'),
+  nailCare: require('../images/nailCare.png'),
+  feetCare: require('../images/feetCare.png'),
+  skinCare: require('../images/skinCare.png'),
 };

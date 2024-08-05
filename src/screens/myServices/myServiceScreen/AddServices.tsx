@@ -8,13 +8,20 @@ import DottedBorder from '../../../components/dottedBorder/DottedBorder';
 import {screenHeight, screenWidth} from '../../../utils/dimensions';
 import CustomInput from '../../../components/input/CustomInput';
 import CustomButton from '../../../components/button/CustomButton';
-import {useNavigation} from '@react-navigation/native';
+
 import {useArtistAddServicesMutation} from '../../../Redux/services/app/AppApi';
 import ImagePicker from 'react-native-image-crop-picker';
 import AppToast from '../../../components/appToast/AppToast';
 
-const AddServices = () => {
-  const navigation: any = useNavigation();
+const AddServices = ({
+  navigation,
+  route,
+}: {
+  navigation?: any;
+  route?: Object;
+}) => {
+  const {categoryType} = route?.params;
+
   // API initialization
   const [artistAddServices] = useArtistAddServicesMutation();
   const [title, setTitle] = useState('');
@@ -25,7 +32,7 @@ const AddServices = () => {
   const [durations, setDurations] = useState('');
   const AddServiceApi = () => {
     const formData = new FormData();
-    formData.append('service', title);
+    formData.append('service', categoryType);
     formData.append('rates', rate);
     formData.append('duration', durations);
     formData.append('title', title);
@@ -36,9 +43,12 @@ const AddServices = () => {
     artistAddServices(formData)
       ?.unwrap()
       .then(response => {
-        console.log(response, 'sdfdsjhf2343##');
-        navigation.navigate(strings?.Services);
+        navigation.navigate(strings?.myservices);
         AppToast({type: 'success', message: response?.status});
+      })
+      .catch(error => {
+        console.log(error, 'ERROR F');
+        AppToast({type: 'error', message: error});
       });
   };
 

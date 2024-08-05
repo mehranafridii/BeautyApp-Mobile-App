@@ -1,4 +1,5 @@
 import {
+  Alert,
   Image,
   ScrollView,
   StyleSheet,
@@ -27,7 +28,7 @@ const Services = () => {
   return (
     <View style={styles.container}>
       <Header heading={strings?.myServices} />
-      <ScrollView style={{padding: 15}}>
+      <ScrollView contentContainerStyle={{paddingHorizontal: 24}}>
         <CustomeType
           text={strings.type20}
           textName={strings.hair_Cut}
@@ -42,7 +43,8 @@ const Services = () => {
             width={screenWidth / 1.1}
             borderRadius={30}
             paddingVerticel={10}
-            onPress={() => navigation.navigate(strings.addServices)}
+            // onPress={() => navigation.navigate(strings.addServices)}
+            onPress={() => Alert.alert('Adding Services Flow')}
             text={strings.addService}
           />
         </View>
@@ -145,7 +147,6 @@ const styles = StyleSheet.create({
   divider: {
     borderTopColor: Colors.grey100,
     borderTopWidth: 1.5,
-    margin: 15,
   },
 
   containerHeadline: {
