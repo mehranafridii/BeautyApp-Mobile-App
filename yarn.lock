@@ -5984,10 +5984,10 @@ react-native-image-crop-picker@^0.41.2:
   resolved "https://registry.yarnpkg.com/react-native-image-crop-picker/-/react-native-image-crop-picker-0.41.2.tgz#824fa8fee8391fbb3e0b5ae2973221a2dff0cafb"
   integrity sha512-GcDu/adXU/1y/MrxsbOfqcGRGWC2pTttt5VGy/jyRJ6GXfoC29fTQf8SG5kGtc5schSR6K+mKYO4uW6eJPljlQ==
 
-react-native-maps@^1.15.4:
-  version "1.17.3"
-  resolved "https://registry.yarnpkg.com/react-native-maps/-/react-native-maps-1.17.3.tgz#ff29377cdbb8ef44cd428dded9cc84798f5dd529"
-  integrity sha512-LMp42EQ55QbIhR0LXJCm12OQ34SwhQaSPgeaWbJ8pRgllfEW/XMJ5IFYhfWUXPFQWXn1q/F74KUS+wLhySdfnw==
+react-native-maps@1.14.0:
+  version "1.14.0"
+  resolved "https://registry.yarnpkg.com/react-native-maps/-/react-native-maps-1.14.0.tgz#1e5cac8e88d80002c512dd4763a205493a1ae58d"
+  integrity sha512-ai7h4UdRLGPFCguz1fI8n4sKLEh35nZXHAH4nSWyAeHGrN8K9GjICu9Xd4Q5Ok4h+WwrM6Xz5pGbF3Qm1tO6iQ==
   dependencies:
     "@types/geojson" "^7946.0.13"
 
