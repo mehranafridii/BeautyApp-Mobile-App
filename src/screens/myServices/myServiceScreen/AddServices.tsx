@@ -23,7 +23,7 @@ const AddServices = ({
   const {categoryType} = route?.params;
 
   // API initialization
-  const [artistAddServices] = useArtistAddServicesMutation();
+  const [artistAddServices, {isLoading}] = useArtistAddServicesMutation();
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [rate, setRate] = useState([]);
@@ -198,6 +198,7 @@ const AddServices = ({
           <CustomButton
             style={styles.button}
             text={strings.next}
+            isLoader={isLoading}
             onPress={() => AddServiceApi()}
           />
         </View>
