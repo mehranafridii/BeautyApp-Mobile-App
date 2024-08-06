@@ -6,9 +6,9 @@ const signUp = (body: Object) => {
     url: Endpoints.signUp,
     method: apiMethods.post,
     body,
-    headers: {
-      'Content-type': 'application/json',
-    },
+    // headers: {
+    //   'Content-type': 'application/json',
+    // },
   };
 };
 const signUpArtist = (body: Object) => {
@@ -16,9 +16,9 @@ const signUpArtist = (body: Object) => {
     url: Endpoints.signUpArtist,
     method: apiMethods.post,
     body,
-    headers: {
-      'Content-type': 'application/json',
-    },
+    // headers: {
+    //   'Content-type': 'application/json',
+    // },
   };
 };
 const login = (body: Object) => {
@@ -26,9 +26,6 @@ const login = (body: Object) => {
     url: Endpoints.login,
     method: apiMethods.post,
     body,
-    headers: {
-      'Content-type': 'application/json',
-    },
   };
 };
 export const AuthApi = baseApi.injectEndpoints({
