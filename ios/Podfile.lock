@@ -948,7 +948,7 @@ PODS:
   - React-Mapbuffer (0.73.4):
     - glog
     - React-debug
-  - react-native-maps (1.17.3):
+  - react-native-maps (1.14.0):
     - React-Core
   - react-native-mmkv (2.12.2):
     - glog
@@ -1421,7 +1421,7 @@ SPEC CHECKSUMS:
   React-jsinspector: 9ac353eccf6ab54d1e0a33862ba91221d1e88460
   React-logger: 0a57b68dd2aec7ff738195f081f0520724b35dab
   React-Mapbuffer: 63913773ed7f96b814a2521e13e6d010282096ad
-  react-native-maps: 5d563f21238f8e8fea24ae6ff2772bfde17f6f34
+  react-native-maps: cbf2f03bfeebfd7ec45966b066db13a075fd2af3
   react-native-mmkv: 61c0e00963aee12f65c2c34ee83a3dc890026a0d
   react-native-pager-view: 51b8a98ed400354aea0250186669db6c66a6231f
   react-native-restart: 7595693413fe3ca15893702f2c8306c62a708162
