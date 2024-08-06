@@ -88,6 +88,15 @@ const artistAddServices = (body: any) => {
     url: Endpoints.artistAddService,
     method: apiMethods.post,
     body,
+    // headers: {
+    //   'Content-type': 'application/json',
+    // },
+  };
+};
+const artistGetMyServices = () => {
+  return {
+    url: Endpoints.artistMyService,
+    method: apiMethods.get,
     headers: {
       'Content-type': 'application/json',
     },
@@ -126,6 +135,9 @@ export const AppApi = baseApi.injectEndpoints({
     artistAddServices: build.mutation({
       query: artistAddServices,
     }),
+    artistGetMyServices: build.query({
+      query: artistGetMyServices,
+    }),
   }),
 });
 
@@ -141,4 +153,5 @@ export const {
   useLazyCustomerUpcomingBookingsQuery,
   //
   useArtistAddServicesMutation,
+  useLazyArtistGetMyServicesQuery,
 } = AppApi;

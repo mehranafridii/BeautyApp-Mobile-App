@@ -19,4 +19,5 @@ export const Endpoints = {
 
   // Artist Services
   artistAddService: 'Services/Store',
+  artistMyService: 'Services/MyServices',
 };

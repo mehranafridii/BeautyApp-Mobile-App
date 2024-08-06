@@ -1,6 +1,6 @@
 import {createApi, fetchBaseQuery} from '@reduxjs/toolkit/query/react';
 import api from '../../constants/Api.constants';
-console.log(api.baseUrl, 'sdjfksdjfk');
+
 const baseQuery = fetchBaseQuery({
   baseUrl: api.baseUrl,
   prepareHeaders: (headers, {getState}) => {
@@ -15,14 +15,6 @@ const baseQuery = fetchBaseQuery({
 });
 
 const baseQueryWithInterceptor = async (args, api, extraOptions) => {
-  console.log(
-    args,
-    'ARGS<<<>>>>',
-    api,
-    'API<<<<<<<',
-    extraOptions,
-    'KJDFKJDFK112321',
-  );
   let result = await baseQuery(args, api, extraOptions);
   if (result.error && result.error.status === 401) {
   }
