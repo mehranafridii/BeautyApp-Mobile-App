@@ -7,6 +7,7 @@ import {CustomTypePropsTypes} from './types';
 import strings from '../../utils/strings/strings';
 
 const CustomeType: FC<CustomTypePropsTypes> = ({
+  item,
   text,
   textName,
   path,
@@ -15,7 +16,7 @@ const CustomeType: FC<CustomTypePropsTypes> = ({
 }) => {
   return (
     <TouchableOpacity
-      onPress={onPress}
+      onPress={() => onPress(item)}
       style={{
         borderColor: Colors.grey100,
         backgroundColor: bgColor || 'transaparent',
@@ -33,14 +34,11 @@ const CustomeType: FC<CustomTypePropsTypes> = ({
           flexDirection: 'row',
           alignItems: 'center',
         }}>
-        {/* <TouchableOpacity
-          activeOpacity={strings.buttonopacity}
-          onPress={onPress}> */}
         <Image
           source={path || Images.arrow_right}
           style={{marginHorizontal: 10}}
         />
-        {/* </TouchableOpacity> */}
+
         <Text style={{color: Colors.black, fontWeight: 'bold'}}>{text}</Text>
       </View>
       <Text style={{padding: 10, color: Colors.lightGrey}}>{textName}</Text>
