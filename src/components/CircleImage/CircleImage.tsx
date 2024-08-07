@@ -4,16 +4,19 @@ import {Images} from '../../assets/images';
 import CustomText from '../text/CustomText';
 import {useNavigation} from '@react-navigation/native';
 import strings from '../../utils/strings/strings';
+import Utility from '../../utils/utility/Utility';
 
 const CircleImage = ({text, image}: {text?: any; image?: any}) => {
   const navigation: any = useNavigation();
+  const _image = Utility.getImageUrl(image);
+  console.log(_image, '_image');
   return (
     <TouchableOpacity
       onPress={() =>
         navigation.navigate(strings.addServices, {categoryType: text})
       }
-      style={{margin: 12, alignItems: 'center'}}>
-      <Image source={image} />
+      style={styles.containerStyle}>
+      <Image source={{uri: _image}} width={86} height={86} borderRadius={100} />
       <CustomText text={text} style={{margin: 12}} />
     </TouchableOpacity>
   );
@@ -21,4 +24,9 @@ const CircleImage = ({text, image}: {text?: any; image?: any}) => {
 
 export default CircleImage;
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  containerStyle: {
+    alignItems: 'center',
+    flex: 1,
+  },
+});
