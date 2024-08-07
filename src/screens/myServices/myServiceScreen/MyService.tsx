@@ -1,4 +1,4 @@
-import React, {useCallback, useRef} from 'react';
+import React, {useCallback, useRef, useState} from 'react';
 import strings from '../../../utils/strings/strings';
 import Header from '../../../components/header/Header';
 import {Colors} from '../../../utils/colors/colors';
@@ -21,41 +21,59 @@ import {
 
 import RBSheet from 'react-native-raw-bottom-sheet';
 import FooterTwoButton from '../../../components/footerTwoButton/FooterTwoButton';
+import Utility from '../../../utils/utility/Utility';
 const MyService = ({navigation}: {navigation: any}) => {
+  //API intialization
+  const [artistGetMyServices, {isLoading}] = useLazyArtistGetMyServicesQuery();
+  // States
+  const [myServiceData, setMyServiceData] = useState([]);
+  const [sheetData, setSheetData] = useState([]);
   const bottomSheetRef = useRef<RBSheet>(null);
 
-  const openBottomSheet = () => {
+  const openBottomSheet = (data: any) => {
+    setSheetData(myServiceData[data]);
     bottomSheetRef?.current?.open();
   };
-  const [artistGetMyServices, {data: myServiceData}] =
-    useLazyArtistGetMyServicesQuery();
+
   useFocusEffect(
     useCallback(() => {
       ArtistGetMyServicesAPI();
     }, []),
   );
   const ArtistGetMyServicesAPI = () => {
-    artistGetMyServices('').unwrap();
+    artistGetMyServices('')
+      .unwrap()
+      .then(response => {
+        const {data} = response;
+        const dataNow = Utility.myServicesDataFormat(data);
+        setMyServiceData(dataNow);
+        console.log(dataNow, 'sfsdfnNNNNN');
+      });
   };
+
+  const services = Object.keys(myServiceData);
   console.log(myServiceData, 'MYSErvie', myServiceData?.data?.length);
+  // Main Return
   return (
     <View style={styles.container}>
       <Header heading={strings?.myServices} />
-      <View style={styles.centeredContainer}>
-        {myServiceData?.data?.length ? (
-          <FlatList
-            contentContainerStyle={{paddingBottom: 60}}
-            showsHorizontalScrollIndicator={false}
-            showsVerticalScrollIndicator={false}
-            data={myServiceData?.data || []}
-            renderItem={({item, index}) => (
-              <CustomeType
-                text={strings.type08}
-                textName={item?.service}
-                onPress={openBottomSheet}
-              />
-            )}
-          />
+      <ScrollView
+        contentContainerStyle={
+          services?.length > 0
+            ? styles.serviceContainer
+            : styles.centeredContainer
+        }
+        showsHorizontalScrollIndicator={false}
+        showsVerticalScrollIndicator={false}>
+        {services?.length > 0 ? (
+          services?.map(item => (
+            <CustomeType
+              item={item}
+              text={`${myServiceData[item]?.length}  ${strings.types}`}
+              textName={item}
+              onPress={openBottomSheet}
+            />
+          ))
         ) : (
           <>
             <Image source={Images.calendar_clock} />
@@ -81,7 +99,7 @@ const MyService = ({navigation}: {navigation: any}) => {
           paddingVerticel={10}
           onPress={() => navigation.navigate('AddServicesSelected')}
         />
-      </View>
+      </ScrollView>
       {/* Sheet Component Below */}
       <RBSheet
         ref={bottomSheetRef}
@@ -97,13 +115,18 @@ const MyService = ({navigation}: {navigation: any}) => {
             width: screenWidth / 4,
           },
         }}>
-        <View style={styles.flex}>
-          <TouchableOpacity style={{alignItems: 'center'}}>
-            <CustomText text={strings.selectHairCut} size={18} />
-          </TouchableOpacity>
-          <View style={styles.divider} />
-          <ScrollView style={styles.flex} contentContainerStyle={styles.scroll}>
-            <TouchableOpacity
+        <View>
+          <CustomText
+            text={strings.selectHairCut}
+            size={18}
+            style={{alignSelf: 'center'}}
+          />
+          {/* </TouchableOpacity> */}
+          {/* <View style={styles.divider} /> */}
+          <ScrollView
+            // style={styles.flex}
+            contentContainerStyle={styles.sheetScrollContainer}>
+            {/* <TouchableOpacity
               activeOpacity={strings.buttonopacity}
               style={styles.contentContainer}>
               <View style={styles.row}>
@@ -150,13 +173,16 @@ const MyService = ({navigation}: {navigation: any}) => {
                 </View>
               </View>
               <CustomText size={18} text={strings.riyal28} />
-            </TouchableOpacity>
-            <CustomeType
-              text={strings.dollar24}
-              textName={strings.crew_cut}
-              path={Images.plus}
-            />
-            <View style={{marginTop: screenHeight * 0.3}}>
+            </TouchableOpacity> */}
+            {sheetData?.map(item => (
+              <CustomeType
+                text={`${item?.rates}  ${strings.$} `}
+                textName={item?.title}
+                path={Images.plus}
+              />
+            ))}
+
+            <View style={{marginTop: 20}}>
               <FooterTwoButton
                 textLeft={strings.cancle}
                 onPressLeft={() => bottomSheetRef?.current?.close()}
@@ -186,6 +212,15 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingHorizontal: 15,
   },
+  serviceContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 15,
+  },
   button: {width: '80%', marginVertical: 10},
   buttonStyle: {width: 20, height: 20},
+  sheetScrollContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
 });
