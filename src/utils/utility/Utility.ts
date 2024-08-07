@@ -354,5 +354,8 @@ const Utility = {
       return acc;
     }, {}); // Start with an empty object
   },
+  getImageUrl: function (imagePath: string) {
+    return 'http://vdz.wic.temporary.site//' + imagePath;
+  },
 };
 export default Utility;
