@@ -102,6 +102,15 @@ const artistGetMyServices = () => {
     },
   };
 };
+const getCategoryList = () => {
+  return {
+    url: Endpoints.listCategory,
+    method: apiMethods.get,
+    headers: {
+      'Content-type': 'application/json',
+    },
+  };
+};
 ////
 export const AppApi = baseApi.injectEndpoints({
   endpoints: build => ({
@@ -138,6 +147,9 @@ export const AppApi = baseApi.injectEndpoints({
     artistGetMyServices: build.query({
       query: artistGetMyServices,
     }),
+    getCategoryList: build.query({
+      query: getCategoryList,
+    }),
   }),
 });
 
@@ -154,4 +166,6 @@ export const {
   //
   useArtistAddServicesMutation,
   useLazyArtistGetMyServicesQuery,
+  //
+  useLazyGetCategoryListQuery,
 } = AppApi;
