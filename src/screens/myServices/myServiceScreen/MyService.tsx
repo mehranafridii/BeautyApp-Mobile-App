@@ -50,7 +50,7 @@ const MyService = ({navigation}: {navigation: any}) => {
         console.log(dataNow, 'sfsdfnNNNNN');
       });
   };
-
+  console.log(sheetData, 'DJFKDFKDSHETTDAT');
   const services = Object.keys(myServiceData);
   console.log(myServiceData, 'MYSErvie', myServiceData?.data?.length);
   // Main Return
@@ -188,7 +188,9 @@ const MyService = ({navigation}: {navigation: any}) => {
                 onPressLeft={() => bottomSheetRef?.current?.close()}
                 onPressRight={() => {
                   bottomSheetRef?.current?.close(),
-                    navigation.navigate(strings.addServices);
+                    navigation.navigate(strings.addServices, {
+                      categoryType: sheetData[0]?.service,
+                    });
                 }}
                 textRight={strings.addtype}
               />

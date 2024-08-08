@@ -27,7 +27,6 @@ const Splash = () => {
       isToken
         ? changeStack('AppStack')
         : navigation.replace(strings.onboardingscreen);
-      // navigation.navigate(strings.onboardingscreen);
     }, 2000);
   }, []);
 
