@@ -148,7 +148,6 @@ const UserHome = () => {
               renderItem={({item, index}) => renderItemServices(item, index)}
             />
             <ImageBackground
-              // key={index}
               resizeMode="stretch"
               style={styling.bgImage}
               source={Images.tools}>
@@ -160,6 +159,7 @@ const UserHome = () => {
                 text={strings?.servicesDesc}
               />
             </ImageBackground>
+            <View style={{width: 100, height: 100, backgroundColor: 'red'}} />
           </View>
         ) : (
           <View>
@@ -271,13 +271,16 @@ const styling = StyleSheet.create({
     paddingHorizontal: 8,
     borderRadius: 8,
     marginTop: 12,
-    width: screenWidth / 1.33,
+
+    // width: screenWidth / 1.33,
+    height: 50,
   },
   flex1: {flexDirection: 'row', alignItems: 'center'},
   textInput: {
     marginLeft: 8,
     width: screenWidth / 1.62,
     color: Colors.lightGrey,
+    textAlign: 'right',
   },
   searchContainer: {
     flexDirection: 'row',
