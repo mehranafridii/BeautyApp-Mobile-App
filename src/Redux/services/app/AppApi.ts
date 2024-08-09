@@ -111,9 +111,48 @@ const getCategoryList = () => {
     },
   };
 };
+//OnBoarding
+const onBoardScreen1 = () => {
+  return {
+    url: Endpoints.onBoardScreen1,
+    method: apiMethods.get,
+    headers: {
+      'Content-type': 'application/json',
+    },
+  };
+};
+const onBoardScreen2 = () => {
+  return {
+    url: Endpoints.onBoardScreen2,
+    method: apiMethods.get,
+    headers: {
+      'Content-type': 'application/json',
+    },
+  };
+};
+const onBoardScreen3 = () => {
+  return {
+    url: Endpoints.onBoardScreen3,
+    method: apiMethods.get,
+    headers: {
+      'Content-type': 'application/json',
+    },
+  };
+};
 ////
 export const AppApi = baseApi.injectEndpoints({
   endpoints: build => ({
+    //Onboarding
+    onBoardScreen1: build.query({
+      query: onBoardScreen1,
+    }),
+    onBoardScreen2: build.query({
+      query: onBoardScreen2,
+    }),
+    onBoardScreen3: build.query({
+      query: onBoardScreen3,
+    }),
+    // Booking
     customerBookingService: build.mutation({
       query: customerBookingService,
     }),
@@ -154,6 +193,11 @@ export const AppApi = baseApi.injectEndpoints({
 });
 
 export const {
+  //onboarding
+  useLazyOnBoardScreen1Query,
+  useLazyOnBoardScreen2Query,
+  useLazyOnBoardScreen3Query,
+  // Booking
   useCustomerBookingServiceMutation,
   useLazyArtistBookingsQuery,
   useLazyArtistUpcomingBookingsQuery,

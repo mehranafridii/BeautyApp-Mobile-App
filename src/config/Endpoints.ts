@@ -6,6 +6,10 @@ export const Endpoints = {
   forgotPassword: 'users/forget-password',
   verifyOTP: 'users/otp-verification',
   resetPassword: 'users/reset-password',
+  //Onboarding
+  onBoardScreen1: 'onboarding_screen_01',
+  onBoardScreen2: 'onboarding_screen_02',
+  onBoardScreen3: 'onboarding_screen_03',
   //APP
   customerBookingService: 'Booking/Customer/Store',
   customerUpcomingBookings: 'Booking/Customer/Activebooking',
