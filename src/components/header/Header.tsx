@@ -25,7 +25,7 @@ const Header: FC<HeaderPropsTypes> = ({heading, searchCircle, style}) => {
           style={{resizeMode: 'contain', alignSelf: 'center'}}
         />
       ) : (
-        <Text style={{color: 'transparent'}}>sss</Text>
+        <Text style={{color: 'transparent'}}></Text>
       )}
       <CustomText size={17} text={heading} />
       <TouchableOpacity

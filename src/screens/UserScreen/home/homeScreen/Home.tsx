@@ -121,7 +121,7 @@ const UserHome = () => {
             <Image source={Images.bell} />
           </TouchableOpacity>
         </View>
-        <View style={styling.searchContainer}>
+        {/* <View style={styling.searchContainer}>
           <View style={styling.input}>
             <View style={styling.flex1}>
               <Image
@@ -145,10 +145,24 @@ const UserHome = () => {
               style={{width: 30, height: 30}}
             />
           </TouchableOpacity>
-        </View>
+        </View> */}
         {filter ? (
           <View style={{marginTop: 20}}>
-            <CustomText size={18} text={strings.services} />
+            <View style={styling.searchContainer}>
+              <CustomText
+                size={18}
+                text={strings.services}
+                style={{textAlign: 'left'}}
+              />
+              <TouchableOpacity onPress={() => setFilter(!filter)}>
+                <CustomText
+                  size={13}
+                  color={Colors.primary}
+                  text={strings.seeLess}
+                />
+              </TouchableOpacity>
+            </View>
+
             <FlatList
               // style={styling.flatlist}
               data={categories?.data}
@@ -201,11 +215,13 @@ const UserHome = () => {
             </View>
             <View style={styling.searchContainer}>
               <CustomText size={18} text={strings.services} />
-              <CustomText
-                size={13}
-                color={Colors.primary}
-                text={strings.seeall}
-              />
+              <TouchableOpacity onPress={() => setFilter(!filter)}>
+                <CustomText
+                  size={13}
+                  color={Colors.primary}
+                  text={strings.seeall}
+                />
+              </TouchableOpacity>
             </View>
             <FlatList
               showsHorizontalScrollIndicator={false}
@@ -295,6 +311,7 @@ const styling = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
+    marginBottom: 20,
   },
   filter: {
     backgroundColor: Colors.primary,

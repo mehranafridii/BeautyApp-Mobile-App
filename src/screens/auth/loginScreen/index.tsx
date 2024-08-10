@@ -53,10 +53,6 @@ const Login = () => {
           if (response?.data) {
             const userRole =
               Number(response?.data?.role) === 0 ? 'user' : 'business';
-            // console.log(response?.data?.token, 'response?.data?.toke');
-            // console.log(response?.data, 'response?.data');
-            // console.log(userRole, 'USERLOGIROLE');
-
             dispatch(setUserType(userRole));
             dispatch(setToken(response?.data?.token));
             dispatch(setUser(response?.data));
