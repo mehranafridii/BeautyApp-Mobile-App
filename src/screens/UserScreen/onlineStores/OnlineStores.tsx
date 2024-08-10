@@ -9,7 +9,8 @@ import Header from '../../../components/header/Header';
 import CustomText from '../../../components/text/CustomText';
 import {nearAtristDetail, topAtristDetail} from '../../../utils/dummyData';
 
-const OnlineStores = () => {
+const OnlineStores = ({route}: {route: Object}) => {
+  const {categoryType} = route?.params;
   const navigation: any = useNavigation();
   const renderItemTopArtist = (item: any, index: number) => {
     return (
@@ -36,19 +37,19 @@ const OnlineStores = () => {
   };
   return (
     <View style={{flex: 1, backgroundColor: Colors.white}}>
-      <Header heading={strings.onlinestore} />
+      <Header heading={categoryType} />
       <ScrollView showsVerticalScrollIndicator={false}>
-        <View style={[styles.searchContainer, {marginTop: 8}]}>
+        {/* <View style={[styles.searchContainer, {marginTop: 8}]}>
           <CustomText size={18} text={strings.toprated} />
           <CustomText size={13} color={Colors.primary} text={strings.seeall} />
-        </View>
-        <FlatList
+        </View> */}
+        {/* <FlatList
           style={{marginTop: 10, marginLeft: 15}}
           showsHorizontalScrollIndicator={false}
           horizontal
           data={topAtristDetail}
           renderItem={({item, index}) => renderItemTopArtist(item, index)}
-        />
+        /> */}
         <View style={[styles.searchContainer, {marginTop: 8}]}>
           <CustomText size={18} text={strings.nearartist} />
           <CustomText size={13} color={Colors.primary} text={strings.seeall} />

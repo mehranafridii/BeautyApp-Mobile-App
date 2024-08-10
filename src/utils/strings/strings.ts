@@ -103,6 +103,7 @@ export default {
   sr: 'ريال سعودي',
   myservices: 'خدماتي',
   seeall: 'اظهار الكل',
+  seeLess: 'انظر أقل',
   earning: 'الأرباح',
   wallet: 'محفظة',
   $: 'دولارًا',
