@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {SafeAreaView, StatusBar, useColorScheme} from 'react-native';
 import {persistedStore, Store} from './src/Redux/Store';
 import {Provider} from 'react-redux';
@@ -11,7 +11,6 @@ function App(): React.JSX.Element {
   const backgroundStyle = {
     backgroundColor: isDarkMode ? 'white' : 'white',
   };
-
   return (
     <Provider store={Store}>
       <PersistGate loading={null} persistor={persistedStore}>

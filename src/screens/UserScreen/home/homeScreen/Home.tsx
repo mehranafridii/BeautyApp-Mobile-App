@@ -8,7 +8,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import DropDownPicker from 'react-native-dropdown-picker';
 import Slick from 'react-native-slick';
 import {useNavigation} from '@react-navigation/native';
@@ -26,6 +26,8 @@ import {
   topAtristDetail,
 } from '../../../../utils/dummyData';
 import {screenHeight, screenWidth} from '../../../../utils/dimensions';
+import {useLazyGetCategoryListQuery} from '../../../../Redux/services/app/AppApi';
+import CircleImage from '../../../../components/CircleImage/CircleImage';
 
 const UserHome = () => {
   const navigation: any = useNavigation();
@@ -38,7 +40,13 @@ const UserHome = () => {
     {label: 'Banana', value: 'banana'},
     {label: 'Pear', value: 'pear'},
   ]);
-
+  const [getCategoryList, {data: categories}] = useLazyGetCategoryListQuery();
+  useEffect(() => {
+    GetCategoryList();
+  }, []);
+  const GetCategoryList = () => {
+    getCategoryList('').unwrap();
+  };
   const renderItem = (item: any, index: number) => {
     return (
       <View key={index} style={styling.servicesContainer}>
@@ -75,13 +83,14 @@ const UserHome = () => {
   };
   const renderItemServices = (item: any, index: number) => {
     return (
-      <TouchableOpacity
-        onPress={() => navigation.navigate(strings.onlinestorescreen)}
-        activeOpacity={strings.buttonopacity}
-        style={styling.iconView}>
-        <Image style={{marginBottom: 5}} source={item?.img} />
-        <CustomText text={item?.heading} />
-      </TouchableOpacity>
+      <CircleImage text={item?.category} image={item?.image} />
+      // <TouchableOpacity
+      //   onPress={() => navigation.navigate(strings.onlinestorescreen)}
+      //   activeOpacity={strings.buttonopacity}
+      //   style={styling.iconView}>
+      //   <Image style={{marginBottom: 5}} source={item?.img} />
+      //   {/* <CustomText text={item?.heading} /> */}
+      // </TouchableOpacity>
     );
   };
   return (
@@ -141,15 +150,16 @@ const UserHome = () => {
           <View style={{marginTop: 20}}>
             <CustomText size={18} text={strings.services} />
             <FlatList
-              style={styling.flatlist}
-              data={homeServicesData}
+              // style={styling.flatlist}
+              data={categories?.data}
               scrollEnabled={false}
               numColumns={3}
               renderItem={({item, index}) => renderItemServices(item, index)}
             />
+
             <ImageBackground
-              resizeMode="stretch"
-              style={styling.bgImage}
+              resizeMode="contain"
+              // style={styling.imageStyle}
               source={Images.tools}>
               <CustomText
                 style={styling.heading}
@@ -159,7 +169,6 @@ const UserHome = () => {
                 text={strings?.servicesDesc}
               />
             </ImageBackground>
-            <View style={{width: 100, height: 100, backgroundColor: 'red'}} />
           </View>
         ) : (
           <View>
@@ -308,6 +317,9 @@ const styling = StyleSheet.create({
     textAlign: 'right',
     marginRight: 16,
     marginTop: '12%',
+    // marginBottom: '12%',
+    // paddingHorizontal: 20,
+    // paddingVertical: 10,
   },
   servicesContainer: {
     marginHorizontal: 14,
@@ -327,6 +339,15 @@ const styling = StyleSheet.create({
   bgImage: {
     borderRadius: 8,
     height: screenHeight / 5,
+    shadowColor: Colors.lightGrey,
+    shadowOffset: {width: -2, height: 4},
+    shadowOpacity: 0.2,
+    shadowRadius: 3,
+    elevation: 5,
+  },
+  imageStyle: {
+    borderRadius: 8,
+    width: '100%',
     shadowColor: Colors.lightGrey,
     shadowOffset: {width: -2, height: 4},
     shadowOpacity: 0.2,

@@ -15,8 +15,8 @@ import {getUserType} from '../../../Redux/Reducers/UserTypeSlice';
 const Splash = () => {
   const navigation: any = useNavigation();
 
-  const getStoreToken = useSelector(getToken);
-  const userType = useSelector(getUserType);
+  // const getStoreToken = useSelector(getToken);
+  // const userType = useSelector(getUserType);
 
   useEffect(() => {
     I18nManager.forceRTL(true);

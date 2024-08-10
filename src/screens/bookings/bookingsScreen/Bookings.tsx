@@ -78,6 +78,22 @@ const Bookings = () => {
     }
   }, [index]);
 
+  //Getting All Data but revert for now
+  const fetchArtistBookingData = async () => {
+    try {
+      const [
+        upcomingResponse,
+        completedResponse,
+        cancelResponse,
+        bookingResponse,
+      ] = await Promise.all([
+        customerUpcomingApi('').unwrap(),
+        customerCompletedApi('').unwrap(),
+        customerCancelApi('').unwrap(),
+        customerBookingApi('')?.unwrap(),
+      ]);
+    } catch (error) {}
+  };
   ///
 
   /// API functions
