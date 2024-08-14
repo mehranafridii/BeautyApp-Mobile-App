@@ -1,11 +1,15 @@
-import {Image, StyleSheet, View} from 'react-native';
+import {Image, StyleSheet, TouchableOpacity, View} from 'react-native';
 import React, {FC} from 'react';
 import {Images} from '../../assets/images';
 import CustomText from '../text/CustomText';
 import {AtristDetailPropsTypes} from './types';
 import {Colors} from '../../utils/colors/colors';
+import Utility from '../../utils/utility/Utility';
+import {useNavigation} from '@react-navigation/native';
+import strings from '../../utils/strings/strings';
 
 const ArtistDetail: FC<AtristDetailPropsTypes> = ({
+  artistDetail,
   image,
   heading,
   time,
@@ -13,17 +17,39 @@ const ArtistDetail: FC<AtristDetailPropsTypes> = ({
   desc,
   address,
 }) => {
+  const navigation = useNavigation();
+
+  const imageUrl = console.log(Utility.getImageUrl(artistDetail?.image));
   return (
-    <View style={styles.container}>
+    <TouchableOpacity
+      style={styles.container}
+      onPress={() => navigation.navigate(strings.artistdetailscreen)}>
+      {/* <Image source={{uri: Utility.getImageUrl(artistDetail?.image)}} /> */}
       <Image style={styles.heart} source={Images.heart2} />
-      <Image source={image} />
+      <Image
+        source={imageUrl ? {uri: imageUrl} : Images.img8}
+        // borderRadius={16}
+        borderTopLeftRadius={16}
+        borderTopRightRadius={16}
+        style={{width: '100%'}}
+      />
       <View style={styles.rating}>
         <CustomText text={'4.8 (1k+ مراجعة)'} />
         <Image style={{marginLeft: 3}} source={Images.star} />
       </View>
       <View style={{paddingHorizontal: 10}}>
-        <CustomText style={{marginTop: 9}} size={20} text={heading} />
-        <CustomText color={Colors.lightGrey} size={18} text={desc} />
+        <CustomText
+          style={{marginTop: 9}}
+          size={20}
+          text={artistDetail?.name}
+          style={{textAlign: 'left'}}
+        />
+        <CustomText
+          color={Colors.lightGrey}
+          size={18}
+          text={artistDetail?.services}
+          style={{textAlign: 'left'}}
+        />
         <View
           style={{
             borderTopWidth: 1,
@@ -34,17 +60,25 @@ const ArtistDetail: FC<AtristDetailPropsTypes> = ({
         <View>
           <View style={styles.footer}>
             <Image source={Images.location} />
-            <CustomText color={Colors.lightGrey} size={16} text={address} />
+            <CustomText
+              color={Colors.lightGrey}
+              size={16}
+              text={artistDetail?.address}
+            />
           </View>
           <View style={styles.footer}>
             <Image source={Images.clock} />
-            <CustomText color={Colors.lightGrey} size={15} text={distance} />
+            <CustomText color={Colors.lightGrey} size={15} text={'مون صن '} />
             <View style={styles.dot} />
-            <CustomText color={Colors.lightGrey} size={15} text={time} />
+            <CustomText
+              color={Colors.lightGrey}
+              size={15}
+              text={'مون صن | 11 صباحًا - 11 مساءً'}
+            />
           </View>
         </View>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 };
 
@@ -83,6 +117,8 @@ const styles = StyleSheet.create({
     borderColor: Colors.grey100,
     paddingBottom: 7,
     backgroundColor: Colors.white,
+    // backgroundColor: 'red',
+    width: '100%',
   },
   heart: {position: 'absolute', zIndex: 1, left: 10, top: 10},
 });

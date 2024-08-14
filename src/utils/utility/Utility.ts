@@ -346,13 +346,12 @@ const Utility = {
   // },
   myServicesDataFormat: function (data: any) {
     return data.reduce((acc, item) => {
-      // Check if the service already exists in the accumulator
       if (!acc[item.service]) {
-        acc[item.service] = []; // Initialize an array for this service
+        acc[item.service] = [];
       }
-      acc[item.service].push(item); // Add item to the array for this service
+      acc[item.service].push(item);
       return acc;
-    }, {}); // Start with an empty object
+    }, {});
   },
   getImageUrl: function (imagePath: string) {
     return 'http://vdz.wic.temporary.site//' + imagePath;

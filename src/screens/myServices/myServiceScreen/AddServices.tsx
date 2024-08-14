@@ -20,7 +20,7 @@ const AddServices = ({
   navigation?: any;
   route?: Object;
 }) => {
-  const {categoryType} = route?.params;
+  const {itemData} = route?.params;
 
   // API initialization
   const [artistAddServices, {isLoading}] = useArtistAddServicesMutation();
@@ -32,7 +32,7 @@ const AddServices = ({
   const [durations, setDurations] = useState('');
   const AddServiceApi = () => {
     const formData = new FormData();
-    formData.append('service', categoryType);
+    formData.append('service', itemData?.id);
     formData.append('rates', rate);
     formData.append('duration', durations);
     formData.append('title', title);

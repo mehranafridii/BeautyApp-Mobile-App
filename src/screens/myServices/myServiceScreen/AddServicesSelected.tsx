@@ -34,7 +34,7 @@ const AddServicesSelected = () => {
           numColumns={3}
           columnWrapperStyle={styles.columnStyle}
           renderItem={({item}) => (
-            <CircleImage text={item?.category} image={item?.image} />
+            <CircleImage itemData={item} image={item?.image} />
           )}
         />
       </View>

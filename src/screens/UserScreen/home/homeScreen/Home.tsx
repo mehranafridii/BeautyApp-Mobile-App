@@ -83,7 +83,7 @@ const UserHome = () => {
   };
   const renderItemServices = (item: any, index: number) => {
     return (
-      <CircleImage text={item?.category} image={item?.image} />
+      <CircleImage itemData={item} image={item?.image} />
       // <TouchableOpacity
       //   onPress={() => navigation.navigate(strings.onlinestorescreen)}
       //   activeOpacity={strings.buttonopacity}

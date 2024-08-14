@@ -8,7 +8,15 @@ import Utility from '../../utils/utility/Utility';
 import {useSelector} from 'react-redux';
 import {getUserType} from '../../Redux/Reducers/UserTypeSlice';
 
-const CircleImage = ({text, image}: {text?: any; image?: any}) => {
+const CircleImage = ({
+  itemData,
+  text,
+  image,
+}: {
+  itemData: Object;
+  text?: any;
+  image?: any;
+}) => {
   const userType = useSelector(getUserType);
   const navigation: any = useNavigation();
   const _image = Utility.getImageUrl(image);
@@ -16,15 +24,17 @@ const CircleImage = ({text, image}: {text?: any; image?: any}) => {
 
   const handlePressAction = () => {
     userType === 'business'
-      ? navigation.navigate(strings.addServices, {categoryType: text})
-      : navigation.navigate(strings.onlinestorescreen, {categoryType: text});
+      ? navigation.navigate(strings.addServices, {
+          itemData: itemData,
+        })
+      : navigation.navigate(strings.onlinestorescreen, {itemData: itemData});
   };
   return (
     <TouchableOpacity
       onPress={() => handlePressAction()}
       style={styles.containerStyle}>
       <Image source={{uri: _image}} width={86} height={86} borderRadius={100} />
-      <CustomText text={text} style={{margin: 12}} />
+      <CustomText text={itemData?.category} style={{margin: 12}} />
     </TouchableOpacity>
   );
 };

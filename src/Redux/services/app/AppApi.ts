@@ -139,6 +139,15 @@ const onBoardScreen3 = () => {
     },
   };
 };
+const getArtistsForService = (id: string) => {
+  return {
+    url: `${Endpoints.artistServices}${id}`,
+    method: apiMethods.get,
+    headers: {
+      'Content-type': 'application/json',
+    },
+  };
+};
 ////
 export const AppApi = baseApi.injectEndpoints({
   endpoints: build => ({
@@ -189,6 +198,9 @@ export const AppApi = baseApi.injectEndpoints({
     getCategoryList: build.query({
       query: getCategoryList,
     }),
+    getArtistsForService: build.query({
+      query: getArtistsForService,
+    }),
   }),
 });
 
@@ -212,4 +224,6 @@ export const {
   useLazyArtistGetMyServicesQuery,
   //
   useLazyGetCategoryListQuery,
+  //
+  useLazyGetArtistsForServiceQuery,
 } = AppApi;

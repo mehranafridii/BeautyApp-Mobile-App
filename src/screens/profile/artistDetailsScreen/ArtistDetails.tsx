@@ -350,6 +350,7 @@ const ArtistDetails = () => {
             />
             <Image style={styles.instaImage} source={Images.insta} />
           </View>
+          {/* <Image style={styles.profilePicStyle} source={Images.profilepic} /> */}
           <View style={styles.artistContainer}>
             <CustomText
               color={Colors.lightGrey}
@@ -594,6 +595,7 @@ const styles = StyleSheet.create({
     borderRadius: 99,
     zIndex: 2,
     marginTop: '13%',
+    backgroundColor: 'pink',
   },
   editContainer: {
     backgroundColor: Colors.white,
