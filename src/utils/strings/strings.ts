@@ -145,6 +145,7 @@ export default {
   logout: 'تسجيل خروج',
   profilescreen: 'Profile',
   artistdetailscreen: 'ArtistDetails',
+  artistDetailsUser: 'ArtistDetailsUser',
   addServices: 'AddServices',
   Services: 'Services',
   MyService: 'MyService',
@@ -399,7 +400,8 @@ export default {
     'قد يقوم الفنان بإلغاء حجزك بسبب \n ساعة الخدمات على وشك الانتهاء',
   oneselect: 'تم اختيار خدمة واحدة',
   workinghour: 'ساعات العمل',
-  bookapointment_screen: 'BookApointment',
+  bookapointment_screen: 'BookAppointment',
+  bookAppointment_screen: 'BookAppointment',
   bookapoint: 'موعد الكتاب',
   forcancelation:
     'للإلغاء، يجب أن يفرض أي حجز على العميل وديعة تتراوح بين 20-50% من التكلفة الإجمالية',
