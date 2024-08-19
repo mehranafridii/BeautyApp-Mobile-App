@@ -16,7 +16,7 @@ import {screenWidth} from '../../../utils/dimensions';
 import {daysData, timeData} from '../../../utils/dummyData';
 import CustomButton from '../../../components/button/CustomButton';
 
-const BookApointment = () => {
+const BookApointment = ({navigation}) => {
   return (
     <View style={styles.container}>
       <Header heading={strings.bookapoint} />
@@ -25,6 +25,7 @@ const BookApointment = () => {
         style={{marginLeft: 20, flex: 1}}>
         <CustomText
           color={Colors.lightGrey}
+          style={{textAlign: 'left'}}
           size={15}
           text={strings.bookapoint}
         />
@@ -34,15 +35,19 @@ const BookApointment = () => {
             size={16}
             color={Colors.lightGrey}
             text={strings.forcancelation}
-            style={{width: screenWidth / 1.3}}
+            style={{width: screenWidth / 1.3, textAlign: 'left'}}
           />
         </View>
-        <CustomText size={19} text={strings.serviceRequired} />
+        <CustomText
+          size={19}
+          text={strings.serviceRequired}
+          style={{textAlign: 'left'}}
+        />
         <CustomText
           size={15}
           color={Colors.lightGrey}
           text={strings.hair_Cut}
-          style={{marginVertical: 5}}
+          style={{marginVertical: 5, textAlign: 'left'}}
         />
         <View style={styles.selectedView}>
           <Image source={Images.crossRed} />
@@ -62,7 +67,11 @@ const BookApointment = () => {
           <Image style={styles.icon} source={Images.duration} />
           <CustomText size={16} text={strings.faux_hawk} />
         </View>
-        <CustomText size={19} text={strings.youraddress} />
+        <CustomText
+          size={19}
+          text={strings.youraddress}
+          style={{textAlign: 'left'}}
+        />
         <View
           style={[
             styles.selectedView,
@@ -74,6 +83,7 @@ const BookApointment = () => {
               numberOfLines={1}
               size={15}
               text={strings.address_Dummy}
+              // style={{textAlign: 'left'}}
             />
             <CustomText
               style={{textAlign: 'right'}}
@@ -90,27 +100,28 @@ const BookApointment = () => {
           text={strings.changeaddress}
         />
         <CustomText
-          style={{marginTop: 20, marginBottom: 10}}
+          style={{marginTop: 20, marginBottom: 10, textAlign: 'left'}}
           size={21}
           text={strings.day}
         />
         <FlatList
           data={daysData}
           horizontal
+          contentContainerStyle={{columnGap: 8}}
           showsHorizontalScrollIndicator={false}
           renderItem={({item, index}) => {
             return (
               <TouchableOpacity key={index} style={styles.days}>
-                <CustomText size={16} text={item?.day} />
+                <CustomText size={12} text={item?.day} />
                 <View>
-                  <CustomText size={18} text={item?.date} />
+                  <CustomText size={15} text={item?.date} />
                 </View>
               </TouchableOpacity>
             );
           }}
         />
         <CustomText
-          style={{marginTop: 20, marginBottom: 10}}
+          style={{marginTop: 20, marginBottom: 10, textAlign: 'left'}}
           size={21}
           text={strings.time}
         />
@@ -128,47 +139,51 @@ const BookApointment = () => {
         />
         <View style={{marginRight: 20, marginVertical: 20}}>
           <View style={styles.flexbox}>
-            <CustomText size={21} text={strings.travelcost} />
+            <CustomText size={18} text={strings.travelcost} />
             <View style={styles.flex}>
               <Image
                 style={[styles.icon, {marginRight: 5}]}
                 source={Images.dollar}
               />
-              <CustomText size={21} text={strings.riyal28} />
+              <CustomText size={15} text={strings.riyal28} />
             </View>
           </View>
           <View style={styles.flexbox}>
-            <CustomText size={21} text={strings.total_Duration} />
+            <CustomText size={18} text={strings.total_Duration} />
             <View style={styles.flex}>
               <Image
                 style={[styles.icon, {marginRight: 5}]}
                 source={Images.duration}
               />
-              <CustomText size={21} text={strings.hour} />
+              <CustomText size={15} text={strings.hour} />
             </View>
           </View>
           <View style={styles.flexbox}>
-            <CustomText size={21} text={strings.total_Cost} />
+            <CustomText size={18} text={strings.total_Cost} />
             <View style={styles.flex}>
               <Image
                 style={[styles.icon, {marginRight: 5}]}
                 source={Images.dollar}
               />
-              <CustomText size={21} text={strings.riyal28} />
+              <CustomText size={15} text={strings.riyal28} />
             </View>
           </View>
-          <View style={{flexDirection: 'row'}}>
-            <Image style={{marginRight: 7}} source={Images.info} />
+          <View style={{flexDirection: 'row', marginTop: 10}}>
+            <Image
+              style={{marginRight: 7, marginTop: 10}}
+              source={Images.info}
+            />
             <CustomText
               size={15}
               color={Colors.lightGrey}
               text={strings.cancelbooking}
+              style={{textAlign: 'left'}}
             />
           </View>
         </View>
         <View style={styles.button}>
           <CustomButton
-            // onPress={() => navigation.navigate(strings.bookapointment_screen)}
+            onPress={() => navigation.goBack()}
             text={strings.bookapointment}
           />
         </View>
@@ -199,18 +214,19 @@ const styles = StyleSheet.create({
   days: {
     borderWidth: 1,
     borderColor: Colors.grey100,
-    borderRadius: 99,
+    borderRadius: 100,
     alignItems: 'center',
-    paddingHorizontal: 25,
-    paddingVertical: 6,
-    marginRight: 8,
+    paddingHorizontal: 32,
+    paddingVertical: 2,
   },
   time: {
     borderWidth: 1,
     borderColor: Colors.grey100,
-    borderRadius: 99,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 100,
     paddingHorizontal: 25,
-    paddingVertical: 12,
+    paddingVertical: 5,
     marginRight: 8,
   },
   infoContainer: {flexDirection: 'row', marginTop: 20, marginBottom: 20},
