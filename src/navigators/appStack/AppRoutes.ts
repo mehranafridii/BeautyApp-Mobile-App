@@ -32,6 +32,7 @@ import BottomStack from '../bottomStack/BottomStack';
 import {getUserType} from '../../Redux/Reducers/UserTypeSlice';
 import UserBottomStack from '../UserBottomStack/UserBottomStack';
 import BookApointment from '../../screens/UserScreen/artistDetailsScreen/BookApointment';
+import ArtistDetailsUser from '../../screens/UserScreen/artistDetailsScreen/ArtistDetails';
 
 // Get user type for stacks management
 
@@ -44,6 +45,11 @@ export const appRoutes = [
     name: 'ArtistDetails',
     component: ArtistDetails,
   },
+  {
+    name: 'ArtistDetailsUser',
+    component: ArtistDetailsUser,
+  },
+
   {
     name: 'Profile',
     component: Profile,
@@ -147,7 +153,7 @@ export const appRoutes = [
     component: OnlineStoresDetail,
   },
   {
-    name: 'BookApointment',
+    name: 'BookAppointment',
     component: BookApointment,
   },
 ];
