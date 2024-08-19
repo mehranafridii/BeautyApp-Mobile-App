@@ -7,6 +7,8 @@ import {Colors} from '../../utils/colors/colors';
 import Utility from '../../utils/utility/Utility';
 import {useNavigation} from '@react-navigation/native';
 import strings from '../../utils/strings/strings';
+import {useSelector} from 'react-redux';
+import {getUserType} from '../../Redux/Reducers/UserTypeSlice';
 
 const ArtistDetail: FC<AtristDetailPropsTypes> = ({
   artistDetail,
@@ -18,12 +20,16 @@ const ArtistDetail: FC<AtristDetailPropsTypes> = ({
   address,
 }) => {
   const navigation = useNavigation();
-
+  const userType = useSelector(getUserType);
   const imageUrl = console.log(Utility.getImageUrl(artistDetail?.image));
   return (
     <TouchableOpacity
       style={styles.container}
-      onPress={() => navigation.navigate(strings.artistdetailscreen)}>
+      onPress={() => {
+        userType === 'business'
+          ? navigation.navigate(strings.artistdetailscreen)
+          : navigation.navigate(strings.artistDetailsUser);
+      }}>
       {/* <Image source={{uri: Utility.getImageUrl(artistDetail?.image)}} /> */}
       <Image style={styles.heart} source={Images.heart2} />
       <Image
