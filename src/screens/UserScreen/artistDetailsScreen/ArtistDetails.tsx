@@ -49,7 +49,7 @@ const ArtistDetailsUser = () => {
   const FirstRoute = () => (
     <View style={{flex: 1}}>
       <ScrollView
-        style={styles.flexContainer}
+        contentContainerStyle={styles.flexContainer}
         showsVerticalScrollIndicator={false}>
         <View style={styles.flexContainer}>
           <View style={styles.alserviceContainer}>
@@ -108,7 +108,7 @@ const ArtistDetailsUser = () => {
             ) : null}
             <CustomeType
               textName={strings.hair_Cut}
-              onPress={() => bottomSheetRef.current?.open()}
+              onPress={() => bottomSheetRef?.current?.open()}
               text={strings?.type20}
             />
             <CustomeType
@@ -125,24 +125,28 @@ const ArtistDetailsUser = () => {
             />
           </View>
         </View>
-      </ScrollView>
-      <View style={styles.bottombtn}>
-        <View style={styles.selected}>
-          <View style={styles.flex}>
-            <Image style={{marginRight: 4}} source={Images.duration} />
-            <CustomText
-              color={Colors.lightGrey}
-              size={13}
-              text={strings.timeduration}
-            />
+
+        <View style={styles.bottombtn}>
+          <View style={styles.selected}>
+            <View style={styles.flex}>
+              <Image style={{marginRight: 4}} source={Images.duration} />
+              <CustomText
+                color={Colors.lightGrey}
+                size={13}
+                text={strings.timeduration}
+              />
+            </View>
+            <View style={styles.flex}>
+              <Image source={Images.dollar} />
+              <CustomText size={14} fontWeight="bold" text={strings.riyal28} />
+            </View>
           </View>
-          <View style={styles.flex}>
-            <Image source={Images.dollar} />
-            <CustomText size={14} fontWeight="bold" text={strings.riyal28} />
-          </View>
+          <CustomButton
+            text={strings.bookapointment}
+            onPress={() => navigation.navigate(strings.bookAppointment_screen)}
+          />
         </View>
-        <CustomButton text={strings.bookapointment} />
-      </View>
+      </ScrollView>
     </View>
   );
   const SecondRoute = () => (
@@ -310,209 +314,224 @@ const ArtistDetailsUser = () => {
   );
   return (
     <View style={styles.container}>
-      <ImageBackground style={styles.bgImageStyle} source={Images.profilebg}>
-        <TouchableOpacity
-          style={styles.backImage}
-          activeOpacity={0.7}
-          onPress={() => navigation.goBack()}>
-          <Image source={Images.back} />
-        </TouchableOpacity>
-        <TouchableOpacity
+      <ScrollView contentContainerStyle={{flexGrow: 1}}>
+        <ImageBackground style={styles.bgImageStyle} source={Images.profilebg}>
+          <TouchableOpacity
+            style={styles.backImage}
+            activeOpacity={0.7}
+            onPress={() => navigation.goBack()}>
+            <Image source={Images.back} />
+          </TouchableOpacity>
+
+          {/* <TouchableOpacity
           activeOpacity={strings.buttonopacity}
           style={styles.editContainer}>
           <CustomText size={14} color={Colors.lightGrey} text={strings.edit} />
           <Image style={{marginLeft: 4}} source={Images.camera} />
-        </TouchableOpacity>
-        <View style={styles.editView}>
+        </TouchableOpacity> */}
+          {/* <View style={styles.editView}>
           <Image style={styles.editImage} source={Images.edit} />
           <Image style={styles.profilePicStyle} source={Images.profilepic} />
-        </View>
-      </ImageBackground>
-      <View style={styles.topContainer}>
-        <View style={styles.iconMainContainer}>
-          <View style={styles.artistContainer}>
-            <CustomText
-              color={Colors.lightGrey}
-              size={14}
-              text={'@artistuser'}
-            />
-            <Image style={styles.instaImage} source={Images.insta} />
-          </View>
-          <View style={styles.artistContainer}>
-            <CustomText
-              color={Colors.lightGrey}
-              size={14}
-              text={'@artistuser'}
-            />
-            <Image style={styles.instaImage} source={Images.facbook} />
-          </View>
-        </View>
-        <View style={styles.jennyContainer}>
-          <CustomText size={24} text={strings.jenny} />
-          <View style={styles.artistContainer}>
-            <CustomText
-              color={Colors.lightGrey}
-              size={16}
-              text={strings.jobdone}
-            />
-            <Text style={styles.jobCancleLine}> | </Text>
-            <CustomText
-              color={Colors.lightGrey}
-              size={16}
-              text={strings.jobcancel}
-            />
-          </View>
-          <View style={styles.artistContainer}>
-            <Image style={styles.clockImage} source={Images.clock} />
-            <CustomText
-              color={Colors.lightGrey}
-              size={15}
-              text={strings.min15}
-            />
-            <View style={styles.dot} />
-            <CustomText
-              color={Colors.lightGrey}
-              size={15}
-              text={strings.km15}
-            />
-            <View style={styles.dot} />
-            <CustomText
-              color={Colors.lightGrey}
-              size={15}
-              text={strings.pm11}
-            />
-            <CustomText
-              color={Colors.lightGrey}
-              size={15}
-              text={strings.am11}
-            />
-            <Text style={styles.monsunText}> | </Text>
-            <CustomText
-              color={Colors.lightGrey}
-              size={15}
-              text={strings.monsun}
-            />
-          </View>
-          <View style={styles.runningContainer}>
-            <Image style={styles.runningImage} source={Images.running} />
-            <CustomText
-              color={Colors.lightGrey}
-              size={15}
-              text={strings.travelingcost}
-            />
-          </View>
-          <View style={styles.reviewContainer}>
-            <CustomText fontWeight="600" size={15} text={strings.review} />
-            <Image style={styles.startImage} source={Images.star} />
-
-            <CustomText fontWeight="600" size={15} text={strings.favorite} />
-            <Image style={styles.heartImg} source={Images.heart} />
-          </View>
-        </View>
-        <TabView
-          navigationState={{index, routes}}
-          renderScene={renderScene}
-          onIndexChange={setIndex}
-          renderTabBar={renderTabBar}
-          initialLayout={{width: screenWidth}}
-          style={styles.tabViewStyle}
-        />
-        <RBSheet
-          ref={bottomSheetRef}
-          height={screenHeight / 1.1}
-          openDuration={250}
-          closeOnDragDown={true}
-          customStyles={{
-            draggableIcon: {
-              backgroundColor: Colors.grey100,
-              width: 123,
-            },
-            container: {
-              borderTopLeftRadius: 25,
-              borderTopRightRadius: 25,
-            },
-          }}>
-          <View style={styles.contentContainer}>
-            <CustomText
-              style={styles.alignText}
-              size={22}
-              text={strings?.selectHairCut}
-            />
-            <TouchableOpacity
-              activeOpacity={strings.buttonopacity}
-              onPress={() => bottomSheetRef.current?.close()}
-              style={styles.cross}>
-              <Image source={Images.crossBlack} />
-            </TouchableOpacity>
-            <View style={styles.divider} />
-            <FlatList
-              showsVerticalScrollIndicator={false}
-              data={hairCutData}
-              contentContainerStyle={{flexGrow: 1}}
-              renderItem={({item, index}) => {
-                return (
-                  <TouchableOpacity
-                    onPress={() => handleHairCut(item)}
-                    key={index}
-                    style={{marginVertical: 6}}>
-                    <HairCutCard
-                      heading={item?.heading}
-                      duration={item?.duration}
-                      price={item?.price}
-                      icon={
-                        selectedItem === item ? Images.crossRed : Images?.plus
-                      }
-                      borderColor={
-                        selectedItem === item ? Colors.primary : Colors.grey100
-                      }
-                      bgColor={
-                        selectedItem === item ? Colors.lightpink : Colors.white
-                      }
-                    />
-                  </TouchableOpacity>
-                );
-              }}
-            />
-            <View style={{height: 180}} />
-            <View style={styles.bottomContainer}>
-              <View style={styles.bottomInput}>
-                <View style={styles.flex}>
-                  <Image source={Images.duration} />
-                  <CustomText
-                    color={Colors.lightGrey}
-                    size={13}
-                    text={strings.timeduration}
-                  />
-                </View>
-                <View style={styles.flex}>
-                  <Image source={Images.dollar} />
-                  <CustomText
-                    size={14}
-                    fontWeight="bold"
-                    text={strings.riyal28}
-                  />
-                </View>
-              </View>
-              <View style={{flexDirection: 'row'}}>
-                <Image style={{marginRight: 7}} source={Images.info} />
-                <CustomText
-                  size={13}
-                  color={Colors.lightGrey}
-                  text={strings.cancelbooking}
-                />
-              </View>
-
-              <FooterTwoButton
-                marginTop={15}
-                onPressRight={() => bottomSheetRef.current?.close()}
-                onPressLeft={() => bottomSheetRef.current?.close()}
-                textLeft={strings.cancle}
-                textRight={strings.addhours}
+        </View> */}
+        </ImageBackground>
+        <View style={styles.topContainer}>
+          {/* Top */}
+          <View style={styles.iconMainContainer}>
+            <View style={styles.artistContainer}>
+              <CustomText
+                color={Colors.lightGrey}
+                size={14}
+                text={'@artistuser'}
+              />
+              <Image style={styles.instaImage} source={Images.insta} />
+            </View>
+            <View style={styles.avatarContainer}>
+              <Image
+                style={styles.profilePicStyle}
+                source={Images.profilepic}
               />
             </View>
+            <View style={styles.artistContainer}>
+              <CustomText
+                color={Colors.lightGrey}
+                size={14}
+                text={'@artistuser'}
+              />
+              <Image style={styles.instaImage} source={Images.facbook} />
+            </View>
           </View>
-        </RBSheet>
-      </View>
+          {/* TopEnd */}
+          <View style={styles.jennyContainer}>
+            <CustomText size={24} text={strings.jenny} />
+            <View style={styles.artistContainer}>
+              <CustomText
+                color={Colors.lightGrey}
+                size={16}
+                text={strings.jobdone}
+              />
+              <Text style={styles.jobCancleLine}> | </Text>
+              <CustomText
+                color={Colors.lightGrey}
+                size={16}
+                text={strings.jobcancel}
+              />
+            </View>
+            <View style={styles.artistContainer}>
+              <Image style={styles.clockImage} source={Images.clock} />
+              <CustomText
+                color={Colors.lightGrey}
+                size={15}
+                text={strings.min15}
+              />
+              <View style={styles.dot} />
+              <CustomText
+                color={Colors.lightGrey}
+                size={15}
+                text={strings.km15}
+              />
+              <View style={styles.dot} />
+              <CustomText
+                color={Colors.lightGrey}
+                size={15}
+                text={strings.pm11}
+              />
+              <CustomText
+                color={Colors.lightGrey}
+                size={15}
+                text={strings.am11}
+              />
+              <Text style={styles.monsunText}> | </Text>
+              <CustomText
+                color={Colors.lightGrey}
+                size={15}
+                text={strings.monsun}
+              />
+            </View>
+            <View style={styles.runningContainer}>
+              <Image style={styles.runningImage} source={Images.running} />
+              <CustomText
+                color={Colors.lightGrey}
+                size={15}
+                text={strings.travelingcost}
+              />
+            </View>
+            <View style={styles.reviewContainer}>
+              <CustomText fontWeight="600" size={15} text={strings.review} />
+              <Image style={styles.startImage} source={Images.star} />
+
+              <CustomText fontWeight="600" size={15} text={strings.favorite} />
+              <Image style={styles.heartImg} source={Images.heart} />
+            </View>
+          </View>
+          <TabView
+            navigationState={{index, routes}}
+            renderScene={renderScene}
+            onIndexChange={setIndex}
+            renderTabBar={renderTabBar}
+            initialLayout={{width: screenWidth}}
+            style={styles.tabViewStyle}
+          />
+          <RBSheet
+            ref={bottomSheetRef}
+            height={screenHeight / 1.1}
+            openDuration={250}
+            closeOnDragDown={true}
+            customStyles={{
+              draggableIcon: {
+                backgroundColor: Colors.grey100,
+                width: 123,
+              },
+              container: {
+                borderTopLeftRadius: 25,
+                borderTopRightRadius: 25,
+              },
+            }}>
+            <View style={styles.contentContainer}>
+              <CustomText
+                style={styles.alignText}
+                size={22}
+                text={strings?.selectHairCut}
+              />
+              <TouchableOpacity
+                activeOpacity={strings.buttonopacity}
+                onPress={() => bottomSheetRef.current?.close()}
+                style={styles.cross}>
+                <Image source={Images.crossBlack} />
+              </TouchableOpacity>
+              <View style={styles.divider} />
+              <FlatList
+                showsVerticalScrollIndicator={false}
+                data={hairCutData}
+                contentContainerStyle={{flexGrow: 1}}
+                renderItem={({item, index}) => {
+                  return (
+                    <TouchableOpacity
+                      onPress={() => handleHairCut(item)}
+                      key={index}
+                      style={{marginVertical: 6}}>
+                      <HairCutCard
+                        heading={item?.heading}
+                        duration={item?.duration}
+                        price={item?.price}
+                        icon={
+                          selectedItem === item ? Images.crossRed : Images?.plus
+                        }
+                        borderColor={
+                          selectedItem === item
+                            ? Colors.primary
+                            : Colors.grey100
+                        }
+                        bgColor={
+                          selectedItem === item
+                            ? Colors.lightpink
+                            : Colors.white
+                        }
+                      />
+                    </TouchableOpacity>
+                  );
+                }}
+              />
+              <View style={{height: 180}} />
+              <View style={styles.bottomContainer}>
+                <View style={styles.bottomInput}>
+                  <View style={styles.flex}>
+                    <Image source={Images.duration} />
+                    <CustomText
+                      color={Colors.lightGrey}
+                      size={13}
+                      text={strings.timeduration}
+                    />
+                  </View>
+                  <View style={styles.flex}>
+                    <Image source={Images.dollar} />
+                    <CustomText
+                      size={14}
+                      fontWeight="bold"
+                      text={strings.riyal28}
+                    />
+                  </View>
+                </View>
+                <View style={{flexDirection: 'row'}}>
+                  <Image style={{marginRight: 7}} source={Images.info} />
+                  <CustomText
+                    size={13}
+                    color={Colors.lightGrey}
+                    text={strings.cancelbooking}
+                  />
+                </View>
+
+                <FooterTwoButton
+                  marginTop={15}
+                  onPressRight={() => bottomSheetRef.current?.close()}
+                  onPressLeft={() => bottomSheetRef.current?.close()}
+                  textLeft={strings.cancle}
+                  textRight={strings.addhours}
+                />
+              </View>
+            </View>
+          </RBSheet>
+        </View>
+      </ScrollView>
     </View>
   );
 };
@@ -521,7 +540,7 @@ export default ArtistDetailsUser;
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    flexGrow: 1,
     backgroundColor: Colors.white,
   },
   dot: {
@@ -561,22 +580,36 @@ const styles = StyleSheet.create({
   reviewContainer: {flexDirection: 'row', alignItems: 'center', marginTop: 5},
   runningContainer: {flexDirection: 'row', alignItems: 'center'},
   runningImage: {height: 20, width: 20, marginRight: 3},
-  profilePicStyle: {
-    width: 112,
-    height: 112,
-  },
+
   monsunText: {fontSize: 20, color: Colors.lightGrey},
   jobCancleLine: {fontSize: 24, color: Colors.lightGrey},
   jennyContainer: {marginTop: '8%', alignItems: 'center'},
   clockImage: {height: 20, width: 20, marginRight: 3},
   instaImage: {marginLeft: 5, height: 30, width: 30},
-  artistContainer: {flexDirection: 'row', alignItems: 'center'},
+  artistContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  avatarContainer: {
+    position: 'absolute',
+    backgroundColor: 'white',
+    left: '38%',
+    bottom: 0,
+    borderRadius: 100,
+    padding: 6,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  profilePicStyle: {
+    width: 112,
+    height: 112,
+  },
   iconMainContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingHorizontal: 15,
-    paddingTop: 10,
+    paddingVertical: 10,
   },
   topContainer: {
     flex: 1,
@@ -637,7 +670,7 @@ const styles = StyleSheet.create({
   bgImage: {height: 180, width: 180, margin: 4},
   profileCardContainer: {marginVertical: 10},
   paddingView: {padding: 15},
-  flexContainer: {flex: 1},
+  flexContainer: {flexGrow: 1},
   sheetContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
