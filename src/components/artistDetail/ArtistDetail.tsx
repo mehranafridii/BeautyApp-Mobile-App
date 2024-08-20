@@ -19,6 +19,7 @@ const ArtistDetail: FC<AtristDetailPropsTypes> = ({
   desc,
   address,
 }) => {
+  console.log(artistDetail, 'sdjfkdsjfkdsj');
   const navigation = useNavigation();
   const userType = useSelector(getUserType);
   const imageUrl = console.log(Utility.getImageUrl(artistDetail?.image));
@@ -28,12 +29,14 @@ const ArtistDetail: FC<AtristDetailPropsTypes> = ({
       onPress={() => {
         userType === 'business'
           ? navigation.navigate(strings.artistdetailscreen)
-          : navigation.navigate(strings.artistDetailsUser);
+          : navigation.navigate(strings.artistDetailsUser, {
+              artistDetail: artistDetail,
+            });
       }}>
       {/* <Image source={{uri: Utility.getImageUrl(artistDetail?.image)}} /> */}
       <Image style={styles.heart} source={Images.heart2} />
       <Image
-        source={imageUrl ? {uri: imageUrl} : Images.img8}
+        source={imageUrl ? {uri: imageUrl} : Images.img3}
         // borderRadius={16}
         borderTopLeftRadius={16}
         borderTopRightRadius={16}
