@@ -9,7 +9,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, {useRef, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {Colors} from '../../../utils/colors/colors';
 import {Images} from '../../../assets/images';
 import {screenHeight, screenWidth} from '../../../utils/dimensions';
@@ -31,10 +31,58 @@ import ProfileButtons from '../../../components/ProfileButtons/ProfileButtons';
 import IconWithText from '../../../components/IconWithText/IconWithText';
 import CustomButton from '../../../components/button/CustomButton';
 import HairCutCard from '../../../components/hairCutCard/HairCutCard';
+import {useLazyGetArtistsDetailsQuery} from '../../../Redux/services/app/AppApi';
+import Utility from '../../../utils/utility/Utility';
 
-const ArtistDetailsUser = () => {
+const ArtistDetailsUser = ({
+  navigation,
+  route,
+}: {
+  navigation: any;
+  route: Object;
+}) => {
+  const {artistDetail} = route?.params;
+  // API initialisation
+  //API initialization
+  const [getArtistDetails, {data: artistDetailData}] =
+    useLazyGetArtistsDetailsQuery();
+  // States
+  const [artistList, setArtistList] = useState([]);
+  console.log(artistDetailData, 'artistDetailData');
+  useEffect(() => {
+    // itemData?.id && getArtist(itemData?.id);
+    artistDetail?.id && GetArtistDetails(artistDetail?.id);
+  }, []);
+  const GetArtistDetails = (serviceId: string) => {
+    getArtistDetails(serviceId)
+      .unwrap()
+      ?.then(response => {
+        const {data} = response;
+
+        // const getArtistsList = data?.reduce((acc, item) => {
+        //   if (item?.artist) {
+        //     const existingArtist = acc?.find(
+        //       artist => artist?.id === item?.artist?.id,
+        //     );
+        //     if (existingArtist === undefined) {
+        //       acc?.push(item?.artist);
+        //     }
+        //   }
+        //   return acc;
+        // }, []);
+        // setArtistList(getArtistsList);
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  };
+  // Data
+  const userImage = artistDetailData?.profile?.image
+    ? Utility.getImageUrl(artistDetailData?.profile?.image)
+    : null;
+
   const bottomSheetRef = useRef<RBSheet>(null);
-  const navigation: any = useNavigation();
+  // const navigation: any = useNavigation();
   const [index, setIndex] = useState(0);
   const [selectedItem, setSelectedItem] = useState<any>();
   const [routes] = useState([
@@ -152,21 +200,31 @@ const ArtistDetailsUser = () => {
   const SecondRoute = () => (
     <ScrollView showsVerticalScrollIndicator={false}>
       <View style={styles.photoContainer}>
-        <CustomText size={20} text={strings.photos} />
+        <CustomText
+          size={20}
+          text={`${strings.photosLength} (${artistDetailData?.gallary?.length})`}
+          style={{textAlign: 'left'}}
+        />
       </View>
       <FlatList
-        data={photosData}
+        data={artistDetailData?.gallary}
         numColumns={2}
         scrollEnabled={false}
         renderItem={({item, index}) => {
+          const picture = Utility.getImageUrl(item?.image);
           return (
             <ImageBackground
               key={index}
               style={styles.bgImage}
-              source={item.img}>
+              // source={picture ? {uri: picture} : item.img}
+              source={Images.img1}>
               {item?.category && (
                 <View style={styles.categoryContainer}>
-                  <CustomText color={Colors.white} text={item?.category} />
+                  <CustomText
+                    color={Colors.white}
+                    text={item?.category}
+                    style={{textAlign: 'left'}}
+                  />
                 </View>
               )}
             </ImageBackground>
@@ -255,27 +313,28 @@ const ArtistDetailsUser = () => {
         <CustomText size={20} text={strings.aboutus} />
       </View>
       <CustomText
-        text={strings.lorium_Text_Small}
+        text={artistDetailData?.aboutus?.description}
         color={Colors.lightGrey}
-        style={{marginHorizontal: 10}}
+        style={{marginHorizontal: 10, textAlign: 'left'}}
+        numberOfLines={5}
       />
       <CustomText
-        style={{paddingRight: 10}}
+        style={{paddingRight: 10, textAlign: 'left'}}
         size={18}
         text={strings.workinghour}
       />
 
       <View style={styles.divider2} />
-      {weekdays?.map((item, index) => {
+      {artistDetailData?.workinghours?.map((item, index) => {
         return (
           <View key={index} style={styles.sheetContainer4}>
-            <CustomText
-              color={Colors.lightGrey}
-              size={16}
-              text={item?.weekday}
-            />
+            <CustomText color={Colors.lightGrey} size={16} text={item?.date} />
             <View style={styles.flex}>
-              <CustomText size={14} fontWeight="400" text={item?.time} />
+              <CustomText
+                size={14}
+                fontWeight="400"
+                text={`${item?.starttime}-${item?.endtime}`}
+              />
             </View>
           </View>
         );
@@ -286,11 +345,27 @@ const ArtistDetailsUser = () => {
         text={strings.social_Media}
       />
       <View style={styles.divider2} />
-      <IconWithText path={Images.facbook} text={strings.artistUser} />
-      <IconWithText path={Images.insta} text={strings.artistUser} />
-      <IconWithText path={Images.dribbble} text={strings.artistUser} />
-      <IconWithText path={Images.LinkedIn} text={strings.artistUser} />
-      <IconWithText path={Images.twitterS} text={strings.artistUser} />
+
+      <IconWithText
+        path={Images.facbook}
+        text={artistDetailData?.sociallinks[0]?.facebook}
+      />
+      <IconWithText
+        path={Images.insta}
+        text={artistDetailData?.sociallinks[0]?.instagram}
+      />
+      <IconWithText
+        path={Images.dribbble}
+        text={artistDetailData?.sociallinks[0]?.otherurl}
+      />
+      <IconWithText
+        path={Images.LinkedIn}
+        text={artistDetailData?.sociallinks[0]?.linkedin}
+      />
+      <IconWithText
+        path={Images.twitterS}
+        text={artistDetailData?.sociallinks[0]?.twiter}
+      />
       <CustomButton
         onPress={() => navigation.navigate(strings.bookapointment_screen)}
         style={{alignSelf: 'center', marginTop: 12}}
@@ -348,7 +423,7 @@ const ArtistDetailsUser = () => {
             <View style={styles.avatarContainer}>
               <Image
                 style={styles.profilePicStyle}
-                source={Images.profilepic}
+                source={userImage ? {uri: userImage} : Images.profilepic}
               />
             </View>
             <View style={styles.artistContainer}>
@@ -362,7 +437,7 @@ const ArtistDetailsUser = () => {
           </View>
           {/* TopEnd */}
           <View style={styles.jennyContainer}>
-            <CustomText size={24} text={strings.jenny} />
+            <CustomText size={24} text={artistDetailData?.profile?.name} />
             <View style={styles.artistContainer}>
               <CustomText
                 color={Colors.lightGrey}
@@ -412,7 +487,7 @@ const ArtistDetailsUser = () => {
               <CustomText
                 color={Colors.lightGrey}
                 size={15}
-                text={strings.travelingcost}
+                text={`${strings.travelingCost} ${artistDetailData?.profile?.travelingcost}`}
               />
             </View>
             <View style={styles.reviewContainer}>
@@ -569,7 +644,7 @@ const styles = StyleSheet.create({
     marginBottom: 7,
   },
   bgImageStyle: {
-    height: screenHeight / 3.8,
+    height: screenHeight / 4.8,
     width: screenWidth,
     alignSelf: 'center',
   },
@@ -659,12 +734,12 @@ const styles = StyleSheet.create({
   },
   categoryContainer: {
     backgroundColor: Colors.primary,
-    alignSelf: 'flex-end',
+    alignSelf: 'flex-start',
     position: 'absolute',
     bottom: 8,
-    right: 11,
-    paddingVertical: 4,
-    paddingHorizontal: 8,
+    left: 11,
+    paddingVertical: 9,
+    paddingHorizontal: 10,
     borderRadius: 16,
   },
   bgImage: {height: 180, width: 180, margin: 4},
