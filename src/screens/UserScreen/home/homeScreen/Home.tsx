@@ -8,10 +8,10 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, {useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import DropDownPicker from 'react-native-dropdown-picker';
 import Slick from 'react-native-slick';
-import {useNavigation} from '@react-navigation/native';
+import {useFocusEffect, useNavigation} from '@react-navigation/native';
 import strings from '../../../../utils/strings/strings';
 import CustomText from '../../../../components/text/CustomText';
 import ArtistBrand from '../../../../components/artistBrand/ArtistBrand';
@@ -44,6 +44,11 @@ const UserHome = () => {
   useEffect(() => {
     GetCategoryList();
   }, []);
+  useFocusEffect(
+    useCallback(() => {
+      setFilter(false);
+    }, []),
+  );
   const GetCategoryList = () => {
     getCategoryList('').unwrap();
   };

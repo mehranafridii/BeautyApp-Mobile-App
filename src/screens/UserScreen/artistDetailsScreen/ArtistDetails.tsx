@@ -152,7 +152,7 @@ const ArtistDetailsUser = ({
                       source={Images.duration}
                     />
                   </View>
-                  <View style={(styles.flex, {backgroundColor: 'red'})}>
+                  <View style={styles.flex}>
                     <Image style={{marginRight: 5}} source={Images.dollar} />
                     <CustomText
                       fontWeight="600"
