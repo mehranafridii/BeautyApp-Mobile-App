@@ -11,6 +11,7 @@ const TextWithImage: FC<TextWithImagePropTypes> = ({
   alignSelf,
   textColor,
   fontWeight,
+  showImageAtBackofText = false,
 }) => {
   return (
     <View
@@ -19,13 +20,18 @@ const TextWithImage: FC<TextWithImagePropTypes> = ({
         alignItems: 'center',
         alignSelf: alignSelf || null,
       }}>
+      {showImageAtBackofText && (
+        <Image source={path} style={{marginRight: 15}} />
+      )}
       <CustomText
         text={text}
         size={size || 12}
         fontWeight={fontWeight || '500'}
         color={textColor || Colors.lightGrey}
       />
-      <Image source={path} style={{marginLeft: 5}} />
+      {!showImageAtBackofText && (
+        <Image source={path} style={{marginLeft: 15}} />
+      )}
     </View>
   );
 };
