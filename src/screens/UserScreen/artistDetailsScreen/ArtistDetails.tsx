@@ -1,4 +1,5 @@
 import {
+  Alert,
   FlatList,
   Image,
   ImageBackground,
@@ -101,7 +102,11 @@ const ArtistDetailsUser = ({
         showsVerticalScrollIndicator={false}>
         <View style={styles.flexContainer}>
           <View style={styles.alserviceContainer}>
-            <CustomText size={20} text={strings?.alservice} />
+            <CustomText
+              size={20}
+              // text={`${strings?.allservice}(${artistDetailData?.service?.length})`}
+              text={`${strings?.allservice} (2)`}
+            />
             <TouchableOpacity activeOpacity={strings.buttonopacity}>
               <CustomText size={14} text={strings?.addservices} />
             </TouchableOpacity>
@@ -109,13 +114,17 @@ const ArtistDetailsUser = ({
           <View style={styles.centerView}>
             {selectedItem ? (
               <View style={styles.bottomView}>
-                <View style={[styles.flexbox, {marginBottom: 5}]}>
+                <View
+                  style={[
+                    styles.flexbox,
+                    {marginBottom: 5, alignItems: 'center'},
+                  ]}>
                   <CustomText
                     size={17}
                     color={Colors.lightGrey}
                     text={selectedItem?.heading}
                   />
-                  <View style={styles.flex}>
+                  <View style={[styles.flex]}>
                     <CustomText size={16} text={strings.type20} />
                     <CustomText
                       style={{marginHorizontal: 5}}
@@ -128,7 +137,7 @@ const ArtistDetailsUser = ({
                       color={Colors.primary}
                       text={strings.oneselect}
                     />
-                    <Image source={Images.arrowleft} />
+                    <Image source={Images.arrowleft} style={{marginTop: 8}} />
                   </View>
                 </View>
                 <View style={styles.flexbox}>
@@ -143,7 +152,7 @@ const ArtistDetailsUser = ({
                       source={Images.duration}
                     />
                   </View>
-                  <View style={styles.flex}>
+                  <View style={(styles.flex, {backgroundColor: 'red'})}>
                     <Image style={{marginRight: 5}} source={Images.dollar} />
                     <CustomText
                       fontWeight="600"
@@ -161,16 +170,17 @@ const ArtistDetailsUser = ({
             />
             <CustomeType
               textName={strings.hair_Coloring}
+              onPress={() => bottomSheetRef?.current?.open()}
               text={strings?.type12}
             />
-            <CustomeType textName={strings.hair_Wash} text={strings?.type08} />
+            {/* <CustomeType textName={strings.hair_Wash} text={strings?.type08} />
             <CustomeType textName={strings.shaving} text={strings?.type12} />
             <CustomeType textName={strings.skincare} text={strings?.type04} />
             <CustomeType textName={strings.hairdry} text={strings?.type05} />
             <CustomeType
               textName={strings.face_makeup}
               text={strings?.type12}
-            />
+            /> */}
           </View>
         </View>
 
@@ -382,7 +392,7 @@ const ArtistDetailsUser = ({
   const renderTabBar = (props: any) => (
     <TabBar
       {...props}
-      labelStyle={{color: Colors.black}}
+      labelStyle={{color: Colors.black, fontSize: 12, fontWeight: 600}}
       indicatorStyle={styles.indicatorStyle}
       style={{backgroundColor: Colors.white}}
     />
@@ -391,23 +401,36 @@ const ArtistDetailsUser = ({
     <View style={styles.container}>
       <ScrollView contentContainerStyle={{flexGrow: 1}}>
         <ImageBackground style={styles.bgImageStyle} source={Images.profilebg}>
-          <TouchableOpacity
-            style={styles.backImage}
-            activeOpacity={0.7}
-            onPress={() => navigation.goBack()}>
-            <Image source={Images.back} />
-          </TouchableOpacity>
-
-          {/* <TouchableOpacity
-          activeOpacity={strings.buttonopacity}
-          style={styles.editContainer}>
-          <CustomText size={14} color={Colors.lightGrey} text={strings.edit} />
-          <Image style={{marginLeft: 4}} source={Images.camera} />
-        </TouchableOpacity> */}
-          {/* <View style={styles.editView}>
-          <Image style={styles.editImage} source={Images.edit} />
-          <Image style={styles.profilePicStyle} source={Images.profilepic} />
-        </View> */}
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              paddingHorizontal: 24,
+              marginTop: 15,
+            }}>
+            <View
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                gap: 10,
+              }}>
+              <TouchableOpacity
+              // onPress={() => Alert.alert('Favorite')}
+              >
+                <Image source={Images.bigHeart} />
+              </TouchableOpacity>
+              <TouchableOpacity
+                activeOpacity={strings.buttonopacity}
+                style={{}}>
+                <Image style={{marginLeft: 4}} source={Images.share} />
+              </TouchableOpacity>
+            </View>
+            <TouchableOpacity
+              activeOpacity={0.7}
+              onPress={() => navigation.goBack()}>
+              <Image source={Images.back} />
+            </TouchableOpacity>
+          </View>
         </ImageBackground>
         <View style={styles.topContainer}>
           {/* Top */}
@@ -644,7 +667,7 @@ const styles = StyleSheet.create({
     marginBottom: 7,
   },
   bgImageStyle: {
-    height: screenHeight / 4.8,
+    height: screenHeight / 5,
     width: screenWidth,
     alignSelf: 'center',
   },
@@ -658,7 +681,7 @@ const styles = StyleSheet.create({
 
   monsunText: {fontSize: 20, color: Colors.lightGrey},
   jobCancleLine: {fontSize: 24, color: Colors.lightGrey},
-  jennyContainer: {marginTop: '8%', alignItems: 'center'},
+  jennyContainer: {marginTop: 20, alignItems: 'center'},
   clockImage: {height: 20, width: 20, marginRight: 3},
   instaImage: {marginLeft: 5, height: 30, width: 30},
   artistContainer: {
