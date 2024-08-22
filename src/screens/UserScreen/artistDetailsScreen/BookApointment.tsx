@@ -6,7 +6,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React from 'react';
+import React, {FC, useState} from 'react';
 import {Colors} from '../../../utils/colors/colors';
 import Header from '../../../components/header/Header';
 import strings from '../../../utils/strings/strings';
@@ -15,8 +15,26 @@ import {Images} from '../../../assets/images';
 import {screenWidth} from '../../../utils/dimensions';
 import {daysData, timeData} from '../../../utils/dummyData';
 import CustomButton from '../../../components/button/CustomButton';
+import Utility from '../../../utils/utility/Utility';
+interface BookAppointmentPropTypes {
+  navigation: any;
+}
+const BookApointment: FC<BookAppointmentPropTypes> = ({navigation}) => {
+  const [days, setDays] = useState(daysData);
+  const [time, setTime] = useState(timeData);
 
-const BookApointment = ({navigation}) => {
+  const handleSelectedItem = (data: any, index: number, _setState: any) => {
+    // const _days = [...days];
+    // _days[index] = {
+    //   ..._days[index],
+    //   selected: _days[index]?.selected === true ? false : true,
+    // };
+    // setDays(_days);
+    const updatedDate = Utility.selectItemMethod(data, index);
+    _setState(updatedDate);
+  };
+
+  // Main Return
   return (
     <View style={styles.container}>
       <Header heading={strings.bookapoint} />
@@ -77,13 +95,17 @@ const BookApointment = ({navigation}) => {
             styles.selectedView,
             {alignItems: 'flex-start', marginVertical: 8},
           ]}>
-          <Image style={styles.icon} source={Images.edited} />
+          <TouchableOpacity
+          // onPress={() => navigation.navigate(strings.locationscreen)}
+          >
+            <Image style={styles.icon} source={Images.edited} />
+          </TouchableOpacity>
           <View style={{marginLeft: 15}}>
             <CustomText
               numberOfLines={1}
               size={15}
               text={strings.address_Dummy}
-              // style={{textAlign: 'left'}}
+              style={{textAlign: 'left'}}
             />
             <CustomText
               style={{textAlign: 'right'}}
@@ -105,16 +127,27 @@ const BookApointment = ({navigation}) => {
           text={strings.day}
         />
         <FlatList
-          data={daysData}
+          data={days}
           horizontal
           contentContainerStyle={{columnGap: 8}}
           showsHorizontalScrollIndicator={false}
           renderItem={({item, index}) => {
             return (
-              <TouchableOpacity key={index} style={styles.days}>
-                <CustomText size={12} text={item?.day} />
+              <TouchableOpacity
+                key={index}
+                style={styles.days(item?.selected)}
+                onPress={() => handleSelectedItem(days, index, setDays)}>
+                <CustomText
+                  size={12}
+                  text={item?.day}
+                  style={styles.daysText(item?.selected)}
+                />
                 <View>
-                  <CustomText size={15} text={item?.date} />
+                  <CustomText
+                    size={15}
+                    text={item?.date}
+                    style={styles.daysText(item?.selected)}
+                  />
                 </View>
               </TouchableOpacity>
             );
@@ -126,13 +159,20 @@ const BookApointment = ({navigation}) => {
           text={strings.time}
         />
         <FlatList
-          data={timeData}
+          data={time}
           horizontal
           showsHorizontalScrollIndicator={false}
           renderItem={({item, index}) => {
             return (
-              <TouchableOpacity key={index} style={styles.time}>
-                <CustomText size={16} text={item?.time} />
+              <TouchableOpacity
+                key={index}
+                style={styles.time(item?.selected)}
+                onPress={() => handleSelectedItem(time, index, setTime)}>
+                <CustomText
+                  size={16}
+                  text={item?.time}
+                  style={styles.timeText(item?.selected)}
+                />
               </TouchableOpacity>
             );
           }}
@@ -183,7 +223,7 @@ const BookApointment = ({navigation}) => {
         </View>
         <View style={styles.button}>
           <CustomButton
-            onPress={() => navigation.goBack()}
+            onPress={() => navigation.navigate(strings.managePaymentScreen)}
             text={strings.bookapointment}
           />
         </View>
@@ -211,24 +251,32 @@ const styles = StyleSheet.create({
     justifyContent: 'space-evenly',
   },
   icon: {width: 20, height: 20},
-  days: {
+  days: isSelected => ({
     borderWidth: 1,
+    backgroundColor: isSelected ? Colors.primary : Colors.white,
     borderColor: Colors.grey100,
     borderRadius: 100,
     alignItems: 'center',
     paddingHorizontal: 32,
     paddingVertical: 2,
-  },
-  time: {
+  }),
+  daysText: isSelected => ({
+    color: isSelected ? Colors.white : Colors.black,
+  }),
+  time: isSelected => ({
     borderWidth: 1,
     borderColor: Colors.grey100,
+    backgroundColor: isSelected ? Colors.primary : Colors.white,
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 100,
     paddingHorizontal: 25,
     paddingVertical: 5,
     marginRight: 8,
-  },
+  }),
+  timeText: isSelected => ({
+    color: isSelected ? Colors.white : Colors.black,
+  }),
   infoContainer: {flexDirection: 'row', marginTop: 20, marginBottom: 20},
   flexbox: {
     flexDirection: 'row',

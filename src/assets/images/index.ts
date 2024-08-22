@@ -149,4 +149,5 @@ export const Images = {
   nailCare: require('../images/nailCare.png'),
   feetCare: require('../images/feetCare.png'),
   skinCare: require('../images/skinCare.png'),
+  bigHeart: require('../images/bigHeart.png'),
 };

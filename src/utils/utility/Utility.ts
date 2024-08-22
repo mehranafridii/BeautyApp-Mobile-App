@@ -356,5 +356,14 @@ const Utility = {
   getImageUrl: function (imagePath: string) {
     return 'http://vdz.wic.temporary.site//' + imagePath;
   },
+  selectItemMethod: function (data: any, itemIndex: any) {
+    let selectedData = data?.map((item: any, index: any) => {
+      if (index === itemIndex) {
+        return {...item, selected: true};
+      }
+      return {...item, selected: false};
+    });
+    return selectedData;
+  },
 };
 export default Utility;

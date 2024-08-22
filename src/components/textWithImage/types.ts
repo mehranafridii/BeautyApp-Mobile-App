@@ -5,4 +5,5 @@ export interface TextWithImagePropTypes {
   size?: number;
   textColor?: string;
   fontWeight?: string;
+  showImageAtBackofText: boolean;
 }
