@@ -16,12 +16,27 @@ import {screenWidth} from '../../../utils/dimensions';
 import {daysData, timeData} from '../../../utils/dummyData';
 import CustomButton from '../../../components/button/CustomButton';
 import Utility from '../../../utils/utility/Utility';
+import ServiceCard from '../../../components/serviceCard/ServiceCard';
 interface BookAppointmentPropTypes {
   navigation: any;
 }
 const BookApointment: FC<BookAppointmentPropTypes> = ({navigation}) => {
   const [days, setDays] = useState(daysData);
   const [time, setTime] = useState(timeData);
+  const [services, setServices] = useState([
+    {
+      serviceName: 'fauz hawk',
+      persons: 2,
+      price: 70,
+      time: '2hr',
+    },
+    {
+      serviceName: 'fauz hawk',
+      persons: 1,
+      price: 45,
+      time: '1hr',
+    },
+  ]);
 
   const handleSelectedItem = (data: any, index: number, _setState: any) => {
     // const _days = [...days];
@@ -33,7 +48,10 @@ const BookApointment: FC<BookAppointmentPropTypes> = ({navigation}) => {
     const updatedDate = Utility.selectItemMethod(data, index);
     _setState(updatedDate);
   };
-
+  const removeService = (_index: Number) => {
+    const updatedData = services?.filter((item, index) => index !== _index);
+    setServices(updatedData);
+  };
   // Main Return
   return (
     <View style={styles.container}>
@@ -67,24 +85,19 @@ const BookApointment: FC<BookAppointmentPropTypes> = ({navigation}) => {
           text={strings.hair_Cut}
           style={{marginVertical: 5, textAlign: 'left'}}
         />
-        <View style={styles.selectedView}>
-          <Image source={Images.crossRed} />
-          <CustomText size={16} fontWeight="700" text={strings.riyal28} />
-          <CustomText size={16} color={Colors.lightGrey} text={'2'} />
-          <Image style={styles.icon} source={Images.user} />
-          <CustomText size={16} color={Colors.lightGrey} text={strings.hour} />
-          <Image style={styles.icon} source={Images.duration} />
-          <CustomText size={16} text={strings.faux_hawk} />
-        </View>
-        <View style={[styles.selectedView, {marginVertical: 20}]}>
-          <Image source={Images.crossRed} />
-          <CustomText size={16} fontWeight="700" text={strings.riyal28} />
-          <CustomText size={16} color={Colors.lightGrey} text={'2'} />
-          <Image style={styles.icon} source={Images.user} />
-          <CustomText size={16} color={Colors.lightGrey} text={strings.hour} />
-          <Image style={styles.icon} source={Images.duration} />
-          <CustomText size={16} text={strings.faux_hawk} />
-        </View>
+        <FlatList
+          data={services}
+          renderItem={({item, index}) => {
+            return (
+              <ServiceCard
+                itemData={item}
+                index={index}
+                removeService={removeService}
+              />
+            );
+          }}
+        />
+
         <CustomText
           size={19}
           text={strings.youraddress}

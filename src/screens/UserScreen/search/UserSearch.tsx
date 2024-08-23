@@ -1,5 +1,5 @@
-import {ScrollView, StyleSheet} from 'react-native';
-import React from 'react';
+import {ScrollView, StyleSheet, View} from 'react-native';
+import React, {useState} from 'react';
 import {Colors} from '../../../utils/colors/colors';
 import {screenHeight, screenWidth} from '../../../utils/dimensions';
 import {Images} from '../../../assets/images';
@@ -7,12 +7,18 @@ import SearchBarWithFilter from '../../../components/SearchBarWithFilter/SearchB
 import SearchScreenBox from '../../../components/SearchScreenBox/SearchScreenBox';
 
 const UserSearch = () => {
+  const [search, setSearch] = useState('');
   return (
-    <ScrollView showsVerticalScrollIndicator={false} style={styling.container}>
-      <SearchBarWithFilter />
-      <SearchScreenBox bgImage={Images.profilebg} />
-      <SearchScreenBox bgImage={Images.addImage} />
-    </ScrollView>
+    <View style={styling.container}>
+      <SearchBarWithFilter search={search} setSearch={setSearch} />
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        // style={styling.container}
+      >
+        <SearchScreenBox bgImage={Images.profilebg} />
+        <SearchScreenBox bgImage={Images.addImage} />
+      </ScrollView>
+    </View>
   );
 };
 
