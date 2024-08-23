@@ -1,4 +1,5 @@
 import {
+  Alert,
   Image,
   StyleSheet,
   Text,
@@ -6,27 +7,20 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, {useState} from 'react';
+import React, {FC, useState} from 'react';
 import {Colors} from '../../utils/colors/colors';
 import {screenWidth} from '../../utils/dimensions';
 import strings from '../../utils/strings/strings';
 import {Images} from '../../assets/images';
-
-const SearchBarWithFilter = () => {
+interface SearchBarPropTypes {
+  search: string;
+  setSearch: any;
+}
+const SearchBarWithFilter: FC<SearchBarPropTypes> = ({search, setSearch}) => {
   const [filter, setFilter] = useState(false);
 
   return (
     <View style={styling.searchContainer}>
-      <View style={styling.input}>
-        <View style={styling.flex1}>
-          <Image style={{tintColor: Colors.primary}} source={Images.search} />
-          <TextInput
-            style={styling.textInput}
-            placeholder={strings.searchsaloon}
-            placeholderTextColor={Colors.lightGrey}
-          />
-        </View>
-      </View>
       <TouchableOpacity
         onPress={() => setFilter(!filter)}
         activeOpacity={strings.buttonopacity}
@@ -37,6 +31,27 @@ const SearchBarWithFilter = () => {
           style={{width: 30, height: 30}}
         />
       </TouchableOpacity>
+      <View style={styling.input}>
+        <View style={styling.flex1}>
+          <TextInput
+            style={styling.textInput}
+            value={search}
+            placeholder={strings.searchsaloon}
+            placeholderTextColor={Colors.lightGrey}
+            onChangeText={text => setSearch(text)}
+          />
+          {search !== '' ? (
+            <TouchableOpacity onPress={() => setSearch('')}>
+              <Image
+                style={{tintColor: Colors.primary}}
+                source={Images.cross}
+              />
+            </TouchableOpacity>
+          ) : (
+            <Image style={{tintColor: Colors.primary}} source={Images.search} />
+          )}
+        </View>
+      </View>
     </View>
   );
 };
@@ -72,9 +87,11 @@ const styling = StyleSheet.create({
     marginTop: 12,
     width: screenWidth / 1.33,
   },
-  flex1: {flexDirection: 'row', alignItems: 'center'},
+  flex1: {flexDirection: 'row', alignItems: 'center', height: 50},
   textInput: {
     marginLeft: 8,
     width: screenWidth / 1.62,
+    textAlign: 'right',
+    color: Colors.black,
   },
 });

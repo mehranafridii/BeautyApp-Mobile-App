@@ -18,7 +18,11 @@ const SearchScreenBox: FC<SearchScreenBoxPropTypes> = ({bgImage}) => {
     <View style={styling.cardContainer}>
       <Image source={bgImage} style={styling.imgStyle} />
       <View style={styling.textContainer}>
-        <CustomText text={strings.jenny} size={16} />
+        <CustomText
+          text={strings.jenny}
+          size={16}
+          style={{textAlign: 'left'}}
+        />
         <RightImageText
           path={Images.cost}
           text={strings.travelCost_20}
