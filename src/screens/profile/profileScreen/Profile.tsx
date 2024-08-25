@@ -65,7 +65,7 @@ const Profile = () => {
         <ProfileDetail
           heading={strings.yourprofile}
           icon={Images.user}
-          onPress={() => navigation.navigate(strings.yourprofile)}
+          onPress={() => navigation.navigate(strings.artistdetailscreen)}
         />
         <ProfileDetail
           heading={strings.offdays}
