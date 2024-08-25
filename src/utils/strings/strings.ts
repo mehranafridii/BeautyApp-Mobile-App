@@ -236,6 +236,7 @@ export default {
   threeKm: '3.5 كم/50 دقيقة',
   serviceRequired: 'الخدمات المطلوبة',
   dollar_24: '24.00 ريال',
+  saudiRiyal: 'ريال',
   decline: 'انخفاض',
   request_reservation: 'طلب حجز جديد',
   rs: '24.00 رس',

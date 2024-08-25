@@ -1,3 +1,4 @@
+import {Alert} from 'react-native';
 import AppToast from '../../components/appToast/AppToast';
 import strings from '../strings/strings';
 import {
@@ -354,7 +355,8 @@ const Utility = {
     }, {});
   },
   getImageUrl: function (imagePath: string) {
-    return 'http://vdz.wic.temporary.site//' + imagePath;
+    const assetsUrl = 'http://vdz.wic.temporary.site//';
+    return assetsUrl + imagePath;
   },
   selectItemMethod: function (data: any, itemIndex: any) {
     let selectedData = data?.map((item: any, index: any) => {
@@ -364,6 +366,39 @@ const Utility = {
       return {...item, selected: false};
     });
     return selectedData;
+  },
+  handleQuantity: function (services, _serviceId, type) {
+    return services?.map(item => {
+      const currentQuantity =
+        typeof item?.quantity === 'number' ? item?.quantity : 0;
+      return {
+        ...item,
+        quantity:
+          item.id === _serviceId
+            ? Math.max(
+                1,
+                currentQuantity +
+                  (type === 'ADD' ? 1 : type === 'REMOVE' ? -1 : 0),
+              )
+            : currentQuantity,
+      };
+    });
+  },
+  selectingItem: function (itemToSelect, data) {
+    const mappedSelectedItem = data?.map(item =>
+      item === itemToSelect
+        ? {...item, isSelected: true}
+        : {...item, isSelected: false},
+    );
+    return mappedSelectedItem;
+  },
+  selectMultipleItem: function (itemToSelect, data) {
+    const mappedSelectedItem = data?.map(item =>
+      item === itemToSelect
+        ? {...item, isSelected: item?.isSelected ? false : true}
+        : {...item, isSelected: item?.isSelected},
+    );
+    return mappedSelectedItem;
   },
 };
 export default Utility;

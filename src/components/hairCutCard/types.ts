@@ -5,4 +5,6 @@ export interface HairCutCardPropsTypes {
   bgColor?: any;
   icon?: any;
   borderColor?: string;
+  handleQuantity?: any;
+  itemData?: any;
 }
