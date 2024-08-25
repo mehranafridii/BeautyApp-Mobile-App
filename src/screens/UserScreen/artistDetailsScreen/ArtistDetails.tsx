@@ -10,7 +10,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useEffect, useMemo, useRef, useState} from 'react';
 import {Colors} from '../../../utils/colors/colors';
 import {Images} from '../../../assets/images';
 import {screenHeight, screenWidth} from '../../../utils/dimensions';
@@ -49,7 +49,10 @@ const ArtistDetailsUser = ({
     useLazyGetArtistsDetailsQuery();
   // States
   const [artistList, setArtistList] = useState([]);
-  console.log(artistDetailData, 'artistDetailData');
+  const [serviceForSheet, setServiceForSheet] = useState([]);
+  console.log(serviceForSheet, 'sfjkdsjfk22jsdkjfk');
+  console.log(artistDetailData, 'artistDetailDataNew11');
+  console.log(artistDetailData?.services[0]?.service, 'artistDetailDataNew11');
   useEffect(() => {
     // itemData?.id && getArtist(itemData?.id);
     artistDetail?.id && GetArtistDetails(artistDetail?.id);
@@ -92,9 +95,38 @@ const ArtistDetailsUser = ({
     {key: 'third', title: strings.review1},
     {key: 'fourth', title: strings.aboutus},
   ]);
+  const handleQuantity = (id: any, type: string) => {
+    // Alert.alert(JSON.stringify(id), JSON.stringify(type));
+    setServiceForSheet(Utility.handleQuantity(serviceForSheet, id, type));
+  };
+  // get total amount of services
+  const totalAmount = useMemo(() => {
+    return serviceForSheet?.reduce((total, service) => {
+      if (service?.isSelected) {
+        return (
+          Number(total) + Number(service?.rates) * Number(service?.quantity)
+        );
+      }
+    }, 0);
+  }, [serviceForSheet]);
+  console.log(totalAmount, 'totalAmounttotalAmount32');
   const handleHairCut = (item: any) => {
     setSelectedItem(item);
+    setServiceForSheet(Utility.selectMultipleItem(item, serviceForSheet));
   };
+
+  const serviceWithCategory = artistDetailData?.services?.reduce(
+    (acc, currentItem) => {
+      let category = currentItem?.category_detail?.category;
+      if (!acc[category]) {
+        acc[category] = [];
+      }
+      acc[category].push(currentItem);
+      return acc;
+    },
+    {},
+  );
+  console.log(serviceWithCategory, 'serviceWithCategory');
   const FirstRoute = () => (
     <View style={{flex: 1}}>
       <ScrollView
@@ -163,24 +195,19 @@ const ArtistDetailsUser = ({
                 </View>
               </View>
             ) : null}
-            <CustomeType
-              textName={strings.hair_Cut}
-              onPress={() => bottomSheetRef?.current?.open()}
-              text={strings?.type20}
+            <FlatList
+              data={artistDetailData?.services}
+              renderItem={({item, index}) => (
+                <CustomeType
+                  textName={item?.category_detail?.category}
+                  onPress={() => {
+                    bottomSheetRef?.current?.open(),
+                      setServiceForSheet(serviceWithCategory[item?.service]);
+                  }}
+                  text={strings?.type20}
+                />
+              )}
             />
-            <CustomeType
-              textName={strings.hair_Coloring}
-              onPress={() => bottomSheetRef?.current?.open()}
-              text={strings?.type12}
-            />
-            {/* <CustomeType textName={strings.hair_Wash} text={strings?.type08} />
-            <CustomeType textName={strings.shaving} text={strings?.type12} />
-            <CustomeType textName={strings.skincare} text={strings?.type04} />
-            <CustomeType textName={strings.hairdry} text={strings?.type05} />
-            <CustomeType
-              textName={strings.face_makeup}
-              text={strings?.type12}
-            /> */}
           </View>
         </View>
 
@@ -222,6 +249,7 @@ const ArtistDetailsUser = ({
         scrollEnabled={false}
         renderItem={({item, index}) => {
           const picture = Utility.getImageUrl(item?.image);
+          console.log(picture, 'sjkfksdjf');
           return (
             <ImageBackground
               key={index}
@@ -559,25 +587,26 @@ const ArtistDetailsUser = ({
               <View style={styles.divider} />
               <FlatList
                 showsVerticalScrollIndicator={false}
-                data={hairCutData}
+                data={serviceForSheet}
                 contentContainerStyle={{flexGrow: 1}}
                 renderItem={({item, index}) => {
                   return (
                     <TouchableOpacity
-                      onPress={() => handleHairCut(item)}
+                      onPress={() => {
+                        handleHairCut(item);
+                        // handleSelectServiceAndQuantity(item, item?.id);
+                      }}
                       key={index}
                       style={{marginVertical: 6}}>
                       <HairCutCard
-                        heading={item?.heading}
+                        itemData={item}
+                        heading={item?.title}
                         duration={item?.duration}
-                        price={item?.price}
-                        icon={
-                          selectedItem === item ? Images.crossRed : Images?.plus
-                        }
+                        price={`${item?.rates} ${strings.saudiRiyal}`}
+                        handleQuantity={handleQuantity}
+                        icon={item?.isSelected ? Images.crossRed : Images?.plus}
                         borderColor={
-                          selectedItem === item
-                            ? Colors.primary
-                            : Colors.grey100
+                          item?.isSelected ? Colors.primary : Colors.grey100
                         }
                         bgColor={
                           selectedItem === item
