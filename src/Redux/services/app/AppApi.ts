@@ -157,6 +157,15 @@ const getArtistsDetails = (id: string) => {
     },
   };
 };
+const getArtistsProfile = (id: string) => {
+  return {
+    url: `${Endpoints.artistProfile}`,
+    method: apiMethods.get,
+    headers: {
+      'Content-type': 'application/json',
+    },
+  };
+};
 
 ////
 export const AppApi = baseApi.injectEndpoints({
@@ -214,6 +223,9 @@ export const AppApi = baseApi.injectEndpoints({
     getArtistsDetails: build.query({
       query: getArtistsDetails,
     }),
+    getArtistsProfile: build.query({
+      query: getArtistsProfile,
+    }),
   }),
 });
 
@@ -240,4 +252,5 @@ export const {
   //
   useLazyGetArtistsForServiceQuery,
   useLazyGetArtistsDetailsQuery,
+  useLazyGetArtistsProfileQuery,
 } = AppApi;

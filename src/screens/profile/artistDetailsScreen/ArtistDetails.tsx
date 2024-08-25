@@ -9,7 +9,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, {useRef, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {Colors} from '../../../utils/colors/colors';
 import {Images} from '../../../assets/images';
 import {screenHeight, screenWidth} from '../../../utils/dimensions';
@@ -28,20 +28,59 @@ import ProfileButtons from '../../../components/ProfileButtons/ProfileButtons';
 import IconWithText from '../../../components/IconWithText/IconWithText';
 import TextImageText from '../../../components/textImageText/TextImageText';
 import TextWithImage from '../../../components/textWithImage/TextWithImage';
+import {useLazyGetArtistsProfileQuery} from '../../../Redux/services/app/AppApi';
+import Utility from '../../../utils/utility/Utility';
 
 const ArtistDetails = () => {
+  //API initialization
+  const [getArtistProfile, {data: artistProfileData}] =
+    useLazyGetArtistsProfileQuery();
   const bottomSheetRef = useRef<RBSheet>(null);
   const photoSheetRef = useRef<RBSheet>(null);
   const descriptionSheetRef = useRef<RBSheet>(null);
   const addressSheetRef = useRef<RBSheet>(null);
   const navigation: any = useNavigation();
   const [index, setIndex] = useState(0);
+  const [serviceForSheet, setServiceForSheet] = useState([]);
+  useEffect(() => {
+    GetArtistProfile();
+  }, []);
+  console.log(artistProfileData, 'artistProfileData?.servicesdfdsdf');
+  const GetArtistProfile = () => {
+    getArtistProfile('')
+      .unwrap()
+      ?.then(response => {
+        const {data} = response;
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  };
+  //Image of Artist
+  const artistImage = artistProfileData?.profile?.image
+    ? Utility.getImageUrl(artistProfileData?.profile?.image)
+    : null;
+
   const [routes] = useState([
     {key: 'first', title: strings.services},
     {key: 'second', title: strings.gallery},
     {key: 'third', title: strings.review1},
     {key: 'fourth', title: strings.aboutus},
   ]);
+  const serviceWithCategory = artistProfileData?.services?.reduce(
+    (acc, currentItem) => {
+      console.log(currentItem, 'skjfksdfj');
+      const category = currentItem?.category_detail?.category;
+      console.log(category, 'skdfjkdsjfkdsfj');
+      if (!acc[category]) {
+        acc[category] = [];
+      }
+      acc[category].push(currentItem);
+      return acc;
+    },
+    {},
+  );
+  console.log(serviceWithCategory, 'dsfdsfk23423ddd');
   const FirstRoute = () => (
     <ScrollView
       style={styles.flexContainer}
@@ -56,7 +95,7 @@ const ArtistDetails = () => {
           </TouchableOpacity>
         </View>
         <View style={styles.centerView}>
-          <CustomeType
+          {/* <CustomeType
             textName={strings.hair_Cut}
             onPress={() => bottomSheetRef.current?.open()}
             text={strings?.type20}
@@ -64,12 +103,25 @@ const ArtistDetails = () => {
           <CustomeType
             textName={strings.hair_Coloring}
             text={strings?.type12}
+          /> */}
+          <FlatList
+            data={artistProfileData?.services}
+            renderItem={({item, index}) => (
+              <CustomeType
+                textName={item?.category_detail?.category}
+                onPress={() => {
+                  // bottomSheetRef?.current?.open(),
+                  setServiceForSheet(serviceWithCategory[item?.service]);
+                }}
+                text={strings?.type20}
+              />
+            )}
           />
-          <CustomeType textName={strings.hair_Wash} text={strings?.type08} />
+          {/* <CustomeType textName={strings.hair_Wash} text={strings?.type08} />
           <CustomeType textName={strings.shaving} text={strings?.type12} />
           <CustomeType textName={strings.skincare} text={strings?.type04} />
           <CustomeType textName={strings.hairdry} text={strings?.type05} />
-          <CustomeType textName={strings.face_makeup} text={strings?.type12} />
+          <CustomeType textName={strings.face_makeup} text={strings?.type12} /> */}
         </View>
       </View>
     </ScrollView>
@@ -87,18 +139,25 @@ const ArtistDetails = () => {
         </TouchableOpacity>
       </View>
       <FlatList
-        data={photosData}
+        data={artistProfileData?.gallary}
         numColumns={2}
         scrollEnabled={false}
         renderItem={({item, index}) => {
+          const picture = Utility.getImageUrl(item?.image);
+          console.log(picture, 'sjkfksdjf');
           return (
             <ImageBackground
               key={index}
               style={styles.bgImage}
-              source={item.img}>
+              // source={picture ? {uri: picture} : item.img}
+              source={Images.img1}>
               {item?.category && (
                 <View style={styles.categoryContainer}>
-                  <CustomText color={Colors.white} text={item?.category} />
+                  <CustomText
+                    color={Colors.white}
+                    text={item?.category}
+                    style={{textAlign: 'left'}}
+                  />
                 </View>
               )}
             </ImageBackground>
@@ -147,6 +206,7 @@ const ArtistDetails = () => {
   const fourthRoute = () => (
     <ScrollView showsVerticalScrollIndicator={false}>
       <View style={styles.buttonContainer}>
+        <CustomText size={20} text={strings.aboutus} />
         <TouchableOpacity
           onPress={() => descriptionSheetRef?.current?.open()}
           activeOpacity={strings.buttonopacity}
@@ -158,27 +218,25 @@ const ArtistDetails = () => {
           />
           <Image source={Images.edited} style={{marginLeft: 5}} />
         </TouchableOpacity>
-        <CustomText size={20} text={strings.aboutus} />
       </View>
       <CustomText
-        text={strings.lorium_Text_Small}
+        text={artistProfileData?.aboutus?.description}
         color={Colors.lightGrey}
-        style={{marginHorizontal: 10}}
+        style={{marginHorizontal: 10, textAlign: 'left'}}
       />
       <TextImageText
         onPress={() => bottomSheetRef?.current?.open()}
         withImage={strings.modify_Working_Hour}
         withoutImageText={strings.workinghours}
       />
-
       <View style={styles.divider2} />
-      {weekdays?.map((item, index) => {
+      {artistProfileData?.workinghours?.map((item, index) => {
         return (
           <View key={index} style={styles.sheetContainer4}>
             <CustomText
               color={Colors.lightGrey}
               size={16}
-              text={item?.weekday}
+              text={`${item?.starttime}-${item?.endtime}`}
             />
             <View style={styles.flex}>
               <CustomText size={14} fontWeight="400" text={item?.time} />
@@ -191,11 +249,31 @@ const ArtistDetails = () => {
         withImage={strings.social_Media_Editing}
       />
       <View style={styles.divider2} />
-      <IconWithText path={Images.facbook} text={strings.artistUser} />
+      <IconWithText
+        path={Images.facbook}
+        text={artistProfileData?.sociallinks[0]?.facebook}
+      />
+      <IconWithText
+        path={Images.insta}
+        text={artistProfileData?.sociallinks[0]?.instagram}
+      />
+      <IconWithText
+        path={Images.dribbble}
+        text={artistProfileData?.sociallinks[0]?.otherurl}
+      />
+      <IconWithText
+        path={Images.LinkedIn}
+        text={artistProfileData?.sociallinks[0]?.linkedin}
+      />
+      <IconWithText
+        path={Images.twitterS}
+        text={artistProfileData?.sociallinks[0]?.twiter}
+      />
+      {/* <IconWithText path={Images.facbook} text={strings.artistUser} />
       <IconWithText path={Images.insta} text={strings.artistUser} />
       <IconWithText path={Images.dribbble} text={strings.artistUser} />
       <IconWithText path={Images.LinkedIn} text={strings.artistUser} />
-      <IconWithText path={Images.twitterS} text={strings.artistUser} />
+      <IconWithText path={Images.twitterS} text={strings.artistUser} /> */}
       <TextImageText
         withoutImageText={strings.contactUs}
         withImage={strings.editing_Contact_Detail}
@@ -335,10 +413,6 @@ const ArtistDetails = () => {
           <CustomText size={14} color={Colors.lightGrey} text={strings.edit} />
           <Image style={{marginLeft: 4}} source={Images.camera} />
         </TouchableOpacity>
-        <View style={styles.editView}>
-          <Image style={styles.editImage} source={Images.edit} />
-          <Image style={styles.profilePicStyle} source={Images.profilepic} />
-        </View>
       </ImageBackground>
       <View style={styles.topContainer}>
         <View style={styles.iconMainContainer}>
@@ -350,7 +424,10 @@ const ArtistDetails = () => {
             />
             <Image style={styles.instaImage} source={Images.insta} />
           </View>
-          {/* <Image style={styles.profilePicStyle} source={Images.profilepic} /> */}
+          <View style={styles.avatarContainer}>
+            <Image style={styles.editImage} source={Images.edit} />
+            <Image style={styles.profilePicStyle} source={Images.profilepic} />
+          </View>
           <View style={styles.artistContainer}>
             <CustomText
               color={Colors.lightGrey}
@@ -361,7 +438,7 @@ const ArtistDetails = () => {
           </View>
         </View>
         <View style={styles.jennyContainer}>
-          <CustomText size={24} text={strings.jenny} />
+          <CustomText size={24} text={artistProfileData?.profile?.name} />
           <View style={styles.artistContainer}>
             <CustomText
               color={Colors.lightGrey}
@@ -411,7 +488,7 @@ const ArtistDetails = () => {
             <CustomText
               color={Colors.lightGrey}
               size={15}
-              text={strings.travelingcost}
+              text={`${strings.travelingCost} ${artistProfileData?.profile?.travelingcost}`}
             />
           </View>
           <View style={styles.reviewContainer}>
@@ -597,15 +674,27 @@ const styles = StyleSheet.create({
     marginTop: '13%',
     backgroundColor: 'pink',
   },
+  avatarContainer: {
+    position: 'absolute',
+    backgroundColor: 'white',
+    left: '38%',
+    bottom: 0,
+    borderRadius: 100,
+    padding: 6,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   editContainer: {
     backgroundColor: Colors.white,
     flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'center',
     position: 'absolute',
     right: 30,
     bottom: 55,
-    padding: 4,
     borderRadius: 16,
+    paddingHorizontal: 8,
+    paddingVertical: 4,
   },
   backImage: {marginTop: 25, marginRight: 25, alignSelf: 'flex-end'},
   indicatorStyle: {

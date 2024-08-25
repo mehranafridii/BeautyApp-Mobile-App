@@ -26,6 +26,7 @@ export const Endpoints = {
   artistMyService: 'Services/MyServices',
   artistServices: 'Services/Get/',
   artistDetails: 'Artist/Profile/Detail/',
+  artistProfile: 'artist_profile',
 
   //Category
   listCategory: 'list_category',
