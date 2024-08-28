@@ -368,21 +368,24 @@ const Utility = {
     return selectedData;
   },
   handleQuantity: function (services, _serviceId, type) {
-    return services?.map(item => {
+    const serviceQuantityAdded = services?.map(item => {
       const currentQuantity =
         typeof item?.quantity === 'number' ? item?.quantity : 0;
+      console.log(currentQuantity, 'sjdfkdsjfjkdfjdkjf');
       return {
         ...item,
         quantity:
           item.id === _serviceId
             ? Math.max(
-                1,
+                0,
                 currentQuantity +
                   (type === 'ADD' ? 1 : type === 'REMOVE' ? -1 : 0),
               )
             : currentQuantity,
       };
     });
+    console.log(serviceQuantityAdded, 'sfjdsjfj32323');
+    return serviceQuantityAdded;
   },
   selectingItem: function (itemToSelect, data) {
     const mappedSelectedItem = data?.map(item =>

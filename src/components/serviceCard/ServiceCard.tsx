@@ -14,19 +14,28 @@ const ServiceCard: FC<ServiceCardTypes> = ({
   index,
   removeService,
 }) => {
-  const {serviceName, persons, price, time} = itemData;
+  const {title, quantity, rates, duration} = itemData;
   return (
     <View style={[styles.selectedView, {marginVertical: 20}]}>
       <TouchableOpacity onPress={() => removeService(index)}>
         <Image source={Images.crossRed} />
       </TouchableOpacity>
 
-      <CustomText size={16} fontWeight="700" text={strings.riyal28} />
-      <CustomText size={16} color={Colors.lightGrey} text={persons} />
+      <CustomText
+        size={16}
+        fontWeight="700"
+        text={`${rates * quantity} ${strings.saudiRiyal}`}
+      />
+      <CustomText size={16} color={Colors.lightGrey} text={quantity} />
       <Image style={styles.icon} source={Images.user} />
-      <CustomText size={16} color={Colors.lightGrey} text={time} />
+      <CustomText size={16} color={Colors.lightGrey} text={duration} />
       <Image style={styles.icon} source={Images.duration} />
-      <CustomText size={16} text={serviceName} />
+      <CustomText
+        size={16}
+        text={title}
+        style={{width: 50}}
+        numberOfLines={1}
+      />
     </View>
   );
 };

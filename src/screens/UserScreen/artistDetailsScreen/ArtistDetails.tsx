@@ -48,11 +48,11 @@ const ArtistDetailsUser = ({
   const [getArtistDetails, {data: artistDetailData}] =
     useLazyGetArtistsDetailsQuery();
   // States
-  const [artistList, setArtistList] = useState([]);
+
+  const [services, setServices] = useState();
   const [serviceForSheet, setServiceForSheet] = useState([]);
-  console.log(serviceForSheet, 'sfjkdsjfk22jsdkjfk');
-  console.log(artistDetailData, 'artistDetailDataNew11');
-  console.log(artistDetailData?.services[0]?.service, 'artistDetailDataNew11');
+  const [selectedCategory, setSelectedCategory] = useState();
+
   useEffect(() => {
     // itemData?.id && getArtist(itemData?.id);
     artistDetail?.id && GetArtistDetails(artistDetail?.id);
@@ -61,8 +61,9 @@ const ArtistDetailsUser = ({
     getArtistDetails(serviceId)
       .unwrap()
       ?.then(response => {
-        const {data} = response;
-
+        const {services} = response;
+        // console.log(response, 'jfsdkjfkdsjfkresponse');
+        setServices(services);
         // const getArtistsList = data?.reduce((acc, item) => {
         //   if (item?.artist) {
         //     const existingArtist = acc?.find(
@@ -96,37 +97,46 @@ const ArtistDetailsUser = ({
     {key: 'fourth', title: strings.aboutus},
   ]);
   const handleQuantity = (id: any, type: string) => {
-    // Alert.alert(JSON.stringify(id), JSON.stringify(type));
-    setServiceForSheet(Utility.handleQuantity(serviceForSheet, id, type));
+    setServices(Utility.handleQuantity(services, id, type));
   };
-  // get total amount of services
+
+  console.log(totalAmount, 'totalAmounttotalAmount32');
+
+  const handleServiceSelection = (item: any) => {
+    setServices(Utility.selectMultipleItem(item, services));
+  };
+  const removeSelectedItems = () => {
+    bottomSheetRef.current?.close();
+  };
+  const confirmServices = () => {
+    bottomSheetRef.current?.close();
+  };
+  // get total amount of services for BottomSheet
   const totalAmount = useMemo(() => {
-    return serviceForSheet?.reduce((total, service) => {
+    return services?.reduce((total, service) => {
       if (service?.isSelected) {
         return (
           Number(total) + Number(service?.rates) * Number(service?.quantity)
         );
       }
     }, 0);
-  }, [serviceForSheet]);
-  console.log(totalAmount, 'totalAmounttotalAmount32');
-  const handleHairCut = (item: any) => {
-    setSelectedItem(item);
-    setServiceForSheet(Utility.selectMultipleItem(item, serviceForSheet));
-  };
-
-  const serviceWithCategory = artistDetailData?.services?.reduce(
-    (acc, currentItem) => {
-      let category = currentItem?.category_detail?.category;
-      if (!acc[category]) {
-        acc[category] = [];
+  }, [services]);
+  // Final Amount to show on Screen
+  const finalTotalAmount = useMemo(() => {
+    return services?.reduce((total, service) => {
+      if (service?.isSelected) {
+        return (
+          Number(total) + Number(service?.rates) * Number(service?.quantity)
+        );
       }
-      acc[category].push(currentItem);
-      return acc;
-    },
-    {},
+    }, 0);
+  }, [services]);
+  // to check either service is selected or not selected
+  const isSelectedServices = services?.find(
+    item => item?.isSelected && item?.quantity,
   );
-  console.log(serviceWithCategory, 'serviceWithCategory');
+
+  ///////// TAb UI Methods///////////
   const FirstRoute = () => (
     <View style={{flex: 1}}>
       <ScrollView
@@ -144,92 +154,88 @@ const ArtistDetailsUser = ({
             </TouchableOpacity>
           </View>
           <View style={styles.centerView}>
-            {selectedItem ? (
-              <View style={styles.bottomView}>
-                <View
-                  style={[
-                    styles.flexbox,
-                    {marginBottom: 5, alignItems: 'center'},
-                  ]}>
-                  <CustomText
-                    size={17}
-                    color={Colors.lightGrey}
-                    text={selectedItem?.heading}
-                  />
-                  <View style={[styles.flex]}>
-                    <CustomText size={16} text={strings.type20} />
-                    <CustomText
-                      style={{marginHorizontal: 5}}
-                      size={18}
-                      text={'|'}
-                    />
-                    <Image source={Images.check2} />
-                    <CustomText
-                      size={17}
-                      color={Colors.primary}
-                      text={strings.oneselect}
-                    />
-                    <Image source={Images.arrowleft} style={{marginTop: 8}} />
+            {!!isSelectedServices && (
+              <FlatList
+                data={services?.map(item => {
+                  if (item?.isSelected && item?.quantity) {
+                    return item;
+                  }
+                })}
+                renderItem={({item, index}) => (
+                  <View style={styles.bottomView}>
+                    <View
+                      style={[
+                        styles.flexbox,
+                        {marginBottom: 5, alignItems: 'center'},
+                      ]}>
+                      <CustomText
+                        size={17}
+                        color={Colors.lightGrey}
+                        text={selectedItem?.heading}
+                      />
+                      <View style={[styles.flex]}>
+                        <CustomText size={16} text={strings.type20} />
+                        <CustomText
+                          style={{marginHorizontal: 5}}
+                          size={18}
+                          text={'|'}
+                        />
+                        <Image source={Images.check2} />
+                        <CustomText
+                          size={17}
+                          color={Colors.primary}
+                          text={strings.oneselect}
+                        />
+                        <Image
+                          source={Images.arrowleft}
+                          style={{marginTop: 8}}
+                        />
+                      </View>
+                    </View>
+                    <View style={styles.flexbox}>
+                      <View style={styles.flex}>
+                        <CustomText
+                          size={15}
+                          color={Colors.lightGrey}
+                          text={selectedItem?.duration}
+                        />
+                        <Image
+                          style={{tintColor: Colors.black, marginLeft: 5}}
+                          source={Images.duration}
+                        />
+                      </View>
+                      <View style={styles.flex}>
+                        <Image
+                          style={{marginRight: 5}}
+                          source={Images.dollar}
+                        />
+                        <CustomText
+                          fontWeight="600"
+                          size={18}
+                          text={`${item?.rates * item?.quantity} ${
+                            strings.saudiRiyal
+                          }`}
+                        />
+                      </View>
+                    </View>
                   </View>
-                </View>
-                <View style={styles.flexbox}>
-                  <View style={styles.flex}>
-                    <CustomText
-                      size={15}
-                      color={Colors.lightGrey}
-                      text={selectedItem?.duration}
-                    />
-                    <Image
-                      style={{tintColor: Colors.black, marginLeft: 5}}
-                      source={Images.duration}
-                    />
-                  </View>
-                  <View style={styles.flex}>
-                    <Image style={{marginRight: 5}} source={Images.dollar} />
-                    <CustomText
-                      fontWeight="600"
-                      size={18}
-                      text={selectedItem?.price}
-                    />
-                  </View>
-                </View>
-              </View>
-            ) : null}
+                )}
+              />
+            )}
             <FlatList
-              data={artistDetailData?.services}
+              data={services}
               renderItem={({item, index}) => (
                 <CustomeType
                   textName={item?.category_detail?.category}
                   onPress={() => {
                     bottomSheetRef?.current?.open(),
-                      setServiceForSheet(serviceWithCategory[item?.service]);
+                      setSelectedCategory(item?.category_detail?.category);
                   }}
                   text={strings?.type20}
                 />
               )}
             />
           </View>
-        </View>
-
-        <View style={styles.bottombtn}>
-          <View style={styles.selected}>
-            <View style={styles.flex}>
-              <Image style={{marginRight: 4}} source={Images.duration} />
-              <CustomText
-                color={Colors.lightGrey}
-                size={13}
-                text={strings.timeduration}
-              />
-            </View>
-            <View style={styles.flex}>
-              <Image source={Images.dollar} />
-              <CustomText size={14} fontWeight="bold" text={strings.riyal28} />
-            </View>
-          </View>
-          <CustomButton
-            text={strings.bookapointment}
-            onPress={() => navigation.navigate(strings.bookAppointment_screen)}
-          />
         </View>
       </ScrollView>
     </View>
@@ -249,7 +255,7 @@ const ArtistDetailsUser = ({
         scrollEnabled={false}
         renderItem={({item, index}) => {
           const picture = Utility.getImageUrl(item?.image);
-          console.log(picture, 'sjkfksdjf');
+
           return (
             <ImageBackground
               key={index}
@@ -269,26 +275,6 @@ const ArtistDetailsUser = ({
           );
         }}
       />
-      <View style={styles.bottombtn}>
-        <View style={styles.selected}>
-          <View style={styles.flex}>
-            <Image style={{marginRight: 4}} source={Images.duration} />
-            <CustomText
-              color={Colors.lightGrey}
-              size={13}
-              text={strings.timeduration}
-            />
-          </View>
-          <View style={styles.flex}>
-            <Image source={Images.dollar} />
-            <CustomText size={14} fontWeight="bold" text={strings.riyal28} />
-          </View>
-        </View>
-        <CustomButton
-          style={{width: screenWidth / 1.1}}
-          text={strings.bookapointment}
-        />
-      </View>
     </ScrollView>
   );
   const ThirdRoute = () => (
@@ -325,23 +311,6 @@ const ArtistDetailsUser = ({
             );
           }}
         />
-      </View>
-      <View style={styles.bottombtn}>
-        <View style={styles.selected}>
-          <View style={styles.flex}>
-            <Image style={{marginRight: 4}} source={Images.duration} />
-            <CustomText
-              color={Colors.lightGrey}
-              size={13}
-              text={strings.timeduration}
-            />
-          </View>
-          <View style={styles.flex}>
-            <Image source={Images.dollar} />
-            <CustomText size={14} fontWeight="bold" text={strings.riyal28} />
-          </View>
-        </View>
-        <CustomButton text={strings.bookapointment} />
       </View>
     </ScrollView>
   );
@@ -404,11 +373,11 @@ const ArtistDetailsUser = ({
         path={Images.twitterS}
         text={artistDetailData?.sociallinks[0]?.twiter}
       />
-      <CustomButton
+      {/* <CustomButton
         onPress={() => navigation.navigate(strings.bookapointment_screen)}
         style={{alignSelf: 'center', marginTop: 12}}
         text={strings.bookapointment}
-      />
+      /> */}
     </ScrollView>
   );
   const renderScene = SceneMap({
@@ -557,6 +526,7 @@ const ArtistDetailsUser = ({
             initialLayout={{width: screenWidth}}
             style={styles.tabViewStyle}
           />
+          {/* ///////////////////Sheet///////////////////// */}
           <RBSheet
             ref={bottomSheetRef}
             height={screenHeight / 1.1}
@@ -587,14 +557,17 @@ const ArtistDetailsUser = ({
               <View style={styles.divider} />
               <FlatList
                 showsVerticalScrollIndicator={false}
-                data={serviceForSheet}
+                data={services?.map((item, index) => {
+                  if (item?.category_detail?.category === selectedCategory) {
+                    return item;
+                  }
+                })}
                 contentContainerStyle={{flexGrow: 1}}
                 renderItem={({item, index}) => {
                   return (
                     <TouchableOpacity
                       onPress={() => {
-                        handleHairCut(item);
-                        // handleSelectServiceAndQuantity(item, item?.id);
+                        handleServiceSelection(item);
                       }}
                       key={index}
                       style={{marginVertical: 6}}>
@@ -629,12 +602,14 @@ const ArtistDetailsUser = ({
                       text={strings.timeduration}
                     />
                   </View>
-                  <View style={styles.flex}>
+                  <View style={[styles.flex]}>
                     <Image source={Images.dollar} />
                     <CustomText
                       size={14}
                       fontWeight="bold"
-                      text={strings.riyal28}
+                      text={`${!!totalAmount ? totalAmount : 0} ${
+                        strings.saudiRiyal
+                      }`}
                     />
                   </View>
                 </View>
@@ -649,15 +624,53 @@ const ArtistDetailsUser = ({
 
                 <FooterTwoButton
                   marginTop={15}
-                  onPressRight={() => bottomSheetRef.current?.close()}
-                  onPressLeft={() => bottomSheetRef.current?.close()}
+                  onPressRight={() => {
+                    confirmServices();
+                  }}
+                  onPressLeft={() => {
+                    removeSelectedItems();
+                  }}
                   textLeft={strings.cancle}
                   textRight={strings.addhours}
                 />
               </View>
             </View>
           </RBSheet>
+          {/* ///////////////////SheetEnd///////////////////// */}
         </View>
+        {isSelectedServices && (
+          <View style={styles.bottombtn}>
+            <View style={styles.selected}>
+              <View style={styles.flex}>
+                <Image style={{marginRight: 4}} source={Images.duration} />
+                <CustomText
+                  color={Colors.lightGrey}
+                  size={13}
+                  text={strings.timeduration}
+                />
+              </View>
+              <View style={styles.flex}>
+                <Image source={Images.dollar} />
+                <CustomText
+                  size={14}
+                  fontWeight="bold"
+                  text={`${!!finalTotalAmount ? finalTotalAmount : 0} ${
+                    strings.saudiRiyal
+                  }`}
+                />
+              </View>
+            </View>
+            <CustomButton
+              text={strings.bookapointment}
+              onPress={() =>
+                navigation.navigate(strings.bookAppointment_screen, {
+                  servicesDetails: services,
+                  artistDetails: artistDetailData?.profile,
+                })
+              }
+            />
+          </View>
+        )}
       </ScrollView>
     </View>
   );
@@ -905,8 +918,6 @@ const styles = StyleSheet.create({
   },
   bottombtn: {
     alignSelf: 'center',
-    marginBottom: 10,
-    marginTop: 10,
     elevation: 8,
   },
 });

@@ -17,34 +17,68 @@ import {daysData, timeData} from '../../../utils/dummyData';
 import CustomButton from '../../../components/button/CustomButton';
 import Utility from '../../../utils/utility/Utility';
 import ServiceCard from '../../../components/serviceCard/ServiceCard';
+import {useCustomerBookingServiceMutation} from '../../../Redux/services/app/AppApi';
+import AppToast from '../../../components/appToast/AppToast';
 interface BookAppointmentPropTypes {
   navigation: any;
+  route: any;
 }
-const BookApointment: FC<BookAppointmentPropTypes> = ({navigation}) => {
+const BookApointment: FC<BookAppointmentPropTypes> = ({navigation, route}) => {
+  const {servicesDetails, artistDetails} = route?.params;
+  // API initalization
+  const [customerBooking] = useCustomerBookingServiceMutation();
   const [days, setDays] = useState(daysData);
   const [time, setTime] = useState(timeData);
-  const [services, setServices] = useState([
-    {
-      serviceName: 'fauz hawk',
-      persons: 2,
-      price: 70,
-      time: '2hr',
-    },
-    {
-      serviceName: 'fauz hawk',
-      persons: 1,
-      price: 45,
-      time: '1hr',
-    },
-  ]);
+  const [services, setServices] = useState(servicesDetails);
 
+  // console.log(serviceWithCategory, 'sdfjdfkjk');
+  const totalPrice = servicesDetails?.reduce((acc, currentItem) => {
+    return acc + currentItem?.rates * currentItem?.quantity;
+  }, 0);
+  // console.log(totalPrice, 'sdjfkdsjfksd');
+  const confirmBooking = async () => {
+    const idd = servicesDetails?.map(item => item?.rates);
+    console.log(idd, 'jsdfkdjfiIID');
+    const data = {
+      artist: artistDetails?.id,
+      date: '7/6/2024',
+      starttime: '1:00 PM',
+      endtime: '3:00 PM',
+      total_price: totalPrice,
+      address: 'Karachi',
+      travelcost: artistDetails?.travelingcost,
+      service_id: servicesDetails?.map(item => item?.service),
+      qty: servicesDetails?.map(item => item?.quantity),
+      total: servicesDetails?.map(item => item?.rates),
+      price: servicesDetails?.map(item => item?.rates),
+    };
+    if (services?.length) {
+      const keys = Object.keys(data);
+      const formData = new FormData();
+      // formData.append('artist', artistDetails?.id);
+
+      for (let i of keys) {
+        formData.append(i, data[i]);
+      }
+
+      // return;
+      await customerBooking(formData)
+        .unwrap()
+        .then(res => {
+          console.log(res, 'sjdfjsdfk');
+          // navigation.navigate(strings.managePaymentScreen);
+
+          AppToast({
+            type: 'success',
+            message: 'Artist Registered Sucessfully',
+          });
+        })
+        .catch(error => {
+          console.log(error, 'skdjfkdERR');
+        });
+    }
+  };
   const handleSelectedItem = (data: any, index: number, _setState: any) => {
-    // const _days = [...days];
-    // _days[index] = {
-    //   ..._days[index],
-    //   selected: _days[index]?.selected === true ? false : true,
-    // };
-    // setDays(_days);
     const updatedDate = Utility.selectItemMethod(data, index);
     _setState(updatedDate);
   };
@@ -97,7 +131,6 @@ const BookApointment: FC<BookAppointmentPropTypes> = ({navigation}) => {
             );
           }}
         />
-
         <CustomText
           size={19}
           text={strings.youraddress}
@@ -236,7 +269,7 @@ const BookApointment: FC<BookAppointmentPropTypes> = ({navigation}) => {
         </View>
         <View style={styles.button}>
           <CustomButton
-            onPress={() => navigation.navigate(strings.managePaymentScreen)}
+            onPress={() => confirmBooking()}
             text={strings.bookapointment}
           />
         </View>

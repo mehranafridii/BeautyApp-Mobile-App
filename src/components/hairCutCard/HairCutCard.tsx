@@ -58,14 +58,14 @@ const HairCutCard: FC<HairCutCardPropsTypes> = ({
             <CustomText
               style={{marginLeft: 8}}
               size={15}
-              text={itemData?.quantity ? itemData?.quantity : 1}
+              text={itemData?.quantity ? itemData?.quantity : 0}
             />
             <TouchableOpacity
               onPress={() => {
                 handleQuantity(itemData?.id, 'REMOVE');
-                if (count > 1) {
-                  setCount(count - 1);
-                }
+                // if (count > 1) {
+                //   setCount(count - 1);
+                // }
               }}>
               <Image style={{marginLeft: 7}} source={Images.minus} />
             </TouchableOpacity>
