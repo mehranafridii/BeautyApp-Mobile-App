@@ -407,6 +407,7 @@ export default {
   workinghour: 'ساعات العمل',
   bookapointment_screen: 'BookAppointment',
   bookAppointment_screen: 'BookAppointment',
+  bookingDetails_screen: 'BookingDetails',
   bookapoint: 'موعد الكتاب',
   forcancelation:
     'للإلغاء، يجب أن يفرض أي حجز على العميل وديعة تتراوح بين 20-50% من التكلفة الإجمالية',

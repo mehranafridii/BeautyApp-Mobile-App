@@ -29,7 +29,7 @@ const Ongoing = ({data}: any) => {
         image={Images.addImage}
         isOn={toggleState}
         onToggle={handleToggle}
-        onPress={() => navigation.navigate(strings.booking_Detail)}
+        // onPress={handlePress}
       />
     );
   };

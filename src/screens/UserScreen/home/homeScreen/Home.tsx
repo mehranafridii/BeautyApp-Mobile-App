@@ -56,6 +56,9 @@ const UserHome = () => {
     return (
       <View key={index} style={styling.servicesContainer}>
         <TouchableOpacity
+          // onPress={() =>
+          //   navigation.navigate(strings.onlinestorescreen, {itemData: item})
+          // }
           activeOpacity={strings.buttonopacity}
           style={styling.imgView}>
           <Image source={item?.img} />
@@ -175,10 +178,9 @@ const UserHome = () => {
               numColumns={3}
               renderItem={({item, index}) => renderItemServices(item, index)}
             />
-
             <ImageBackground
               resizeMode="contain"
-              // style={styling.imageStyle}
+              style={styling.imageStyle}
               source={Images.tools}>
               <CustomText
                 style={styling.heading}
@@ -235,12 +237,12 @@ const UserHome = () => {
               renderItem={({item, index}) => renderItem(item, index)}
             />
             <View style={[styling.searchContainer, {marginTop: 8}]}>
+              <CustomText size={18} text={strings.toprated} />
               <CustomText
                 size={13}
                 color={Colors.primary}
                 text={strings.seeall}
               />
-              <CustomText size={18} text={strings.toprated} />
             </View>
             <FlatList
               style={{marginTop: 10}}
@@ -250,12 +252,13 @@ const UserHome = () => {
               renderItem={({item, index}) => renderItemTopArtist(item, index)}
             />
             <View style={[styling.searchContainer, {marginTop: 8}]}>
+              <CustomText size={18} text={strings.nearartist} />
+
               <CustomText
                 size={13}
                 color={Colors.primary}
                 text={strings.seeall}
               />
-              <CustomText size={18} text={strings.nearartist} />
             </View>
             <FlatList
               style={styling.nearFlatlist}
@@ -382,5 +385,9 @@ const styling = StyleSheet.create({
     paddingVertical: 6,
   },
   flatlist: {marginTop: 10, marginBottom: '18%', alignSelf: 'center'},
-  nearFlatlist: {marginTop: 10, alignSelf: 'center'},
+  nearFlatlist: {
+    marginTop: 10,
+    alignSelf: 'center',
+    width: '100%',
+  },
 });

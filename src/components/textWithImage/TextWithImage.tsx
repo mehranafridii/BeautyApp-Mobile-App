@@ -17,6 +17,7 @@ const TextWithImage: FC<TextWithImagePropTypes> = ({
     <View
       style={{
         flexDirection: 'row',
+        justifyContent: 'flex-end',
         alignItems: 'center',
         alignSelf: alignSelf || null,
       }}>

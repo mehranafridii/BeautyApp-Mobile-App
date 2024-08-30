@@ -1,5 +1,5 @@
 import {Image, StyleSheet, Text, View} from 'react-native';
-import React from 'react';
+import React, {FC} from 'react';
 import {Colors} from '../../../../utils/colors/colors';
 import strings from '../../../../utils/strings/strings';
 import Header from '../../../../components/header/Header';
@@ -13,19 +13,27 @@ import PersonWithPrice from '../../../../components/bookingScreenComponent/Perso
 import CostPrice from '../../../../components/bookingScreenComponent/CostPrice';
 import DurationHours from '../../../../components/bookingScreenComponent/DurationHours';
 import {useNavigation} from '@react-navigation/native';
-
-const BookingDetails = ({route}: {route: any}) => {
-  const navigation: any = useNavigation();
-
+interface BookingDetailProps {
+  navigation: any;
+  route: any;
+}
+const BookingDetails: FC<BookingDetailProps> = ({navigation, route}) => {
+  const {bookingDetail} = route?.params;
+  console.log(bookingDetail, 'jdsfkdsfjkds');
+  //Main Return
   return (
     <View style={styles.container}>
       <Header heading={strings?.booking_Detail} />
       <NewBookingRequest route={route?.params} />
       <View style={styles.paddingCommon}>
-        <CustomText text={strings.booking_Detail} size={14} />
+        <CustomText
+          text={strings.booking_Detail}
+          size={14}
+          style={{textAlign: 'left'}}
+        />
         <TextWithImage
           path={Images.location_Mark}
-          text={strings.g85}
+          text={bookingDetail?.address}
           size={14}
           alignSelf={'flex-start'}
         />
@@ -45,12 +53,18 @@ const BookingDetails = ({route}: {route: any}) => {
         <View style={styles.divider} />
       </View>
       <View style={styles.paddingCommon}>
-        <CustomText text={strings.service_detial} size={14} />
+        {/* Service Below */}
+        <CustomText
+          text={strings.service_detial}
+          size={14}
+          style={{textAlign: 'left'}}
+        />
         <View style={{marginVertical: 10}}>
           <CustomText
             text={strings.buzz_cut}
             size={14}
             color={Colors.lightGrey}
+            style={{textAlign: 'left'}}
           />
         </View>
       </View>

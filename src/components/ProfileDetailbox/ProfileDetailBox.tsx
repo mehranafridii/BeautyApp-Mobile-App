@@ -1,4 +1,4 @@
-import {Image, StyleSheet, Text, View} from 'react-native';
+import {Alert, Image, StyleSheet, Text, View} from 'react-native';
 import React, {FC} from 'react';
 import {Colors} from '../../utils/colors/colors';
 import {screenWidth} from '../../utils/dimensions';
@@ -21,8 +21,14 @@ const ProfileDetailBox: FC<ProfileDetailBoxPropsTypes> = ({
   onToggle,
 }) => {
   const navigation: any = useNavigation();
+  const handlePress = () => {
+    navigation.navigate(strings.bookingDetails_screen, {
+      bookingDetail: itemData,
+    });
+  };
   // Destructuring Data
   const {
+    date,
     address,
     starttime,
     endtime,
@@ -33,6 +39,7 @@ const ProfileDetailBox: FC<ProfileDetailBoxPropsTypes> = ({
     artist,
   } = itemData || {};
   console.log(itemData, 'sdfkdfjdksfj');
+
   return (
     <View style={styles.boxContainer}>
       <View style={styles.toggleContainer}>
@@ -45,17 +52,13 @@ const ProfileDetailBox: FC<ProfileDetailBoxPropsTypes> = ({
             isOn={isOn}
           />
         )}
-        <CustomText text={dateText} />
+        <CustomText text={`${date} - ${starttime}`} />
       </View>
       <View style={styles.divider} />
 
       <View style={styles.detailContainer}>
         <View style={styles.nameContainer}>
-          <CustomText
-            text={strings.jenny}
-            size={14}
-            style={{textAlign: 'right'}}
-          />
+          <CustomText text={artist} size={14} style={{textAlign: 'right'}} />
           <TextWithImage path={Images.location_Mark} text={strings.g85} />
           <TextWithImage path={Images.check_Image} text={strings.service_id} />
         </View>
@@ -66,7 +69,7 @@ const ProfileDetailBox: FC<ProfileDetailBoxPropsTypes> = ({
         <CustomButton style={styles.button} text={strings.view_Detail} />
       ) : (
         <FooterTwoButton
-          onPressRight={onPress}
+          onPressRight={handlePress}
           marginTop={5}
           textRight={strings.view_Detail}
           textLeft={strings.cancle}

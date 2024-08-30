@@ -6,6 +6,8 @@ import {Colors} from '../../utils/colors/colors';
 import {screenWidth} from '../../utils/dimensions';
 
 const NewBookingRequest = ({route}: {route: any}) => {
+  console.log(route, 'sdjfkdsds33');
+  const {bookingDetail} = route;
   return (
     <View style={styles.paddingContainer}>
       <CustomText
@@ -14,9 +16,14 @@ const NewBookingRequest = ({route}: {route: any}) => {
         }
         size={14}
         fontWeight="700"
+        style={{textAlign: 'left'}}
       />
       <View style={{marginVertical: 10}}>
-        <CustomText text={strings.july_Time} size={14} />
+        <CustomText
+          text={`${bookingDetail?.starttime} - ${bookingDetail?.date}`}
+          size={14}
+          style={{textAlign: 'left'}}
+        />
       </View>
       <View style={styles.divider} />
     </View>

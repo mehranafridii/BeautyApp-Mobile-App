@@ -24,6 +24,8 @@ interface BookAppointmentPropTypes {
   route: any;
 }
 const BookApointment: FC<BookAppointmentPropTypes> = ({navigation, route}) => {
+  const currentDate = new Date();
+  console.log(currentDate, 'sjfkdjfkdjfCURRENT_DATE', currentDate); //
   const {servicesDetails, artistDetails} = route?.params;
   // API initalization
   const [customerBooking] = useCustomerBookingServiceMutation();
@@ -35,42 +37,64 @@ const BookApointment: FC<BookAppointmentPropTypes> = ({navigation, route}) => {
   const totalPrice = servicesDetails?.reduce((acc, currentItem) => {
     return acc + currentItem?.rates * currentItem?.quantity;
   }, 0);
-  // console.log(totalPrice, 'sdjfkdsjfksd');
+
   const confirmBooking = async () => {
-    const idd = servicesDetails?.map(item => item?.rates);
-    console.log(idd, 'jsdfkdjfiIID');
-    const data = {
-      artist: artistDetails?.id,
-      date: '7/6/2024',
-      starttime: '1:00 PM',
-      endtime: '3:00 PM',
-      total_price: totalPrice,
-      address: 'Karachi',
-      travelcost: artistDetails?.travelingcost,
-      service_id: servicesDetails?.map(item => item?.service),
-      qty: servicesDetails?.map(item => item?.quantity),
-      total: servicesDetails?.map(item => item?.rates),
-      price: servicesDetails?.map(item => item?.rates),
-    };
+    // const data = {
+    //   artist: artistDetails?.id,
+    //   date: '7/6/2024',
+    //   starttime: '1:00 PM',
+    //   endtime: '3:00 PM',
+    //   total_price: totalPrice,
+    //   address: 'Karachi',
+    //   travelcost: artistDetails?.travelingcost,
+    //   service_id: servicesDetails?.map(item => item?.service),
+    //   qty: servicesDetails?.map(item => item?.quantity),
+    //   total: servicesDetails?.map(item => item?.rates),
+    //   price: servicesDetails?.map(item => item?.rates),
+    // };
+
     if (services?.length) {
-      const keys = Object.keys(data);
+      // const keys = Object.keys(data);
       const formData = new FormData();
+      formData.append('artist', artistDetails?.id);
+      formData.append('date', '7/6/2024');
+      formData.append('starttime', '12:00:00');
+      formData.append('endtime', '14:00:00');
+      formData.append('total_price', totalPrice);
+      formData.append('address', 'Pehawar');
+      formData.append('travelcost', artistDetails?.travelingcost);
+      formData.append(
+        'service_id[]',
+        servicesDetails?.map(item => item?.service),
+      );
+      formData.append(
+        'qty[]',
+        servicesDetails?.map(item => item?.quantity),
+      );
+      formData.append(
+        'total[]',
+        servicesDetails?.map(item => item?.rates),
+      );
+      formData.append(
+        'price[]',
+        servicesDetails?.map(item => item?.rates),
+      );
+
       // formData.append('artist', artistDetails?.id);
 
-      for (let i of keys) {
-        formData.append(i, data[i]);
-      }
-
+      // for (let i of keys) {
+      //   // formData.append(i, data[i]);
+      // }
+      console.log(formData, 'djfskdjfFORMDD');
       // return;
       await customerBooking(formData)
         .unwrap()
         .then(res => {
-          console.log(res, 'sjdfjsdfk');
-          // navigation.navigate(strings.managePaymentScreen);
+          navigation.goBack();
 
           AppToast({
             type: 'success',
-            message: 'Artist Registered Sucessfully',
+            message: 'Booking completed successfully',
           });
         })
         .catch(error => {

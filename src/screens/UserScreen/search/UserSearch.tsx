@@ -11,10 +11,7 @@ const UserSearch = () => {
   return (
     <View style={styling.container}>
       <SearchBarWithFilter search={search} setSearch={setSearch} />
-      <ScrollView
-        showsVerticalScrollIndicator={false}
-        // style={styling.container}
-      >
+      <ScrollView showsVerticalScrollIndicator={false}>
         <SearchScreenBox bgImage={Images.profilebg} />
         <SearchScreenBox bgImage={Images.addImage} />
       </ScrollView>
