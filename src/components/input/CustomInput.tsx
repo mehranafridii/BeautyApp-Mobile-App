@@ -38,6 +38,7 @@ const CustomInput: FC<CustomInputPropsTypes> = ({
   additionalInputTextStyle,
   additionalContainerStyle,
   errorIndicator,
+  editable = true,
 }) => {
   const [visible, setVisible] = useState(false);
 
@@ -69,6 +70,7 @@ const CustomInput: FC<CustomInputPropsTypes> = ({
               styles.inputTextContainer(paddingBottom),
               {...additionalInputTextStyle},
             ]}
+            editable={editable}
             secureTextEntry={password && !visible}
             placeholder={placeholder}
             placeholderTextColor={placeHolderTextColor || Colors.lightGrey}

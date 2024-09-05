@@ -27,6 +27,11 @@ export const Endpoints = {
   artistServices: 'Services/Get/',
   artistDetails: 'Artist/Profile/Detail/',
   artistProfile: 'artist_profile',
+  updateArtistProfile: 'update_artist_profile',
+  updateArtistAboutUs: 'Artist/AboutUs',
+  artistImage: 'Artist/Image',
+  artistGallery: 'Artist/Gallary',
+  artistWorkingHours: 'Artist/Working/Hours',
 
   //Category
   listCategory: 'list_category',

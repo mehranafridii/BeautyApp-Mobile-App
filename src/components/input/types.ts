@@ -22,4 +22,5 @@ export interface CustomInputPropsTypes {
   additionalInputTextStyle: object;
   additionalContainerStyle: object;
   errorIndicator: any;
+  editable: boolean;
 }

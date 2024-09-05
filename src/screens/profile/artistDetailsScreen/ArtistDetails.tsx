@@ -1,4 +1,5 @@
 import {
+  Alert,
   FlatList,
   Image,
   ImageBackground,
@@ -16,7 +17,7 @@ import {screenHeight, screenWidth} from '../../../utils/dimensions';
 import CustomText from '../../../components/text/CustomText';
 import strings from '../../../utils/strings/strings';
 import {SceneMap, TabBar, TabView} from 'react-native-tab-view';
-import {useNavigation} from '@react-navigation/native';
+import {useIsFocused, useNavigation} from '@react-navigation/native';
 import CustomeType from '../../../components/CustomType/CustomeType';
 import RBSheet from 'react-native-raw-bottom-sheet';
 import {photosData, profileData, weekdays} from '../../../utils/dummyData';
@@ -28,13 +29,25 @@ import ProfileButtons from '../../../components/ProfileButtons/ProfileButtons';
 import IconWithText from '../../../components/IconWithText/IconWithText';
 import TextImageText from '../../../components/textImageText/TextImageText';
 import TextWithImage from '../../../components/textWithImage/TextWithImage';
-import {useLazyGetArtistsProfileQuery} from '../../../Redux/services/app/AppApi';
+import {
+  useAddArtistWorkingHoursMutation,
+  useAddGalleryMutation,
+  useLazyGetArtistsProfileQuery,
+  useUpdateArtistAboutUsMutation,
+  useUpdateArtistImageMutation,
+} from '../../../Redux/services/app/AppApi';
 import Utility from '../../../utils/utility/Utility';
+import AppToast from '../../../components/appToast/AppToast';
+import ImagePicker from 'react-native-image-crop-picker';
 
 const ArtistDetails = () => {
   //API initialization
   const [getArtistProfile, {data: artistProfileData}] =
     useLazyGetArtistsProfileQuery();
+  const [updateAboutUs] = useUpdateArtistAboutUsMutation();
+  const [updateArtistImage] = useUpdateArtistImageMutation();
+  const [addWorkingHours] = useAddArtistWorkingHoursMutation();
+  const [addGallery] = useAddGalleryMutation();
   const bottomSheetRef = useRef<RBSheet>(null);
   const photoSheetRef = useRef<RBSheet>(null);
   const descriptionSheetRef = useRef<RBSheet>(null);
@@ -42,9 +55,16 @@ const ArtistDetails = () => {
   const navigation: any = useNavigation();
   const [index, setIndex] = useState(0);
   const [serviceForSheet, setServiceForSheet] = useState([]);
+  const [profileImage, setProfileImage] = useState();
+  const [galleryImages, setGalleryImages] = useState();
+  const [galleryCategoryName, setGalleryCategoryName] = useState();
+  const [aboutUs, setAboutUs] = useState();
+  const isFocused = useIsFocused();
+  console.log(descriptionSheetRef, 'descriptionSheetRefdescriptionSheetRef');
   useEffect(() => {
     GetArtistProfile();
-  }, []);
+  }, [isFocused]);
+
   console.log(artistProfileData, 'artistProfileData?.servicesdfdsdf');
   const GetArtistProfile = () => {
     getArtistProfile('')
@@ -55,6 +75,76 @@ const ArtistDetails = () => {
       .catch(error => {
         console.log(error);
       });
+  };
+  const UpdateAboutUs = (aboutUsText: string) => {
+    const formData = new FormData();
+    formData.append('description', aboutUsText);
+    updateAboutUs(formData)
+      ?.unwrap()
+      ?.then(response => {
+        const {status} = response;
+        console.log(response, 'responseresponsedfd');
+        descriptionSheetRef?.current?.close();
+        AppToast({type: 'success', message: status});
+        setAboutUs('');
+      });
+  };
+  const AddGalleryAPI = () => {
+    if (galleryImages?.uri && galleryCategoryName) {
+      const formData = new FormData();
+      formData.append('category', galleryCategoryName);
+      formData.append('image', galleryImages);
+      addGallery(formData)
+        .unwrap()
+        ?.then(res => {
+          console.log(res);
+        })
+        .catch(error => {});
+    } else {
+      AppToast({type: 'error', message: 'Please add details'});
+    }
+  };
+  const AddArtistWorkingHours = () => {
+    const formData = new FormData();
+    formData.append('date', galleryCategoryName);
+    formData.append('starttime', galleryImages);
+    formData.append('endtime', galleryImages);
+    formData.append('availability', galleryImages);
+    formData.append('starttime', galleryImages);
+    formData.append('otherurl', galleryImages);
+    addWorkingHours(formData);
+  };
+  // Upload Image for profile
+  const uploadImages = (index: Number) => {
+    ImagePicker.openPicker({
+      cropping: true,
+      width: 300,
+      height: 400,
+      compressImageQuality: 0.4 || null,
+      mediaType: 'photo',
+      minFiles: 1,
+      smartAlbums: [
+        'UserLibrary',
+        'Favorites',
+        'Screenshots',
+        'RecentlyAdded',
+        'Regular',
+        'Generic',
+        'SelfPortraits',
+        'PhotoStream',
+        'SyncedAlbum',
+        'Imported',
+      ],
+    }).then(image => {
+      let obj = {
+        uri: image?.path,
+        type: image?.mime,
+        name: image?.filename,
+        index: index,
+      };
+      setGalleryImages(obj);
+      // setProfileImage(obj);
+    });
   };
   //Image of Artist
   const artistImage = artistProfileData?.profile?.image
@@ -69,9 +159,7 @@ const ArtistDetails = () => {
   ]);
   const serviceWithCategory = artistProfileData?.services?.reduce(
     (acc, currentItem) => {
-      console.log(currentItem, 'skjfksdfj');
       const category = currentItem?.category_detail?.category;
-      console.log(category, 'skdfjkdsjfkdsfj');
       if (!acc[category]) {
         acc[category] = [];
       }
@@ -80,7 +168,7 @@ const ArtistDetails = () => {
     },
     {},
   );
-  console.log(serviceWithCategory, 'dsfdsfk23423ddd');
+  ///////////////////////////// Tabs Routes and UI /////////////////////////////
   const FirstRoute = () => (
     <ScrollView
       style={styles.flexContainer}
@@ -133,9 +221,9 @@ const ArtistDetails = () => {
         <TouchableOpacity
           onPress={() => photoSheetRef.current?.open()}
           activeOpacity={strings.buttonopacity}
-          style={styles.flex}>
-          <CustomText size={14} text={strings.addphotos} />
+          style={[styles.flex, {gap: 5}]}>
           <Image source={Images.gallery} />
+          <CustomText size={14} text={strings.addphotos} />
         </TouchableOpacity>
       </View>
       <FlatList
@@ -143,14 +231,16 @@ const ArtistDetails = () => {
         numColumns={2}
         scrollEnabled={false}
         renderItem={({item, index}) => {
+          console.log(item?.image, 'IMAJAJA');
           const picture = Utility.getImageUrl(item?.image);
-          console.log(picture, 'sjkfksdjf');
+          console.log(picture, 'ksjfkdsjiJIII');
           return (
             <ImageBackground
               key={index}
               style={styles.bgImage}
-              // source={picture ? {uri: picture} : item.img}
-              source={Images.img1}>
+              borderRadius={12}
+              source={picture ? {uri: picture} : Images.img1}
+              defaultSource={Images.img1}>
               {item?.category && (
                 <View style={styles.categoryContainer}>
                   <CustomText
@@ -269,12 +359,8 @@ const ArtistDetails = () => {
         path={Images.twitterS}
         text={artistProfileData?.sociallinks[0]?.twiter}
       />
-      {/* <IconWithText path={Images.facbook} text={strings.artistUser} />
-      <IconWithText path={Images.insta} text={strings.artistUser} />
-      <IconWithText path={Images.dribbble} text={strings.artistUser} />
-      <IconWithText path={Images.LinkedIn} text={strings.artistUser} />
-      <IconWithText path={Images.twitterS} text={strings.artistUser} /> */}
       <TextImageText
+        onPress={() => addressSheetRef?.current?.open()}
         withoutImageText={strings.contactUs}
         withImage={strings.editing_Contact_Detail}
       />
@@ -298,7 +384,7 @@ const ArtistDetails = () => {
         />
       </View>
       <TextImageText
-        onPress={() => addressSheetRef?.current?.open()}
+        onPress={() => Alert.alert('MapScreen')}
         withImage={strings.viewOnMap}
         withoutImageText={strings.address}
       />
@@ -314,82 +400,16 @@ const ArtistDetails = () => {
         />
       </View>
       <Image source={Images.locationImage} style={styles.imageStyle} />
-      <RBSheet
-        ref={descriptionSheetRef}
-        height={screenHeight / 2.7}
-        openDuration={250}
-        closeOnDragDown={true}
-        customStyles={{
-          draggableIcon: {
-            backgroundColor: Colors.grey100,
-            width: 123,
-          },
-        }}>
-        <View style={styles.contentContainer}>
-          <CustomText
-            style={styles.alignText}
-            size={22}
-            text={strings?.adddesc}
-          />
-          <View style={[styles.divider, {marginBottom: 17}]} />
-          <CustomText text={strings.description} />
-          <TextInput
-            numberOfLines={6}
-            style={styles.descInput}
-            placeholder={strings.enterdesc}
-          />
-          <FooterTwoButton
-            marginTop={15}
-            textLeft={strings.cancle}
-            textRight={strings.adddesc}
-          />
-        </View>
-      </RBSheet>
-      <RBSheet
-        ref={addressSheetRef}
-        height={screenHeight / 1.47}
-        openDuration={250}
-        closeOnDragDown={true}
-        customStyles={{
-          draggableIcon: {
-            backgroundColor: Colors.grey100,
-            width: 123,
-          },
-        }}>
-        <View style={styles.contentContainer}>
-          <CustomText
-            style={styles.alignText}
-            size={22}
-            text={strings?.contactndadress}
-          />
-          <View style={[styles.divider, {marginBottom: 17}]} />
-          <CustomInput label={strings.phonenum} placeholder={strings.num} />
-          <CustomInput
-            style={{marginTop: 10}}
-            label={strings.email}
-            placeholder={strings.expemail}
-          />
-          <CustomInput
-            style={{marginTop: 10}}
-            label={strings.address}
-            placeholder={strings.prestonRd}
-          />
-          <Image source={Images.locationImage} style={styles.imageStyle} />
-          <FooterTwoButton
-            marginTop={15}
-            textLeft={strings.cancle}
-            textRight={strings.contactndadress}
-          />
-        </View>
-      </RBSheet>
     </ScrollView>
   );
+  /////////////////////////// Tabs UI End /////////////////////////////////////////
   const renderScene = SceneMap({
     first: FirstRoute,
     second: SecondRoute,
     third: ThirdRoute,
     fourth: fourthRoute,
   });
+  /// Tab RENDER UI
   const renderTabBar = (props: any) => (
     <TabBar
       {...props}
@@ -398,6 +418,8 @@ const ArtistDetails = () => {
       style={{backgroundColor: Colors.white}}
     />
   );
+
+  ////////// Main Return /////////////////
   return (
     <View style={styles.container}>
       <ImageBackground style={styles.bgImageStyle} source={Images.profilebg}>
@@ -425,8 +447,16 @@ const ArtistDetails = () => {
             <Image style={styles.instaImage} source={Images.insta} />
           </View>
           <View style={styles.avatarContainer}>
-            <Image style={styles.editImage} source={Images.edit} />
-            <Image style={styles.profilePicStyle} source={Images.profilepic} />
+            <TouchableOpacity
+              style={styles.editImage}
+              onPress={() => navigation.navigate('YourProfile')}>
+              <Image source={Images.edit} />
+            </TouchableOpacity>
+            <Image
+              style={styles.profilePicStyle}
+              source={{uri: artistImage}}
+              defaultSource={Images.profilepic}
+            />
           </View>
           <View style={styles.artistContainer}>
             <CustomText
@@ -525,21 +555,47 @@ const ArtistDetails = () => {
               text={strings?.workinghours}
             />
             <View style={styles.divider} />
-            {weekdays?.map((item, index) => {
-              return (
-                <View key={index} style={styles.sheetContainer}>
-                  <CustomText
-                    color={Colors.lightGrey}
-                    size={16}
-                    text={item?.weekday}
-                  />
-                  <View style={styles.flex}>
-                    <CustomText size={14} fontWeight="400" text={item?.time} />
-                    <Image style={{marginLeft: 5}} source={Images.arrow_down} />
-                  </View>
+            {weekdays?.map((item, index) => (
+              <View key={index} style={styles.sheetContainer}>
+                <CustomText
+                  color={Colors.lightGrey}
+                  size={16}
+                  text={item?.weekday}
+                />
+                <View style={styles.flex}>
+                  <CustomText size={14} fontWeight="400" text={item?.time} />
+
+                  <Image style={{marginLeft: 5}} source={Images.arrow_down} />
                 </View>
-              );
-            })}
+              </View>
+            ))}
+            {/* <FlatList
+              data={artistProfileData?.workinghours}
+              renderItem={({item, index}) => {
+                console.log(item, 'skdfkdsfjkiTT');
+                return (
+                  <View key={index} style={styles.sheetContainer}>
+                    <CustomText
+                      color={Colors.lightGrey}
+                      size={16}
+                      text={item?.date}
+                    />
+                    <View style={styles.flex}>
+                      <CustomText
+                        size={14}
+                        fontWeight="400"
+                        text={`${item?.endtime}-${item?.starttime} `}
+                      />
+
+                      <Image
+                        style={{marginLeft: 5}}
+                        source={Images.arrow_down}
+                      />
+                    </View>
+                  </View>
+                );
+              }}
+            /> */}
             <FooterTwoButton
               marginTop={15}
               textLeft={strings.cancle}
@@ -549,7 +605,7 @@ const ArtistDetails = () => {
         </RBSheet>
         <RBSheet
           ref={photoSheetRef}
-          height={screenHeight / 1.95}
+          height={screenHeight / 1.5}
           openDuration={250}
           closeOnDragDown={true}
           customStyles={{
@@ -565,32 +621,128 @@ const ArtistDetails = () => {
               text={strings?.addphotos}
             />
             <View style={styles.divider} />
-            <CustomText size={18} text={strings?.uploadworkphotos} />
+            <CustomText
+              size={18}
+              text={strings?.uploadworkphotos}
+              style={{textAlign: 'left'}}
+            />
             <CustomText
               size={15}
               color={Colors.lightGrey}
               text={strings?.lorem_ipsum}
+              style={{textAlign: 'left'}}
             />
             <DottedBorder
               width={screenWidth / 1.15}
               height={screenHeight / 7}
+              imageSource={galleryImages?.uri}
               text={strings?.uploadphotoshere}
               textColor={Colors.lightGrey}
               bgColor={Colors.grey10}
               marginBottom={20}
+              onHandlePress={() => uploadImages()}
             />
             <CustomInput
               label={strings.photocategory}
               placeholder={strings.hairname}
+              value={galleryCategoryName}
               placeHolderTextColor={Colors.black}
+              onChangeText={text => setGalleryCategoryName(text)}
             />
             <FooterTwoButton
               marginTop={15}
               textLeft={strings.cancle}
               textRight={strings.addtype}
+              onPressLeft={() => photoSheetRef?.current?.close()}
+              onPressRight={() => {
+                AddGalleryAPI();
+              }}
             />
           </View>
         </RBSheet>
+        {/* To Change About Us BottomSheet */}
+        <RBSheet
+          ref={descriptionSheetRef}
+          height={screenHeight / 2.2}
+          openDuration={250}
+          closeOnDragDown={true}
+          customStyles={{
+            draggableIcon: {
+              backgroundColor: Colors.grey100,
+              width: 123,
+            },
+          }}>
+          <View style={styles.contentContainer}>
+            <CustomText
+              style={styles.alignText}
+              size={22}
+              text={strings?.adddesc}
+            />
+            <View style={[styles.divider, {marginBottom: 17}]} />
+            <CustomText
+              text={strings.description}
+              style={{textAlign: 'left'}}
+            />
+            <TextInput
+              // numberOfLines={6}
+              style={styles.descInput}
+              placeholder={strings.enterdesc}
+              value={aboutUs}
+              onChangeText={text => setAboutUs(text)}
+            />
+            <FooterTwoButton
+              marginTop={15}
+              textLeft={strings.cancle}
+              textRight={strings.adddesc}
+              onPressLeft={() => descriptionSheetRef?.current?.close()}
+              onPressRight={() => UpdateAboutUs(aboutUs)}
+            />
+          </View>
+        </RBSheet>
+        {/* End */}
+        {/* To Change Address Us BottomSheet  */}
+        <RBSheet
+          ref={addressSheetRef}
+          height={screenHeight / 1.3}
+          openDuration={250}
+          closeOnDragDown={true}
+          customStyles={{
+            draggableIcon: {
+              backgroundColor: Colors.grey100,
+              width: 123,
+            },
+          }}>
+          <ScrollView
+            contentContainerStyle={[
+              styles.contentContainer,
+              {paddingBottom: 50},
+            ]}>
+            <CustomText
+              style={styles.alignText}
+              size={22}
+              text={strings?.contactndadress}
+            />
+            <View style={[styles.divider, {marginBottom: 17}]} />
+            <CustomInput label={strings.phonenum} placeholder={strings.num} />
+            <CustomInput
+              style={{marginTop: 10}}
+              label={strings.email}
+              placeholder={strings.expemail}
+            />
+            <CustomInput
+              style={{marginTop: 10}}
+              label={strings.address}
+              placeholder={strings.prestonRd}
+            />
+            <Image source={Images.locationImage} style={styles.imageStyle} />
+            <FooterTwoButton
+              marginTop={15}
+              textLeft={strings.cancle}
+              textRight={strings.contactndadress}
+            />
+          </ScrollView>
+        </RBSheet>
+        {/* End */}
       </View>
     </View>
   );
@@ -642,6 +794,7 @@ const styles = StyleSheet.create({
   profilePicStyle: {
     width: 112,
     height: 112,
+    borderRadius: 100,
   },
   monsunText: {fontSize: 20, color: Colors.lightGrey},
   jobCancleLine: {fontSize: 24, color: Colors.lightGrey},
@@ -785,10 +938,16 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
   },
   descInput: {
+    height: 141,
     borderColor: Colors.grey100,
     borderWidth: 1,
     borderRadius: 8,
     marginTop: 5,
+    alignItems: 'flex-start',
+    alignContent: 'flex-start',
+    justifyContent: 'flex-start',
     textAlignVertical: 'top',
+    textAlign: 'right',
+    paddingHorizontal: 10,
   },
 });

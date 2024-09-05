@@ -166,6 +166,56 @@ const getArtistsProfile = (id: string) => {
     },
   };
 };
+const updateArtistsProfile = body => {
+  return {
+    url: Endpoints.updateArtistProfile,
+    method: apiMethods.post,
+    body,
+    // headers: {
+    //   'Content-type': 'application/json',
+    // },
+  };
+};
+const updateArtistAboutUs = body => {
+  return {
+    url: Endpoints.updateArtistAboutUs,
+    method: apiMethods.post,
+    body,
+    // headers: {
+    //   'Content-type': 'application/json',
+    // },
+  };
+};
+const updateArtistImage = body => {
+  return {
+    url: Endpoints.artistImage,
+    method: apiMethods.post,
+    body,
+    // headers: {
+    //   'Content-type': 'application/json',
+    // },
+  };
+};
+const addGallery = body => {
+  return {
+    url: Endpoints.artistGallery,
+    method: apiMethods.post,
+    body,
+    // headers: {
+    //   'Content-type': 'application/json',
+    // },
+  };
+};
+const addArtistWorkingHours = body => {
+  return {
+    url: Endpoints.artistWorkingHours,
+    method: apiMethods.post,
+    body,
+    // headers: {
+    //   'Content-type': 'application/json',
+    // },
+  };
+};
 
 ////
 export const AppApi = baseApi.injectEndpoints({
@@ -226,6 +276,22 @@ export const AppApi = baseApi.injectEndpoints({
     getArtistsProfile: build.query({
       query: getArtistsProfile,
     }),
+    updateArtistsProfile: build.mutation({
+      query: updateArtistsProfile,
+    }),
+
+    updateArtistAboutUs: build.mutation({
+      query: updateArtistAboutUs,
+    }),
+    updateArtistImage: build.mutation({
+      query: updateArtistImage,
+    }),
+    addGallery: build.mutation({
+      query: addGallery,
+    }),
+    addArtistWorkingHours: build.mutation({
+      query: addArtistWorkingHours,
+    }),
   }),
 });
 
@@ -253,4 +319,9 @@ export const {
   useLazyGetArtistsForServiceQuery,
   useLazyGetArtistsDetailsQuery,
   useLazyGetArtistsProfileQuery,
+  useUpdateArtistsProfileMutation,
+  useUpdateArtistAboutUsMutation,
+  useUpdateArtistImageMutation,
+  useAddGalleryMutation,
+  useAddArtistWorkingHoursMutation,
 } = AppApi;

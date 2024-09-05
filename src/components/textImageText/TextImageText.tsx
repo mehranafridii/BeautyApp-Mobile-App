@@ -13,6 +13,7 @@ const TextImageText: FC<TextImageTextPropTypes> = ({
 }) => {
   return (
     <View style={styles.buttonContainer}>
+      <CustomText size={16} text={withoutImageText} />
       <TouchableOpacity
         onPress={onPress}
         activeOpacity={strings.buttonopacity}
@@ -20,7 +21,6 @@ const TextImageText: FC<TextImageTextPropTypes> = ({
         <Image source={Images.edited} style={{marginLeft: 5}} />
         <CustomText color={Colors.primary} size={14} text={withImage} />
       </TouchableOpacity>
-      <CustomText size={16} text={withoutImageText} />
     </View>
   );
 };

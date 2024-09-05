@@ -67,7 +67,7 @@ const AddServices = ({
         'RecentlyAdded',
         'Regular',
         'Generic',
-        'Importeds',
+        'Imported',
         'SelfPortraits',
         'PhotoStream',
         'SyncedAlbum',
