@@ -179,6 +179,7 @@ const MyService = ({navigation}: {navigation: any}) => {
                 text={`${item?.rates}  ${strings.$} `}
                 textName={item?.title}
                 path={Images.plus}
+                onPress={() => {}}
               />
             ))}
 

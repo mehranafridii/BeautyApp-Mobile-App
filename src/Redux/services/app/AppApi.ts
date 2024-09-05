@@ -216,6 +216,16 @@ const addArtistWorkingHours = body => {
     // },
   };
 };
+const updateArtistTravelCost = body => {
+  return {
+    url: Endpoints.artistTravelCost,
+    method: apiMethods.post,
+    body,
+    // headers: {
+    //   'Content-type': 'application/json',
+    // },
+  };
+};
 
 ////
 export const AppApi = baseApi.injectEndpoints({
@@ -292,6 +302,9 @@ export const AppApi = baseApi.injectEndpoints({
     addArtistWorkingHours: build.mutation({
       query: addArtistWorkingHours,
     }),
+    updateArtistTravelCost: build.mutation({
+      query: updateArtistTravelCost,
+    }),
   }),
 });
 
@@ -324,4 +337,5 @@ export const {
   useUpdateArtistImageMutation,
   useAddGalleryMutation,
   useAddArtistWorkingHoursMutation,
+  useUpdateArtistTravelCostMutation,
 } = AppApi;

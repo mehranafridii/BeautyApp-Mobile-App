@@ -147,7 +147,7 @@ const ArtistDetailsUser = ({
             <CustomText
               size={20}
               // text={`${strings?.allservice}(${artistDetailData?.service?.length})`}
-              text={`${strings?.allservice} (2)`}
+              text={`${strings?.allservice} (${services?.length})`}
             />
             <TouchableOpacity activeOpacity={strings.buttonopacity}>
               <CustomText size={14} text={strings?.addservices} />

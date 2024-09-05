@@ -175,23 +175,18 @@ const ArtistDetails = () => {
       showsVerticalScrollIndicator={false}>
       <View style={styles.flexContainer}>
         <View style={styles.alserviceContainer}>
-          <CustomText size={20} text={strings?.alservice} />
+          <CustomText
+            size={20}
+            text={`${strings?.allservice} (${artistProfileData?.services?.length})`}
+          />
           <TouchableOpacity
-            onPress={() => bottomSheetRef.current?.open()}
+            // onPress={() => bottomSheetRef.current?.open()}
+            onPress={() => navigation.navigate('AddServicesSelected')}
             activeOpacity={strings.buttonopacity}>
             <CustomText size={14} text={strings?.addservices} />
           </TouchableOpacity>
         </View>
         <View style={styles.centerView}>
-          {/* <CustomeType
-            textName={strings.hair_Cut}
-            onPress={() => bottomSheetRef.current?.open()}
-            text={strings?.type20}
-          />
-          <CustomeType
-            textName={strings.hair_Coloring}
-            text={strings?.type12}
-          /> */}
           <FlatList
             data={artistProfileData?.services}
             renderItem={({item, index}) => (
@@ -205,11 +200,6 @@ const ArtistDetails = () => {
               />
             )}
           />
-          {/* <CustomeType textName={strings.hair_Wash} text={strings?.type08} />
-          <CustomeType textName={strings.shaving} text={strings?.type12} />
-          <CustomeType textName={strings.skincare} text={strings?.type04} />
-          <CustomeType textName={strings.hairdry} text={strings?.type05} />
-          <CustomeType textName={strings.face_makeup} text={strings?.type12} /> */}
         </View>
       </View>
     </ScrollView>

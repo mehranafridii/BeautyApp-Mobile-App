@@ -38,7 +38,6 @@ const ProfileDetailBox: FC<ProfileDetailBoxPropsTypes> = ({
     id,
     artist,
   } = itemData || {};
-  console.log(itemData, 'sdfkdfjdksfj');
 
   return (
     <View style={styles.boxContainer}>

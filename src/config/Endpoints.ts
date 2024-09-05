@@ -32,6 +32,7 @@ export const Endpoints = {
   artistImage: 'Artist/Image',
   artistGallery: 'Artist/Gallary',
   artistWorkingHours: 'Artist/Working/Hours',
+  artistTravelCost: 'Artist/Traval/Cost',
 
   //Category
   listCategory: 'list_category',

@@ -85,7 +85,7 @@ const Profile = () => {
         <ProfileDetail
           heading={strings.travelcost}
           icon={Images.cost}
-          onPress={() => navigation.navigate(strings.travelcost)}
+          onPress={() => navigation.navigate(strings.travelCostscreen)}
         />
         <ProfileDetail
           heading={strings.settings}
