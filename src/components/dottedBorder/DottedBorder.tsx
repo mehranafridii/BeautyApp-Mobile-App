@@ -22,7 +22,6 @@ const DottedBorder: FC<DottedBorderPropsTypes> = ({
   onHandlePress,
   imageSource,
 }) => {
-  console.log(imageSource, 'sjfksdjfkimageSourceInside');
   return (
     <TouchableOpacity
       onPress={onHandlePress}

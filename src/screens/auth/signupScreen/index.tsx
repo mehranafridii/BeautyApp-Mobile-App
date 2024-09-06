@@ -31,9 +31,9 @@ const Signup = () => {
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState(null);
   const [items, setItems] = useState([
-    {label: 'Apple', value: 'apple'},
-    {label: 'Banana', value: 'banana'},
-    {label: 'Pear', value: 'pear'},
+    {label: 'Category1', value: 'Category'},
+    {label: 'Category2', value: 'Category'},
+    {label: 'Category3', value: 'Category'},
   ]);
 
   const [inputsDetails, setinputsDetails] = useState({
@@ -88,7 +88,7 @@ const Signup = () => {
       await signupArtistApi(formData)
         .unwrap()
         .then(res => {
-          console.log(res, 'sjdfjsdfk');
+          console.log(res, '34343434mkjk343443');
           res?.status
             ? (navigation.navigate(strings.locationscreen),
               AppToast({
@@ -148,6 +148,7 @@ const Signup = () => {
             label={strings.email}
             onChangeText={handleInputs('email')('')}
             errorIndicator={errors.email}
+            keyboardType="email-address"
           />
           <CustomInput
             dropdown

@@ -1,4 +1,5 @@
 import {
+  Alert,
   Image,
   ScrollView,
   StyleSheet,
@@ -18,35 +19,71 @@ import {useNavigation} from '@react-navigation/native';
 import CustomButton from '../../../components/button/CustomButton';
 import {RequestGalleryPermission} from '../../../utils/GalleryPermission/GalleryPermission';
 import ImagePicker from 'react-native-image-crop-picker';
+import {useUploadArtistDocumentMutation} from '../../../Redux/services/auth/AuthApi';
+import AppToast from '../../../components/appToast/AppToast';
 const UploadDocs = () => {
   const navigation: any = useNavigation();
-  const [profileImage, setProfileImage] = useState('');
-  const pickImage = async () => {
-    console.log('first');
-    const options: {
-      cropping: boolean;
-      cropperCircleOverlay: boolean;
-      cropperToolbarTitle: string;
-      mediaType: 'photo';
-    } = {
-      cropping: true,
-      cropperCircleOverlay: false,
-      cropperToolbarTitle: 'Crop Image',
-      mediaType: 'photo',
-    };
+  //API initialization
+  const [uploadDocuments] = useUploadArtistDocumentMutation();
 
-    const galleryPermissionStatus = await RequestGalleryPermission();
-    {
-      galleryPermissionStatus == 'granted'
-        ? ImagePicker.openPicker(options)
-            .then(res => {
-              setProfileImage(res.path);
-              console.log('response@@@@', res.path);
-            })
-            .catch(err => console.log('Error', err))
-        : null;
+  const [documentsImages, setDocumentsImages] = useState();
+  const [workPhotos, setWorkPhotos] = useState();
+  // API functions
+  const UploadDocuments = () => {
+    if (documentsImages?.license && documentsImages?.nationalId) {
+      const formData = new FormData();
+      formData.append('licenseimage', documentsImages?.license);
+      formData.append('idimage', documentsImages?.nationalId);
+      uploadDocuments(formData)
+        ?.unwrap()
+        ?.then(response => {
+          navigation.navigate(strings.loginscreen);
+        })
+        .catch(error => {
+          AppToast({type: 'error', message: 'Unauthorized access'});
+        });
+    } else {
+      AppToast({type: 'error', message: 'Pick Images'});
     }
   };
+  // FUnction to pick images
+  const uploadImages = (key: string) => {
+    ImagePicker.openPicker({
+      cropping: true,
+      width: 300,
+      height: 400,
+      compressImageQuality: 0.4 || null,
+      mediaType: 'photo',
+      minFiles: 1,
+      smartAlbums: [
+        'UserLibrary',
+        'Favorites',
+        'Screenshots',
+        'RecentlyAdded',
+        'Regular',
+        'Generic',
+        'Imported',
+        'SelfPortraits',
+        'PhotoStream',
+        'SyncedAlbum',
+      ],
+    }).then(image => {
+      let obj = {
+        uri: image?.path,
+        type: image?.mime,
+        name: image?.filename,
+      };
+      let obbb = {[key]: obj};
+      console.log(obbb);
+      key === 'license' || key === 'nationalId'
+        ? setDocumentsImages(prev => ({...prev, [key]: obj}))
+        : setWorkPhotos(prev => ({...prev, [key]: obj}));
+    });
+  };
+  console.log(documentsImages, 'sdkjfkdjsdfdfd');
+  console.log(workPhotos, 'WOkdffjROK');
+
+  // MAIN Return
   return (
     <ScrollView
       // style={styles.container}
@@ -65,10 +102,11 @@ const UploadDocs = () => {
           text={strings.uploadworklicense}
         />
         <DottedBorder
-          width={screenWidth / 1.1}
+          width={'100%'}
           height={screenHeight / 6}
+          imageSource={documentsImages?.license?.uri}
           text={strings.uploadyourdocs}
-          // onPress={() => pickImage()}
+          onHandlePress={() => uploadImages('license')}
         />
         <CustomText
           style={styles.alignleft}
@@ -76,10 +114,11 @@ const UploadDocs = () => {
           text={strings.uploadIdcard}
         />
         <DottedBorder
-          width={screenWidth / 1.1}
+          width={'100%'}
           height={screenHeight / 6}
+          imageSource={documentsImages?.nationalId?.uri}
           text={strings.uploadyourdocs}
-          // onPress={pickImage}
+          onHandlePress={() => uploadImages('nationalId')}
         />
         <CustomText
           style={styles.alignleft}
@@ -93,25 +132,26 @@ const UploadDocs = () => {
           text={strings.dumytext}
         />
         <View style={styles.uploadPhotosContainer}>
-          <View>
-            <DottedBorder
-              width={screenWidth / 2.3}
-              height={screenHeight / 8}
-              text={strings.uploadphotos}
-              // onPress={pickImage}
-            />
-          </View>
           <DottedBorder
-            width={screenWidth / 2.3}
+            width={'48%'}
             height={screenHeight / 8}
+            imageSource={workPhotos?.workPic1?.uri}
             text={strings.uploadphotos}
-            // onPress={pickImage}
+            onHandlePress={() => uploadImages('workPic1')}
+          />
+
+          <DottedBorder
+            width={'48%'}
+            height={screenHeight / 8}
+            imageSource={workPhotos?.workPic2?.uri}
+            text={strings.uploadphotos}
+            onHandlePress={() => uploadImages('workPic2')}
           />
         </View>
         <CustomButton
           style={styles.button}
           text={strings.compsignup}
-          onPress={() => navigation.navigate(strings.loginscreen)}
+          onPress={() => UploadDocuments()}
         />
       </View>
     </ScrollView>
@@ -124,7 +164,7 @@ const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
     backgroundColor: Colors.white,
-    padding: 15,
+    paddingHorizontal: 25,
   },
   borderContainer: {
     justifyContent: 'center',
@@ -141,12 +181,16 @@ const styles = StyleSheet.create({
   },
   button: {width: '100%'},
   uploadPhotosContainer: {
+    flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: 40,
+    marginTop: 15,
   },
   borderPadding: {
     paddingVertical: 20,
   },
-  dummyText: {textAlign: 'left', marginTop: 10},
-  alignleft: {textAlign: 'left'},
+  dummyText: {textAlign: 'left'},
+  alignleft: {textAlign: 'left', marginBottom: 15, marginTop: 15},
 });

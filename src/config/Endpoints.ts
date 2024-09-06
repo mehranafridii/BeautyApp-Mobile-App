@@ -6,6 +6,7 @@ export const Endpoints = {
   forgotPassword: 'users/forget-password',
   verifyOTP: 'users/otp-verification',
   resetPassword: 'users/reset-password',
+  documents: 'documents',
   //Onboarding
   onBoardScreen1: 'onboarding_screen_01',
   onBoardScreen2: 'onboarding_screen_02',

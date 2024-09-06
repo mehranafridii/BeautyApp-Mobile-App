@@ -80,7 +80,6 @@ const OnBoarding = () => {
               <View style={styles.map} key={index}>
                 <Image
                   style={{
-                    backgroundColor: 'red',
                     width: '90%',
                     height: screenHeight / 2.6,
                   }}
@@ -126,7 +125,6 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     paddingRight: 20,
     paddingHorizontal: 15,
-    backgroundColor: 'red',
     width: 100,
   },
   skipTextStyle: {

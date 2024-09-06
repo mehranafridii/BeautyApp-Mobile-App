@@ -39,6 +39,7 @@ const CustomInput: FC<CustomInputPropsTypes> = ({
   additionalContainerStyle,
   errorIndicator,
   editable = true,
+  keyboardType = 'default',
 }) => {
   const [visible, setVisible] = useState(false);
 
@@ -77,6 +78,9 @@ const CustomInput: FC<CustomInputPropsTypes> = ({
             value={value}
             // onChange={}
             onChangeText={onChangeText}
+            keyboardType={keyboardType}
+            // keyboardType='email-address'
+
           />
         )}
         {changeText && (

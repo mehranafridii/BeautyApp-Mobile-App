@@ -23,4 +23,5 @@ export interface CustomInputPropsTypes {
   additionalContainerStyle: object;
   errorIndicator: any;
   editable: boolean;
+  keyboardType: string;
 }
