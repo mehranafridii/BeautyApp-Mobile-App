@@ -56,6 +56,7 @@ const UserYourProfile = () => {
           setItems={setItems}
           dropdownPlaceholder={strings.heChooses}
           label={strings.gender}
+          errorIndicator={false}
         />
 
         <View style={styles.buttonContainer}>

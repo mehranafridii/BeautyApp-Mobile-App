@@ -29,18 +29,17 @@ const Signup = () => {
   const navigation: any = useNavigation();
   const [toggleCheckBox, setToggleCheckBox] = useState(false);
   const [open, setOpen] = useState(false);
-  const [value, setValue] = useState(null);
+  const [categoryValue, setCategoryValue] = useState(null);
   const [items, setItems] = useState([
-    {label: 'Category1', value: 'Category'},
-    {label: 'Category2', value: 'Category'},
-    {label: 'Category3', value: 'Category'},
+    {label: strings.artist, value: 'artist'},
+    {label: strings.onlinestore, value: 'onlineStore'},
   ]);
 
   const [inputsDetails, setinputsDetails] = useState({
     name: '',
     phone: '',
     email: '',
-    category: '1',
+    category: categoryValue,
     address: '',
     business_email: '',
     business_name: '',
@@ -57,7 +56,7 @@ const Signup = () => {
     name: '',
     phone: '',
     email: '',
-    category: '1',
+    category: '',
     address: '',
     business_email: '',
     business_name: '',
@@ -70,6 +69,8 @@ const Signup = () => {
     dob: '12-09-2015',
     image: 'none',
   });
+
+  // Handle SignUp Functions
   const handleSignup = async () => {
     const validate = Utility.signupArtistValidation(
       inputsDetails,
@@ -152,8 +153,8 @@ const Signup = () => {
           />
           <CustomInput
             dropdown
-            value={value}
-            setValue={setValue}
+            value={categoryValue}
+            setValue={setCategoryValue}
             open={open}
             setOpen={setOpen}
             items={items}

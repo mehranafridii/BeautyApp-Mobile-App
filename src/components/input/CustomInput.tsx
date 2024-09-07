@@ -60,6 +60,7 @@ const CustomInput: FC<CustomInputPropsTypes> = ({
                 borderColor: Colors.grey100,
                 width: screenWidth / 1.2,
               }}
+              textStyle={{textAlign: 'left'}}
               placeholder={dropdownPlaceholder}
               placeholderStyle={{color: Colors.lightGrey}}
               listMode="MODAL"
@@ -80,7 +81,6 @@ const CustomInput: FC<CustomInputPropsTypes> = ({
             onChangeText={onChangeText}
             keyboardType={keyboardType}
             // keyboardType='email-address'
-
           />
         )}
         {changeText && (

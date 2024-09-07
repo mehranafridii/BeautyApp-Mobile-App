@@ -216,6 +216,7 @@ const YourProfile = ({navigation}) => {
           setItems={setItems}
           dropdownPlaceholder={strings.heChooses}
           label={strings.gender}
+          errorIndicator={false}
         />
         <CustomInput
           style={styles.inputStyle}

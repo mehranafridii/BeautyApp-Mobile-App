@@ -1,6 +1,7 @@
 import {
   BackHandler,
   Image,
+  ScrollView,
   StyleSheet,
   TouchableOpacity,
   View,
@@ -29,7 +30,7 @@ const Location = () => {
   ]);
 
   return (
-    <View style={styles.container}>
+    <ScrollView contentContainerStyle={styles.container}>
       <Image
         style={{marginTop: screenHeight * 0.09}}
         source={Images.currentloc}
@@ -56,6 +57,7 @@ const Location = () => {
         dropdownPlaceholder={strings.allcities}
         label={strings.selectcity}
         dropdown={true}
+        errorIndicator={false}
       />
       <CustomButton
         onPress={() => {
@@ -66,19 +68,18 @@ const Location = () => {
         style={{marginTop: 20}}
         text={strings.allowloc}
       />
-      {checkType == 'user' && (
-        <TouchableOpacity
-          onPress={() => navigation.navigate(strings.manuallocationscreen)}
-          activeOpacity={strings.buttonopacity}>
-          <CustomText
-            size={18}
-            color={Colors.primary}
-            style={{marginTop: 15}}
-            text={strings.enterlocman}
-          />
-        </TouchableOpacity>
-      )}
-    </View>
+
+      <TouchableOpacity
+        onPress={() => navigation.navigate(strings.manuallocationscreen)}
+        activeOpacity={strings.buttonopacity}>
+        <CustomText
+          size={18}
+          color={Colors.primary}
+          style={{marginTop: 15}}
+          text={strings.enterlocman}
+        />
+      </TouchableOpacity>
+    </ScrollView>
   );
 };
 

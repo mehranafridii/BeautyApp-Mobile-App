@@ -122,7 +122,6 @@ const SignupUser = () => {
                 style={{marginVertical: 8}}
                 placeholder={strings.num}
                 label={strings.phonenum}
-                // dropdown={true}
                 onChangeText={handleInputs('contact')('')}
                 errorIndicator={errors?.contact}
               />
