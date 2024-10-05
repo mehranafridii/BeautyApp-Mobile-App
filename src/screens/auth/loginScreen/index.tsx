@@ -58,7 +58,21 @@ const Login = () => {
             dispatch(setUser(response?.data));
             setDataInLocalStorage(MMKV_KEYS.AUTH_TOKEN, response?.data?.token);
             setDataInLocalStorage(MMKV_KEYS.USER_DATA, response?.data);
-            changeStack('AppStack');
+            //NOTE:
+            // Applying these conditions for checking user location and document data (Required Part of APP)
+            console.log(response?.data, 'dskfjsdkjfdksfjskdjf');
+            if (!response?.data?.locationlat && !response?.data?.locationlong) {
+              navigation.navigate(strings.locationscreen);
+            } else if (userRole === 'business') {
+              if (!response?.data?.documents) {
+                navigation.navigate(strings.uploaddocsscreen);
+              } else {
+                changeStack('AppStack');
+              }
+            } else {
+              changeStack('AppStack');
+            }
+            // changeStack('AppStack');
           }
         })
         .catch(errorResponse => {
@@ -80,7 +94,9 @@ const Login = () => {
   // main return
   return (
     <View style={styles.container}>
-      <ScrollView>
+      <ScrollView
+        showsHorizontalScrollIndicator={false}
+        showsVerticalScrollIndicator={false}>
         <View style={styles.container}>
           <CustomText size={26} style={styles.login} text={strings?.signin} />
           <CustomText

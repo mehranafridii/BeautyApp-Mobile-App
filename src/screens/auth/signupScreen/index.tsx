@@ -22,19 +22,43 @@ import {
 } from '../../../Redux/services/auth/AuthApi';
 import AppToast from '../../../components/appToast/AppToast';
 import Utility from '../../../utils/utility/Utility';
+import {useDispatch} from 'react-redux';
+import {setUserType} from '../../../Redux/Reducers/UserTypeSlice';
+import {setToken, setUser} from '../../../Redux/Reducers/UserSlice';
+import {setDataInLocalStorage} from '../../../utils/mmkv/MMKV';
+import {changeStack} from '../../../navigators/NavigationService';
+import {MMKV_KEYS} from '../../../constants/MMKV_KEY';
 
 const Signup = () => {
+  const dispatch = useDispatch();
   // API initialization
   const [signupArtistApi, {isLoading}] = useSignUpArtistMutation();
   const navigation: any = useNavigation();
   const [toggleCheckBox, setToggleCheckBox] = useState(false);
   const [open, setOpen] = useState(false);
-  const [categoryValue, setCategoryValue] = useState(null);
+  const [categoryValue, setCategoryValue] = useState(1);
   const [items, setItems] = useState([
     {label: strings.artist, value: 'artist'},
     {label: strings.onlinestore, value: 'onlineStore'},
   ]);
-
+  // TESTING Data Enter for now
+  // const [inputsDetails, setinputsDetails] = useState({
+  //   name: 'mehran',
+  //   phone: '12345678901',
+  //   email: '',
+  //   category: categoryValue,
+  //   address: 'karachi',
+  //   business_email: 'beauty@gmail.com',
+  //   business_name: 'beatuy',
+  //   business_brand: 'brand',
+  //   services: 'Hair',
+  //   business_payment_account: 'GB33BUKB20201555555555',
+  //   password: 'Asdf!123',
+  //   password_confirmation: 'Asdf!123',
+  //   gender: 'male',
+  //   dob: '12-09-2015',
+  //   image: 'none',
+  // });
   const [inputsDetails, setinputsDetails] = useState({
     name: '',
     phone: '',
@@ -48,9 +72,9 @@ const Signup = () => {
     business_payment_account: '',
     password: '',
     password_confirmation: '',
-    gender: 'male',
-    dob: '12-09-2015',
-    image: 'none',
+    gender: '',
+    dob: '',
+    image: '',
   });
   const [errors, setErrors] = useState({
     name: '',
@@ -77,6 +101,9 @@ const Signup = () => {
       handleErrors,
     );
     console.log(validate, 'validatevalidatevalidate');
+    // navigation.navigate(strings.locationscreen);
+    // Comment for now Testing perpose
+
     if (validate === true) {
       const keys = Object.keys(inputsDetails);
       console.log(keys, 'KEYSHDHF');
@@ -85,21 +112,29 @@ const Signup = () => {
         formData.append(i, inputsDetails[i]);
       }
 
-      // return;
       await signupArtistApi(formData)
         .unwrap()
-        .then(res => {
-          console.log(res, '34343434mkjk343443');
-          res?.status
-            ? (navigation.navigate(strings.locationscreen),
-              AppToast({
-                type: 'success',
-                message: 'Artist Registered Sucessfully',
-              }))
-            : AppToast({
-                type: 'success',
-                message: res?.email,
-              });
+        .then(response => {
+          console.log(response, '34343434mkjk343443');
+          if (response?.data) {
+            const userRole =
+              Number(response?.data?.role) === 0 ? 'user' : 'business';
+            dispatch(setUserType(userRole));
+            dispatch(setToken(response?.data?.token));
+            dispatch(setUser(response?.data));
+            setDataInLocalStorage(MMKV_KEYS.AUTH_TOKEN, response?.data?.token);
+            setDataInLocalStorage(MMKV_KEYS.USER_DATA, response?.data);
+            navigation.navigate(strings.locationscreen);
+            AppToast({
+              type: 'success',
+              message: 'Artist Registered Sucessfully',
+            });
+          } else {
+            AppToast({
+              type: 'success',
+              message: response?.email,
+            });
+          }
         })
         .catch(error => {
           console.log(error, 'skdjfkdERR');
