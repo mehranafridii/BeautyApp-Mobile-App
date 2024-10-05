@@ -7,6 +7,7 @@ export const Endpoints = {
   verifyOTP: 'users/otp-verification',
   resetPassword: 'users/reset-password',
   documents: 'documents',
+  addLocation: 'Location',
   //Onboarding
   onBoardScreen1: 'onboarding_screen_01',
   onBoardScreen2: 'onboarding_screen_02',
@@ -34,6 +35,7 @@ export const Endpoints = {
   artistGallery: 'Artist/Gallary',
   artistWorkingHours: 'Artist/Working/Hours',
   artistTravelCost: 'Artist/Traval/Cost',
+  artistSocialLinks: 'Artist/Social/links',
 
   //Category
   listCategory: 'list_category',

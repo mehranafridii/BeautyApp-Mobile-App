@@ -226,7 +226,16 @@ const updateArtistTravelCost = body => {
     // },
   };
 };
-
+const addSocialLinks = body => {
+  return {
+    url: Endpoints.artistSocialLinks,
+    method: apiMethods.post,
+    body,
+    // headers: {
+    //   'Content-type': 'application/json',
+    // },
+  };
+};
 ////
 export const AppApi = baseApi.injectEndpoints({
   endpoints: build => ({
@@ -305,6 +314,9 @@ export const AppApi = baseApi.injectEndpoints({
     updateArtistTravelCost: build.mutation({
       query: updateArtistTravelCost,
     }),
+    addSocialLinks: build.mutation({
+      query: addSocialLinks,
+    }),
   }),
 });
 
@@ -338,4 +350,5 @@ export const {
   useAddGalleryMutation,
   useAddArtistWorkingHoursMutation,
   useUpdateArtistTravelCostMutation,
+  useAddSocialLinksMutation,
 } = AppApi;

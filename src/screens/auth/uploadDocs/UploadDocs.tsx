@@ -21,7 +21,12 @@ import {RequestGalleryPermission} from '../../../utils/GalleryPermission/Gallery
 import ImagePicker from 'react-native-image-crop-picker';
 import {useUploadArtistDocumentMutation} from '../../../Redux/services/auth/AuthApi';
 import AppToast from '../../../components/appToast/AppToast';
+import {localStorage, setDataInLocalStorage} from '../../../utils/mmkv/MMKV';
+import {setUserType} from '../../../Redux/Reducers/UserTypeSlice';
+import {setToken, setUser} from '../../../Redux/Reducers/UserSlice';
+import {useDispatch} from 'react-redux';
 const UploadDocs = () => {
+  const dispatch = useDispatch();
   const navigation: any = useNavigation();
   //API initialization
   const [uploadDocuments] = useUploadArtistDocumentMutation();
@@ -34,10 +39,22 @@ const UploadDocs = () => {
       const formData = new FormData();
       formData.append('licenseimage', documentsImages?.license);
       formData.append('idimage', documentsImages?.nationalId);
+      formData.append('workimages', workPhotos);
+      console.log(formData, 'sdjfksdfjksdjfkds');
+      // return;
       uploadDocuments(formData)
         ?.unwrap()
         ?.then(response => {
+          console.log(response, 'dsjfkdsjfkdsjfk');
+
+          localStorage?.clearAll();
+          dispatch(setUserType(null));
+          dispatch(setToken(null));
+          dispatch(setUser(null));
+          // NOTE:
+          // Will be redirect to login once the user(artist) upload the document while completing the signup process.
           navigation.navigate(strings.loginscreen);
+          AppToast({type: 'success', message: 'Login now'});
         })
         .catch(error => {
           AppToast({type: 'error', message: 'Unauthorized access'});

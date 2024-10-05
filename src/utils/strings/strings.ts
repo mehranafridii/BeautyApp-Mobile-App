@@ -70,6 +70,7 @@ export default {
   selectcity: 'اختر مدينة',
   allcities: 'جميع المدن',
   allowloc: 'السماح بالوصول إلى الموقع',
+  addLocation: 'إضافة الموقع',
   enterlocman: 'أدخل الموقع يدويا',
   getartist: 'احصل على أفضل فنان\n على عتبة داركم',
   manuallocationscreen: 'ManualLocation',
