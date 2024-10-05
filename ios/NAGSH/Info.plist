@@ -39,13 +39,13 @@
 		</dict>
 	</dict>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>App need your location to provide near by dentist</string>
+	<string>App need your location to provide near by cities</string>
 	<key>NSCameraUsageDescription</key>
 	<string>App needs access to your Camera.</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-	<string>App need your location to provide near by dentist.</string>
+	<string>App need your location to provide near by cities.</string>
 	<key>NSLocationAlwaysUsageDescription</key>
-	<string>App need your location to provide near by dentist.</string>
+	<string>App need your location to provide near by cities.</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>App needs access to your Microphone.</string>
 	<key>NSPhotoLibraryUsageDescription</key>

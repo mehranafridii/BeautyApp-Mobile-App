@@ -5979,6 +5979,11 @@ react-native-dropdown-picker@^5.4.6:
   resolved "https://registry.npmjs.org/react-native-dropdown-picker/-/react-native-dropdown-picker-5.4.6.tgz"
   integrity sha512-T1XBHbE++M6aRU3wFYw3MvcOuabhWZ29RK/Ivdls2r1ZkZ62iEBZknLUPeVLMX3x6iUxj4Zgr3X2DGlEGXeHsA==
 
+react-native-geolocation-service@^5.3.1:
+  version "5.3.1"
+  resolved "https://registry.yarnpkg.com/react-native-geolocation-service/-/react-native-geolocation-service-5.3.1.tgz#4ce1017789da6fdfcf7576eb6f59435622af4289"
+  integrity sha512-LTXPtPNmrdhx+yeWG47sAaCgQc3nG1z+HLLHlhK/5YfOgfLcAb9HAkhREPjQKPZOUx8pKZMIpdGFUGfJYtimXQ==
+
 react-native-image-crop-picker@^0.41.2:
   version "0.41.2"
   resolved "https://registry.yarnpkg.com/react-native-image-crop-picker/-/react-native-image-crop-picker-0.41.2.tgz#824fa8fee8391fbb3e0b5ae2973221a2dff0cafb"
@@ -6001,9 +6006,9 @@ react-native-pager-view@^6.2.3:
   resolved "https://registry.npmjs.org/react-native-pager-view/-/react-native-pager-view-6.3.3.tgz"
   integrity sha512-HViKBlfN/kBJUSu5mRL/V9Bkf1j7uDZozGAjbzh4o9XYo11qVcIK7IwvfzqrkNerVSDy/cAmZcXbcyWnII8xMA==
 
-react-native-permissions@^4.1.4:
+react-native-permissions@^4.1.5:
   version "4.1.5"
-  resolved "https://registry.npmjs.org/react-native-permissions/-/react-native-permissions-4.1.5.tgz"
+  resolved "https://registry.yarnpkg.com/react-native-permissions/-/react-native-permissions-4.1.5.tgz#db4d1ddbf076570043f4fd4168f54bb6020aec92"
   integrity sha512-r6VMRacASmtRHS+GZ+5HQCp9p9kiE+UU9magHOZCXZLTJitdTuVHWZRrb4v4oqZGU+zAp3mZhTQftuMMv+WLUg==
 
 react-native-phone-number-input@^2.1.0:
