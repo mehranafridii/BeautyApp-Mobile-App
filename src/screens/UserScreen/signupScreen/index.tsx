@@ -21,8 +21,14 @@ import {Colors} from '../../../utils/colors/colors';
 import {useSignUpMutation} from '../../../Redux/services/auth/AuthApi';
 import AppToast from '../../../components/appToast/AppToast';
 import Utility from '../../../utils/utility/Utility';
+import {useDispatch} from 'react-redux';
+import {setUserType} from '../../../Redux/Reducers/UserTypeSlice';
+import {setToken, setUser} from '../../../Redux/Reducers/UserSlice';
+import {setDataInLocalStorage} from '../../../utils/mmkv/MMKV';
+import {MMKV_KEYS} from '../../../constants/MMKV_KEY';
 
 const SignupUser = () => {
+  const dispatch = useDispatch();
   // API initialization
   const [signUpApi, {isLoading}] = useSignUpMutation();
   const navigation: any = useNavigation();
@@ -31,13 +37,21 @@ const SignupUser = () => {
   const [numSignup, setNumSignup] = useState<number>(0);
   const [value, setValue] = useState('');
   const [formattedValue, setFormattedValue] = useState('');
+  //Filled for Testing purposes
   const [inputsDetails, setinputsDetails] = useState({
-    name: '',
+    name: 'Mehran',
     email: '',
-    password: '',
-    password_confirmation: '',
-    contact: '',
+    password: 'Asdf!123',
+    password_confirmation: 'Asdf!123',
+    contact: '03120987654',
   });
+  // const [inputsDetails, setinputsDetails] = useState({
+  //   name: '',
+  //   email: '',
+  //   password: '',
+  //   password_confirmation: '',
+  //   contact: '',
+  // });
   const [errors, setErrors] = useState({
     name: '',
     email: '',
@@ -61,20 +75,28 @@ const SignupUser = () => {
       for (let i of keys) {
         formData.append(i, inputsDetails[i]);
       }
-
       await signUpApi(formData)
         .unwrap()
-        .then(res => {
-          res?.status
-            ? (navigation.navigate(strings.locationscreen),
-              AppToast({
-                type: 'success',
-                message: 'User Registered Sucessfully',
-              }))
-            : AppToast({
-                type: 'success',
-                message: res?.email,
-              });
+        .then(response => {
+          if (response?.data) {
+            const userRole =
+              Number(response?.data?.role) === 0 ? 'user' : 'business';
+            dispatch(setUserType(userRole));
+            dispatch(setToken(response?.data?.token));
+            dispatch(setUser(response?.data));
+            setDataInLocalStorage(MMKV_KEYS.AUTH_TOKEN, response?.data?.token);
+            setDataInLocalStorage(MMKV_KEYS.USER_DATA, response?.data);
+            navigation.navigate(strings.locationscreen);
+            AppToast({
+              type: 'success',
+              message: 'Artist Registered Sucessfully',
+            });
+          } else {
+            AppToast({
+              type: 'success',
+              message: response?.email,
+            });
+          }
         })
         .catch(error => {
           console.log(error, 'skdjfkdERR');
