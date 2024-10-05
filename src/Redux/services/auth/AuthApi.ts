@@ -35,7 +35,13 @@ const uploadArtistDocument = (body: Object) => {
     body,
   };
 };
-
+const addLocation = (body: Object) => {
+  return {
+    url: Endpoints.addLocation,
+    method: apiMethods.post,
+    body,
+  };
+};
 export const AuthApi = baseApi.injectEndpoints({
   endpoints: build => ({
     signUp: build.mutation({
@@ -50,6 +56,9 @@ export const AuthApi = baseApi.injectEndpoints({
     uploadArtistDocument: build.mutation({
       query: uploadArtistDocument,
     }),
+    addLocation: build.mutation({
+      query: addLocation,
+    }),
   }),
 });
 
@@ -58,4 +67,5 @@ export const {
   useSignUpArtistMutation,
   useLoginMutation,
   useUploadArtistDocumentMutation,
+  useAddLocationMutation,
 } = AuthApi;
