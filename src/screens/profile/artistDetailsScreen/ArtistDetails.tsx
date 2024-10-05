@@ -32,6 +32,7 @@ import TextWithImage from '../../../components/textWithImage/TextWithImage';
 import {
   useAddArtistWorkingHoursMutation,
   useAddGalleryMutation,
+  useAddSocialLinksMutation,
   useLazyGetArtistsProfileQuery,
   useUpdateArtistAboutUsMutation,
   useUpdateArtistImageMutation,
@@ -44,13 +45,17 @@ const ArtistDetails = () => {
   //API initialization
   const [getArtistProfile, {data: artistProfileData}] =
     useLazyGetArtistsProfileQuery();
+  console.log(artistProfileData, 'artistProfileDataartistProfileData');
   const [updateAboutUs] = useUpdateArtistAboutUsMutation();
   const [updateArtistImage] = useUpdateArtistImageMutation();
   const [addWorkingHours] = useAddArtistWorkingHoursMutation();
   const [addGallery] = useAddGalleryMutation();
+  const [addSocialLinksAPI] = useAddSocialLinksMutation();
+  // States
   const bottomSheetRef = useRef<RBSheet>(null);
   const photoSheetRef = useRef<RBSheet>(null);
   const descriptionSheetRef = useRef<RBSheet>(null);
+  const socialLinksSheetRef = useRef<RBSheet>(null);
   const addressSheetRef = useRef<RBSheet>(null);
   const navigation: any = useNavigation();
   const [index, setIndex] = useState(0);
@@ -59,19 +64,66 @@ const ArtistDetails = () => {
   const [galleryImages, setGalleryImages] = useState();
   const [galleryCategoryName, setGalleryCategoryName] = useState();
   const [aboutUs, setAboutUs] = useState();
+  const [socialInputs, setSocialInputs] = useState({
+    facebook: artistProfileData?.sociallinks[0]?.facebook || '',
+    instagram: artistProfileData?.sociallinks[0]?.instagram || '',
+    otherurl: artistProfileData?.sociallinks[0]?.otherurl || '',
+    linkedin: artistProfileData?.sociallinks[0]?.linkedin || '',
+    twiter: artistProfileData?.sociallinks[0]?.twiter || '',
+  });
+  const [schedule, setSchedule] = useState([
+    {
+      date: 'الاثنين',
+      startTime: '09:00',
+      endTime: '17:00',
+      availability: 'On',
+    },
+    {
+      date: 'يوم الثلاثاء',
+      startTime: '09:00',
+      endTime: '17:00',
+      availability: 'On',
+    },
+    {
+      date: 'الأربعاء',
+      startTime: '09:00',
+      endTime: '17:00',
+      availability: 'off',
+    },
+    {
+      date: 'يوم الخميس',
+      startTime: '09:00',
+      endTime: '17:00',
+      availability: 'off',
+    },
+    {
+      date: 'جمعة',
+      startTime: '09:00',
+      endTime: '17:00',
+      availability: 'On',
+    },
+    {
+      date: 'السبت',
+      startTime: '10:00',
+      endTime: '14:00',
+      availability: 'off',
+    },
+    {
+      date: 'الأحد',
+      startTime: 'Closed',
+      endTime: 'Closed',
+      availability: 'On',
+    },
+  ]);
   const isFocused = useIsFocused();
-  console.log(descriptionSheetRef, 'descriptionSheetRefdescriptionSheetRef');
   useEffect(() => {
     GetArtistProfile();
   }, [isFocused]);
 
-  console.log(artistProfileData, 'artistProfileData?.servicesdfdsdf');
   const GetArtistProfile = () => {
     getArtistProfile('')
       .unwrap()
-      ?.then(response => {
-        const {data} = response;
-      })
+      ?.then(response => {})
       .catch(error => {
         console.log(error);
       });
@@ -97,22 +149,55 @@ const ArtistDetails = () => {
       addGallery(formData)
         .unwrap()
         ?.then(res => {
-          console.log(res);
+          GetArtistProfile();
+          setGalleryCategoryName('');
+          photoSheetRef?.current?.close();
         })
         .catch(error => {});
     } else {
       AppToast({type: 'error', message: 'Please add details'});
     }
   };
+  const AddSocialLinksAPI = () => {
+    const keys = Object.keys(socialInputs);
+
+    const formData = new FormData();
+    for (let i of keys) {
+      formData.append(i, socialInputs[i]);
+
+      addSocialLinksAPI(formData)
+        .unwrap()
+        ?.then(res => {
+          console.log(res, 'sdfjksdjfkdsjfksdjfk');
+          GetArtistProfile();
+          resetSocialInputs();
+          AppToast({type: 'success', message: 'Social Links updated'});
+        })
+        .catch(error => {
+          AppToast({type: 'error', message: 'Please add details'});
+        });
+    }
+  };
+
   const AddArtistWorkingHours = () => {
     const formData = new FormData();
-    formData.append('date', galleryCategoryName);
-    formData.append('starttime', galleryImages);
-    formData.append('endtime', galleryImages);
-    formData.append('availability', galleryImages);
-    formData.append('starttime', galleryImages);
-    formData.append('otherurl', galleryImages);
-    addWorkingHours(formData);
+
+    schedule.forEach((item, index) => {
+      formData.append(`date[]`, item.date);
+      formData.append(`starttime[]`, item.startTime);
+      formData.append(`endtime[]`, item.endTime);
+      formData.append(`availability[]`, item.availability);
+    });
+    addWorkingHours(formData)
+      .unwrap()
+      .then(response => {
+        console.log(response);
+
+        GetArtistProfile();
+      })
+      .catch(error => {
+        console.log(error, 'sdjfkdsjfkdsjfkdsfj');
+      });
   };
   // Upload Image for profile
   const uploadImages = (index: Number) => {
@@ -168,6 +253,21 @@ const ArtistDetails = () => {
     },
     {},
   );
+  const handleInputChange = (key, text) => {
+    setSocialInputs(prev => ({...prev, [key]: text}));
+  };
+  // Function to reset all inputs
+  const resetSocialInputs = () => {
+    setSocialInputs({
+      facebook: '',
+      instagram: '',
+      otherurl: '',
+      linkedin: '',
+      twiter: '',
+    });
+    socialLinksSheetRef.current?.close();
+  };
+
   ///////////////////////////// Tabs Routes and UI /////////////////////////////
   const FirstRoute = () => (
     <ScrollView
@@ -251,7 +351,7 @@ const ArtistDetails = () => {
       <View style={{paddingHorizontal: 15, paddingTop: 10}}>
         <CustomText size={22} text={strings.reviews} />
         <View style={styles.input}>
-          <View style={styles.flex}>
+          <View style={[styles.flex, {height: 40}]}>
             <Image source={Images.search} />
             <TextInput
               style={styles.textInput}
@@ -327,6 +427,16 @@ const ArtistDetails = () => {
       <TextImageText
         withoutImageText={strings.social_Media}
         withImage={strings.social_Media_Editing}
+        onPress={() => {
+          setSocialInputs({
+            facebook: artistProfileData?.sociallinks[0]?.facebook || '',
+            instagram: artistProfileData?.sociallinks[0]?.instagram || '',
+            otherurl: artistProfileData?.sociallinks[0]?.otherurl || '',
+            linkedin: artistProfileData?.sociallinks[0]?.linkedin || '',
+            twiter: artistProfileData?.sociallinks[0]?.twiter || '',
+          });
+          socialLinksSheetRef.current?.open();
+        }}
       />
       <View style={styles.divider2} />
       <IconWithText
@@ -529,7 +639,7 @@ const ArtistDetails = () => {
         />
         <RBSheet
           ref={bottomSheetRef}
-          height={screenHeight / 1.35}
+          height={screenHeight / 1.1}
           openDuration={250}
           closeOnDragDown={true}
           customStyles={{
@@ -538,61 +648,47 @@ const ArtistDetails = () => {
               width: 123,
             },
           }}>
-          <View style={styles.contentContainer}>
+          <ScrollView
+            contentContainerStyle={[
+              styles.contentContainer,
+              {paddingBottom: 50},
+            ]}>
             <CustomText
               style={styles.alignText}
               size={22}
               text={strings?.workinghours}
             />
             <View style={styles.divider} />
-            {weekdays?.map((item, index) => (
+            {schedule?.map((item, index) => (
               <View key={index} style={styles.sheetContainer}>
                 <CustomText
                   color={Colors.lightGrey}
                   size={16}
-                  text={item?.weekday}
+                  text={item?.date}
                 />
                 <View style={styles.flex}>
-                  <CustomText size={14} fontWeight="400" text={item?.time} />
+                  <CustomText
+                    size={14}
+                    fontWeight="400"
+                    text={`${item?.startTime}-${item?.endTime}`}
+                  />
 
                   <Image style={{marginLeft: 5}} source={Images.arrow_down} />
                 </View>
               </View>
             ))}
-            {/* <FlatList
-              data={artistProfileData?.workinghours}
-              renderItem={({item, index}) => {
-                console.log(item, 'skdfkdsfjkiTT');
-                return (
-                  <View key={index} style={styles.sheetContainer}>
-                    <CustomText
-                      color={Colors.lightGrey}
-                      size={16}
-                      text={item?.date}
-                    />
-                    <View style={styles.flex}>
-                      <CustomText
-                        size={14}
-                        fontWeight="400"
-                        text={`${item?.endtime}-${item?.starttime} `}
-                      />
 
-                      <Image
-                        style={{marginLeft: 5}}
-                        source={Images.arrow_down}
-                      />
-                    </View>
-                  </View>
-                );
-              }}
-            /> */}
             <FooterTwoButton
               marginTop={15}
               textLeft={strings.cancle}
               textRight={strings.addhours}
+              onPressRight={() => {
+                AddArtistWorkingHours();
+              }}
             />
-          </View>
+          </ScrollView>
         </RBSheet>
+        {/*...................... PHOTO PICK SHEET...................... */}
         <RBSheet
           ref={photoSheetRef}
           height={screenHeight / 1.5}
@@ -690,6 +786,78 @@ const ArtistDetails = () => {
           </View>
         </RBSheet>
         {/* End */}
+        {/* Add/Update Social Links */}
+
+        <RBSheet
+          ref={socialLinksSheetRef}
+          height={screenHeight / 1.3}
+          openDuration={250}
+          closeOnDragDown={true}
+          customStyles={{
+            draggableIcon: {
+              backgroundColor: Colors.grey100,
+              width: 123,
+            },
+          }}>
+          <ScrollView
+            contentContainerStyle={[
+              styles.contentContainer,
+              {paddingBottom: 50},
+            ]}>
+            <CustomText
+              style={styles.alignText}
+              size={22}
+              text={strings?.contactndadress}
+            />
+            <View style={[styles.divider, {marginBottom: 17}]} />
+
+            <CustomInput
+              style={{marginTop: 10}}
+              label={'Facebook'}
+              value={socialInputs?.facebook}
+              placeholder={'Facebook'}
+              onChangeText={text => handleInputChange('facebook', text)}
+            />
+            <CustomInput
+              style={{marginTop: 10}}
+              value={socialInputs?.instagram}
+              label={'Instagram'}
+              placeholder={'Instagram'}
+              onChangeText={text => handleInputChange('instagram', text)}
+            />
+            <CustomInput
+              style={{marginTop: 10}}
+              value={socialInputs?.otherurl}
+              label={'otherurl'}
+              placeholder={'otherurl'}
+              onChangeText={text => handleInputChange('otherurl', text)}
+            />
+            <CustomInput
+              style={{marginTop: 10}}
+              label={'LinkedIn'}
+              value={socialInputs?.linkedin}
+              placeholder={'LinkedIn'}
+              onChangeText={text => handleInputChange('linkedin', text)}
+            />
+            <CustomInput
+              style={{marginTop: 10}}
+              label={'twitter'}
+              value={socialInputs?.twiter}
+              placeholder={'twitter'}
+              onChangeText={text => handleInputChange('twiter', text)}
+            />
+
+            <FooterTwoButton
+              marginTop={15}
+              textLeft={strings.cancle}
+              textRight={strings.contactndadress}
+              onPressLeft={() => socialLinksSheetRef.current?.close()}
+              onPressRight={() => {
+                AddSocialLinksAPI();
+              }}
+            />
+          </ScrollView>
+        </RBSheet>
         {/* To Change Address Us BottomSheet  */}
         <RBSheet
           ref={addressSheetRef}
@@ -910,6 +1078,7 @@ const styles = StyleSheet.create({
     marginLeft: 11,
     width: screenWidth / 1.5,
     color: Colors.lightGrey,
+    textAlign: 'right',
   },
   textImageContainer: {paddingHorizontal: 20, paddingBottom: 5},
   textImageContainer2: {paddingHorizontal: 20},
