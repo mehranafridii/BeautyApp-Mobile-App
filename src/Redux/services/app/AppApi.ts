@@ -166,6 +166,51 @@ const getArtistsProfile = (id: string) => {
     },
   };
 };
+const getArtistsStatus = (id: string) => {
+  return {
+    url: `${Endpoints.artistStatus}`,
+    method: apiMethods.get,
+    headers: {
+      'Content-type': 'application/json',
+    },
+  };
+};
+const getArtistsHomeData = (id: string) => {
+  return {
+    url: `${Endpoints.artistHomeData}`,
+    method: apiMethods.get,
+    headers: {
+      'Content-type': 'application/json',
+    },
+  };
+};
+const deleteServiceType = (id: string) => {
+  return {
+    url: `${Endpoints.deleteService}${id}`,
+    method: apiMethods.get,
+    headers: {
+      'Content-type': 'application/json',
+    },
+  };
+};
+const artistEarnings = () => {
+  return {
+    url: `${Endpoints.artistEarning}`,
+    method: apiMethods.get,
+    headers: {
+      'Content-type': 'application/json',
+    },
+  };
+};
+const artistPendingEarnings = () => {
+  return {
+    url: `${Endpoints.artistPendingEarning}`,
+    method: apiMethods.get,
+    headers: {
+      'Content-type': 'application/json',
+    },
+  };
+};
 const updateArtistsProfile = body => {
   return {
     url: Endpoints.updateArtistProfile,
@@ -236,6 +281,37 @@ const addSocialLinks = body => {
     // },
   };
 };
+const addBannerPicture = body => {
+  return {
+    url: Endpoints.addBannerPicture,
+    method: apiMethods.post,
+    body,
+    // headers: {
+    //   'Content-type': 'application/json',
+    // },
+  };
+};
+const artistAvailablity = body => {
+  return {
+    url: Endpoints.artistAvailability,
+    method: apiMethods.post,
+    body,
+    // headers: {
+    //   'Content-type': 'application/json',
+    // },
+  };
+};
+const getArtistAvailablity = body => {
+  return {
+    url: Endpoints.getArtistAvailability,
+    method: apiMethods.get,
+    body,
+    // headers: {
+    //   'Content-type': 'application/json',
+    // },
+  };
+};
+
 ////
 export const AppApi = baseApi.injectEndpoints({
   endpoints: build => ({
@@ -317,6 +393,30 @@ export const AppApi = baseApi.injectEndpoints({
     addSocialLinks: build.mutation({
       query: addSocialLinks,
     }),
+    addBannerPicture: build.mutation({
+      query: addBannerPicture,
+    }),
+    getArtistsStatus: build.query({
+      query: getArtistsStatus,
+    }),
+    artistAvailablity: build.mutation({
+      query: artistAvailablity,
+    }),
+    getArtistAvailablity: build.query({
+      query: getArtistAvailablity,
+    }),
+    getArtistsHomeData: build.query({
+      query: getArtistsHomeData,
+    }),
+    deleteServiceType: build.query({
+      query: deleteServiceType,
+    }),
+    artistEarnings: build.query({
+      query: artistEarnings,
+    }),
+    artistPendingEarnings: build.query({
+      query: artistPendingEarnings,
+    }),
   }),
 });
 
@@ -351,4 +451,12 @@ export const {
   useAddArtistWorkingHoursMutation,
   useUpdateArtistTravelCostMutation,
   useAddSocialLinksMutation,
+  useAddBannerPictureMutation,
+  useLazyGetArtistsStatusQuery,
+  useArtistAvailablityMutation,
+  useLazyGetArtistsHomeDataQuery,
+  useLazyDeleteServiceTypeQuery,
+  useLazyArtistEarningsQuery,
+  useLazyArtistPendingEarningsQuery,
+  useLazyGetArtistAvailablityQuery,
 } = AppApi;

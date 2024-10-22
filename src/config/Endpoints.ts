@@ -36,6 +36,14 @@ export const Endpoints = {
   artistWorkingHours: 'Artist/Working/Hours',
   artistTravelCost: 'Artist/Traval/Cost',
   artistSocialLinks: 'Artist/Social/links',
+  addBannerPicture: 'Artist/Banner',
+  artistStatus: 'Artist/Status',
+  artistAvailability: 'Artist/Available',
+  getArtistAvailability: 'Artist/Available/Status',
+  artistHomeData: 'Artist/Home/Screen',
+  deleteService: 'Services/Detail/Delete/',
+  artistEarning: 'Artist/Earning',
+  artistPendingEarning: 'Artist/Earning/Pending',
 
   //Category
   listCategory: 'list_category',

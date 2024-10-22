@@ -1,11 +1,12 @@
 import {
+  Alert,
   Image,
   StyleSheet,
   TextInput,
   TouchableOpacity,
   View,
 } from 'react-native';
-import React from 'react';
+import React, {useState} from 'react';
 import Header from '../../../components/header/Header';
 import strings from '../../../utils/strings/strings';
 import {Images} from '../../../assets/images';
@@ -15,13 +16,21 @@ import CustomText from '../../../components/text/CustomText';
 import {useNavigation} from '@react-navigation/native';
 import {useSelector} from 'react-redux';
 import {getUserType} from '../../../Redux/Reducers/UserTypeSlice';
+import {GooglePlacesAutocomplete} from 'react-native-google-places-autocomplete';
 
 const ManualLocation = () => {
   const checkType = useSelector(getUserType);
-
-  console.log(checkType, 'kfdjdkfj');
+  // const [searchTerm, setSearchTerm] = useState('');
+  // const [locations, setLocations] = useState([]);
+  // const [selectedLocation, setSelectedLocation] = useState(null);
+  const [location, setLocation] = useState({
+    lat: null,
+    lng: null,
+    address: '',
+  });
   const navigation: any = useNavigation();
 
+  // MAIN RETURN
   return (
     <View style={styles.container}>
       <Header heading={strings?.enteryourlocation} />
@@ -36,7 +45,48 @@ const ManualLocation = () => {
         </View>
         <Image source={Images.cross} />
       </View>
+      {/* <GooglePlacesAutocomplete
+        placeholder="Search"
+        fetchDetails={true}
+        onPress={(data, details = null) => {
+          Alert.alert('dkjfksdjfk');
+          console.log(data, 'details', details);
+          // Get the latitude and longitude from details
+          const lat = details.geometry.location.lat;
+          const lng = details.geometry.location.lng;
 
+          // Set the location state
+          setLocation({
+            lat,
+            lng,
+            address: data.description, // Get address
+          });
+
+          console.log('Location:', {lat, lng, address: data.description});
+        }}
+        query={{
+          key: 'YOUR_GOOGLE_MAPS_API_KEY', // Replace with your Google Maps API key
+          language: 'en',
+          components: 'country:ae', // Restrict to UAE
+        }}
+        styles={{
+          container: {
+            flex: 1,
+          },
+          textInputContainer: {
+            width: '100%',
+          },
+          textInput: {
+            height: 40,
+            color: '#5d5d5d',
+            fontSize: 16,
+            backgroundColor: 'red',
+          },
+          listView: {
+            backgroundColor: 'blue',
+          },
+        }}
+      /> */}
       <View style={styles.currentLocation}>
         <Image style={{marginRight: 10}} source={Images.locationmark} />
         <CustomText size={16} text={strings.usecurrenloc} />

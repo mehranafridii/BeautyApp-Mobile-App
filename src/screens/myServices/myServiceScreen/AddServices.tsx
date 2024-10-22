@@ -30,13 +30,14 @@ const AddServices = ({
   const [serviceImages, setServiceImages] = useState([]);
   const [paymentType, setPaymentType] = useState('Cash');
   const [durations, setDurations] = useState('');
+
   const AddServiceApi = () => {
     const formData = new FormData();
     formData.append('service', itemData?.id);
     formData.append('rates', rate);
     formData.append('duration', durations);
     formData.append('title', title);
-    formData.append('images', serviceImages);
+    formData.append('image', serviceImages);
     formData.append('payment', paymentType);
     formData.append('description', description);
 
@@ -47,7 +48,7 @@ const AddServices = ({
         AppToast({type: 'success', message: response?.status});
       })
       .catch(error => {
-        console.log(error, 'ERROR F');
+        console.log(error, 'dsjfdskfdksfjkdsfjd F');
         AppToast({type: 'error', message: error});
       });
   };
@@ -179,6 +180,11 @@ const AddServices = ({
         <View style={styles.buttonContainer}>
           <CustomButton
             text={strings.Cash}
+            textColor={paymentType === 'Cash' ? Colors.white : Colors.lightGrey}
+            bgColor={
+              paymentType === 'Cash' ? Colors.primary : Colors.lightWhite
+            }
+            onPress={() => setPaymentType('Cash')}
             style={{
               width: '30%',
               paddingTop: 0,
@@ -186,8 +192,13 @@ const AddServices = ({
           />
           <CustomButton
             text={strings.credit_Card}
-            textColor={Colors.lightGrey}
-            bgColor={Colors.lightWhite}
+            textColor={
+              paymentType === 'Credit' ? Colors.white : Colors.lightGrey
+            }
+            bgColor={
+              paymentType === 'Credit' ? Colors.primary : Colors.lightWhite
+            }
+            onPress={() => setPaymentType('Credit')}
             style={{
               width: '30%',
               paddingTop: 0,

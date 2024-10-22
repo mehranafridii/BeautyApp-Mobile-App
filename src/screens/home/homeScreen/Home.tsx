@@ -1,12 +1,13 @@
 import {
   FlatList,
   Image,
+  Pressable,
   ScrollView,
   StyleSheet,
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Colors} from '../../../utils/colors/colors';
 import strings from '../../../utils/strings/strings';
 import {Images} from '../../../assets/images';
@@ -15,18 +16,32 @@ import DetailCard from '../../../components/detailCard/DetailCard';
 import DropDownPicker from 'react-native-dropdown-picker';
 import {screenWidth} from '../../../utils/dimensions';
 import ToggleSwitch from 'toggle-switch-react-native';
-import {BookingData} from '../../../utils/dummyData';
+// import {BookingData} from '../../../utils/dummyData';
 import HomeCards from '../../../components/HomeCard/HomeCards';
 import CustomeType from '../../../components/CustomType/CustomeType';
 import {useNavigation} from '@react-navigation/native';
 import {useSelector} from 'react-redux';
 import {getUserType} from '../../../Redux/Reducers/UserTypeSlice';
+import {
+  useArtistAvailablityMutation,
+  useLazyGetArtistAvailablityQuery,
+  useLazyGetArtistsHomeDataQuery,
+  useLazyGetArtistsStatusQuery,
+} from '../../../Redux/services/app/AppApi';
+import AppToast from '../../../components/appToast/AppToast';
 
 const Home = () => {
+  //API initialization
+  const [artistAvailabilityApi] = useArtistAvailablityMutation();
+  const [artistStatusApi, {isLoading}] = useLazyGetArtistsStatusQuery();
+  const [getArtistAvailability] = useLazyGetArtistAvailablityQuery();
+  const [artistHomeDataApi] = useLazyGetArtistsHomeDataQuery();
   const navigation: any = useNavigation();
   const [open, setOpen] = useState(false);
   const userType = useSelector(getUserType);
   const [toggleState, setToggleState] = useState(true);
+  const [artistStatus, setArtistStatus] = useState();
+  const [homeData, setHomeData] = useState();
   const [value, setValue] = useState(strings.newyork);
   const [items, setItems] = useState([
     {label: strings.newyork, value: strings.newyork},
@@ -41,10 +56,90 @@ const Home = () => {
     {label: 'Pear', value: 'pear'},
   ]);
 
+  useEffect(() => {
+    GetArtistStatus();
+    GetArtistAvailability();
+  }, []);
+  const GetArtistStatus = () => {
+    artistStatusApi('')
+      ?.unwrap()
+      ?.then(response => {
+        const {status} = response;
+        setArtistStatus(status);
+      })
+      .catch(() => {});
+  };
   const handleToggle = (isOn: boolean) => {
+    ArtistAvailability();
     setToggleState(isOn);
   };
-
+  useEffect(() => {
+    GetArtistHomeData();
+  }, []);
+  const GetArtistHomeData = () => {
+    artistHomeDataApi('')
+      ?.unwrap()
+      ?.then(response => {
+        console.log(response, 'sdjfsdkfkdsjfksdjfkdsj');
+        setHomeData(response);
+        AppToast({
+          type: 'success',
+          message: response?.status,
+        });
+      })
+      .catch(() => {});
+  };
+  const ArtistAvailability = () => {
+    let payloadData = {
+      availabilty: toggleState === true ? 'On' : 'Off',
+    };
+    const availabilty = toggleState === true ? 'On' : 'Off';
+    const formData = new FormData();
+    formData.append('availibilty', availabilty);
+    artistAvailabilityApi(formData)
+      ?.unwrap()
+      ?.then(response => {
+        console.log(response, 'dfdfdf');
+        GetArtistAvailability();
+        AppToast({
+          type: 'success',
+          message: response?.status,
+        });
+      })
+      .catch(() => {});
+  };
+  const GetArtistAvailability = () => {
+    getArtistAvailability('')
+      ?.unwrap()
+      ?.then(response => {
+        const {status} = response;
+        console.log(response, 'dsfsdfdfdsfdsfds');
+        const Status = status === 'On' ? true : false;
+        setToggleState(Status);
+      })
+      .catch(error => {
+        console.log(error, 'kdsjfkdsjfksdjfkdsjf');
+      });
+  };
+  console.log(toggleState, 'sdkjfdksjfksdjfkdsj');
+  const BookingData = [
+    {
+      count: homeData?.Activebooking,
+      heading: 'الحجوزات النشطة',
+    },
+    {
+      count: homeData?.Totalbooking,
+      heading: 'مجموع حجوزات',
+    },
+    {
+      count: homeData?.Totalviews,
+      heading: 'إجمالي العرض',
+    },
+    {
+      count: homeData?.Totalfav,
+      heading: 'مجموع المفضلة',
+    },
+  ];
   const renderItem = (item: any, index: number) => {
     return (
       <View style={{paddingVertical: 6, paddingHorizontal: 4}}>
@@ -66,9 +161,14 @@ const Home = () => {
           size={14}
           text={strings?.location}
         />
-        <View style={styling.flex}>
+        <Pressable
+          style={[styling.flex, {paddingVertical: 10, gap: 10}]}
+          onPress={() => {
+            navigation.navigate('ManualLocation');
+          }}>
           <Image source={Images.location} />
-          <DropDownPicker
+          <CustomText text={strings.newyork} />
+          {/* <DropDownPicker
             open={open}
             value={value}
             items={items}
@@ -79,8 +179,8 @@ const Home = () => {
             placeholder={strings.location}
             placeholderStyle={{color: Colors.lightGrey}}
             listMode="MODAL"
-          />
-        </View>
+          /> */}
+        </Pressable>
         <TouchableOpacity
           activeOpacity={strings.buttonopacity}
           onPress={() =>
@@ -93,7 +193,7 @@ const Home = () => {
           style={styling.bell}>
           <Image source={Images.bell} />
         </TouchableOpacity>
-        <View style={styling.approve}>
+        <View style={styling.approve(artistStatus)}>
           <Image style={{marginRight: 5}} source={Images.tick} />
           <CustomText
             size={14}
@@ -126,6 +226,13 @@ const Home = () => {
           renderItem={({item, index}) => renderItem(item, index)}
         />
         <View style={styling.price}>
+          <CustomText
+            size={24}
+            style={{width: 95}}
+            color={Colors.primary}
+            fontWeight="bold"
+            text={homeData?.Earning + ' ' + strings.sr}
+          />
           <View>
             <CustomText
               style={styling.marginText}
@@ -144,30 +251,37 @@ const Home = () => {
               style={styling.monthdropDown}
               placeholder={strings.location}
               placeholderStyle={{color: Colors.lightGrey}}
-              listMode="MODAL"
+              listMode="SCROLLVIEW"
             />
           </View>
+        </View>
+        <View style={styling.seeAllView}>
+          <CustomText size={14} text={strings.seeall} />
           <CustomText
-            size={24}
-            style={{width: 95}}
-            color={Colors.primary}
-            fontWeight="bold"
-            text={'671' + ' ' + strings.sr}
+            size={16}
+            text={strings.myservices + ` (${homeData?.services?.length})`}
           />
         </View>
-        <View style={styling.seeAllView}>
+        <FlatList
+          horizontal
+          showsVerticalScrollIndicator={false}
+          showsHorizontalScrollIndicator={false}
+          data={homeData?.services}
+          renderItem={({item, index}) => {
+            return <HomeCards data={item} />;
+          }}
+        />
+        {/* <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
+          <HomeCards />
+          <HomeCards />
+          <HomeCards />
+        </ScrollView> */}
+        {/* <View style={styling.seeAllView}>
           <CustomText size={14} text={strings.seeall} />
-          <CustomText size={16} text={strings.myservices + '(18)'} />
-        </View>
-
-        <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
-          <HomeCards />
-          <HomeCards />
-          <HomeCards />
-        </ScrollView>
-        <View style={styling.seeAllView}>
-          <CustomText size={14} text={strings.seeall} />
-          <CustomText size={16} text={strings.myservices + '(18)'} />
+          <CustomText
+            size={16}
+            text={strings.myservices + ` (${homeData?.services?.length})`}
+          />
         </View>
         <CustomeType
           bgColor={Colors.white}
@@ -198,7 +312,7 @@ const Home = () => {
           bgColor={Colors.white}
           text={strings.type08}
           textName={strings.hair_Wash}
-        />
+        /> */}
       </ScrollView>
     </View>
   );
@@ -213,7 +327,11 @@ const styling = StyleSheet.create({
     paddingHorizontal: 20,
     backgroundColor: Colors.white,
   },
-  rowContainer: {flexDirection: 'row'},
+  rowContainer: {
+    flexDirection: 'row',
+    // alignItems: 'center',
+    // justifyContent: 'center',
+  },
   buttonStyle: {width: screenWidth / 6, marginLeft: '9%'},
   textStyle: {
     flexDirection: 'row',
@@ -226,7 +344,11 @@ const styling = StyleSheet.create({
     justifyContent: 'space-between',
     marginVertical: 12,
   },
-  marginText: {marginBottom: -10, marginLeft: 12},
+  marginText: {
+    marginBottom: 5,
+    paddingRight: 10,
+    textAlign: 'right',
+  },
   borderContainer: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -252,13 +374,14 @@ const styling = StyleSheet.create({
     width: screenWidth / 1.5,
     backgroundColor: 'transparent',
   },
-  approve: {
-    backgroundColor: Colors.green,
+  approve: isApproved => ({
+    backgroundColor:
+      isApproved === 'Accepted' ? Colors.green : Colors.textColorRed,
     flexDirection: 'row',
     padding: 10,
     borderRadius: 8,
     marginBottom: 18,
-  },
+  }),
   online: {
     marginBottom: 10,
     flexDirection: 'row',
@@ -280,11 +403,14 @@ const styling = StyleSheet.create({
     paddingHorizontal: 10,
     paddingVertical: 6,
     borderRadius: 16,
+    zIndex: 100,
   },
   monthdropDown: {
     borderColor: 'transparent',
-    width: screenWidth / 3.5,
+    width: screenWidth / 4,
     backgroundColor: 'transparent',
+    flexDirection: 'row-reverse',
+    zIndex: 10000,
   },
   bell: {position: 'absolute', right: 0, top: 15},
 });

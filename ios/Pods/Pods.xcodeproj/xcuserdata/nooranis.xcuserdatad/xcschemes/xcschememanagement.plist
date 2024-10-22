@@ -124,6 +124,11 @@
 			<key>isShown</key>
 			<false/>
 		</dict>
+		<key>RNDateTimePicker.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
 		<key>RNImageCropPicker-QBImagePicker.xcscheme</key>
 		<dict>
 			<key>isShown</key>
@@ -390,6 +395,11 @@
 			<false/>
 		</dict>
 		<key>react-native-geolocation-service.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
+		<key>react-native-get-random-values.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>

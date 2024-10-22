@@ -242,7 +242,7 @@ export default {
   saudiRiyal: 'ريال',
   decline: 'انخفاض',
   request_reservation: 'طلب حجز جديد',
-  rs: '24.00 رس',
+  rs: 'رس',
   booking_Completed: 'اكتمل الحجز',
   you_Have_Been: 'لقد اكتملت بنجاح!',
   How_was: 'كيف كانت تجربتك مع جيني؟',

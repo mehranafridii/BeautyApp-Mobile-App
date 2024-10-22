@@ -28,6 +28,7 @@ import {setToken, setUser} from '../../../Redux/Reducers/UserSlice';
 import {setDataInLocalStorage} from '../../../utils/mmkv/MMKV';
 import {changeStack} from '../../../navigators/NavigationService';
 import {MMKV_KEYS} from '../../../constants/MMKV_KEY';
+import DropDownPicker from 'react-native-dropdown-picker';
 
 const Signup = () => {
   const dispatch = useDispatch();
@@ -37,45 +38,47 @@ const Signup = () => {
   const [toggleCheckBox, setToggleCheckBox] = useState(false);
   const [open, setOpen] = useState(false);
   const [categoryValue, setCategoryValue] = useState(1);
+  const [value, setValue] = useState(strings.newyork);
+
   const [items, setItems] = useState([
     {label: strings.artist, value: 'artist'},
     {label: strings.onlinestore, value: 'onlineStore'},
   ]);
   // TESTING Data Enter for now
-  // const [inputsDetails, setinputsDetails] = useState({
-  //   name: 'mehran',
-  //   phone: '12345678901',
-  //   email: '',
-  //   category: categoryValue,
-  //   address: 'karachi',
-  //   business_email: 'beauty@gmail.com',
-  //   business_name: 'beatuy',
-  //   business_brand: 'brand',
-  //   services: 'Hair',
-  //   business_payment_account: 'GB33BUKB20201555555555',
-  //   password: 'Asdf!123',
-  //   password_confirmation: 'Asdf!123',
-  //   gender: 'male',
-  //   dob: '12-09-2015',
-  //   image: 'none',
-  // });
   const [inputsDetails, setinputsDetails] = useState({
-    name: '',
-    phone: '',
+    name: 'mehran',
+    phone: '12345678901',
     email: '',
     category: categoryValue,
-    address: '',
-    business_email: '',
-    business_name: '',
-    business_brand: '',
-    services: '',
-    business_payment_account: '',
-    password: '',
-    password_confirmation: '',
-    gender: '',
-    dob: '',
-    image: '',
+    address: 'karachi',
+    business_email: 'beauty@gmail.com',
+    business_name: 'beatuy',
+    business_brand: 'brand',
+    services: 'Hair',
+    business_payment_account: 'GB33BUKB20201555555555',
+    password: 'Asdf!123',
+    password_confirmation: 'Asdf!123',
+    gender: 'male',
+    dob: '12-09-2015',
+    image: 'none',
   });
+  // const [inputsDetails, setinputsDetails] = useState({
+  //   name: '',
+  //   phone: '',
+  //   email: '',
+  //   category: categoryValue,
+  //   address: '',
+  //   business_email: '',
+  //   business_name: '',
+  //   business_brand: '',
+  //   services: '',
+  //   business_payment_account: '',
+  //   password: '',
+  //   password_confirmation: '',
+  //   gender: '',
+  //   dob: '',
+  //   image: '',
+  // });
   const [errors, setErrors] = useState({
     name: '',
     phone: '',
@@ -186,7 +189,24 @@ const Signup = () => {
             errorIndicator={errors.email}
             keyboardType="email-address"
           />
-          <CustomInput
+          <DropDownPicker
+            open={open}
+            value={value}
+            items={items}
+            setOpen={setOpen}
+            setValue={setValue}
+            setItems={setItems}
+            style={styles.locDropdown}
+            placeholder={strings.selectCategory}
+            placeholderStyle={{color: Colors.lightGrey}}
+            dropDownContainerStyle={{
+              width: '93%',
+              alignSelf: 'center',
+              borderColor: Colors.grey100,
+            }}
+            textStyle={{textAlign: 'left'}}
+          />
+          {/* <CustomInput
             dropdown
             value={categoryValue}
             setValue={setCategoryValue}
@@ -198,7 +218,7 @@ const Signup = () => {
             label={strings.category}
             onChangeText={handleInputs('category')('')}
             errorIndicator={errors.category}
-          />
+          /> */}
           <CustomInput
             style={{marginVertical: 8}}
             placeholder={strings.address}
@@ -309,7 +329,14 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.white,
     paddingHorizontal: 20,
     paddingVertical: 15,
-    // textAlign: 'right',
+  },
+  locDropdown: {
+    marginTop: 15,
+    borderColor: Colors.grey100,
+    width: '93%',
+    alignSelf: 'center',
+
+    alignItems: 'center',
   },
   contentContainer: {
     paddingTop: 16,

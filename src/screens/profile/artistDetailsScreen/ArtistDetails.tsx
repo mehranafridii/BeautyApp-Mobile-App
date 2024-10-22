@@ -3,6 +3,7 @@ import {
   FlatList,
   Image,
   ImageBackground,
+  Pressable,
   ScrollView,
   StyleSheet,
   Text,
@@ -10,7 +11,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {Colors} from '../../../utils/colors/colors';
 import {Images} from '../../../assets/images';
 import {screenHeight, screenWidth} from '../../../utils/dimensions';
@@ -31,6 +32,7 @@ import TextImageText from '../../../components/textImageText/TextImageText';
 import TextWithImage from '../../../components/textWithImage/TextWithImage';
 import {
   useAddArtistWorkingHoursMutation,
+  useAddBannerPictureMutation,
   useAddGalleryMutation,
   useAddSocialLinksMutation,
   useLazyGetArtistsProfileQuery,
@@ -40,17 +42,18 @@ import {
 import Utility from '../../../utils/utility/Utility';
 import AppToast from '../../../components/appToast/AppToast';
 import ImagePicker from 'react-native-image-crop-picker';
-
+import DateTimePickerModal from 'react-native-modal-datetime-picker';
 const ArtistDetails = () => {
   //API initialization
   const [getArtistProfile, {data: artistProfileData}] =
     useLazyGetArtistsProfileQuery();
-  console.log(artistProfileData, 'artistProfileDataartistProfileData');
+  console.log(artistProfileData, 'sdfkjdsjf112312312');
   const [updateAboutUs] = useUpdateArtistAboutUsMutation();
   const [updateArtistImage] = useUpdateArtistImageMutation();
   const [addWorkingHours] = useAddArtistWorkingHoursMutation();
   const [addGallery] = useAddGalleryMutation();
   const [addSocialLinksAPI] = useAddSocialLinksMutation();
+  const [addBannerPicAPI] = useAddBannerPictureMutation();
   // States
   const bottomSheetRef = useRef<RBSheet>(null);
   const photoSheetRef = useRef<RBSheet>(null);
@@ -60,10 +63,11 @@ const ArtistDetails = () => {
   const navigation: any = useNavigation();
   const [index, setIndex] = useState(0);
   const [serviceForSheet, setServiceForSheet] = useState([]);
-  const [profileImage, setProfileImage] = useState();
+  const [profileBannerImage, setProfileBannerImage] = useState();
   const [galleryImages, setGalleryImages] = useState();
   const [galleryCategoryName, setGalleryCategoryName] = useState();
   const [aboutUs, setAboutUs] = useState();
+  const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
   const [socialInputs, setSocialInputs] = useState({
     facebook: artistProfileData?.sociallinks[0]?.facebook || '',
     instagram: artistProfileData?.sociallinks[0]?.instagram || '',
@@ -199,8 +203,23 @@ const ArtistDetails = () => {
         console.log(error, 'sdjfkdsjfkdsjfkdsfj');
       });
   };
+  const AddBannerPic = () => {
+    if (profileBannerImage?.uri) {
+      const formData = new FormData();
+      formData.append('image', profileBannerImage);
+      addBannerPicAPI(formData)
+        .unwrap()
+        ?.then(res => {
+          GetArtistProfile();
+          setProfileBannerImage('');
+        })
+        .catch(error => {});
+    } else {
+      AppToast({type: 'error', message: 'Please add details'});
+    }
+  };
   // Upload Image for profile
-  const uploadImages = (index: Number) => {
+  const uploadImages = (type: String) => {
     ImagePicker.openPicker({
       cropping: true,
       width: 300,
@@ -227,21 +246,25 @@ const ArtistDetails = () => {
         name: image?.filename,
         index: index,
       };
-      setGalleryImages(obj);
-      // setProfileImage(obj);
+      type === 'banner'
+        ? [setProfileBannerImage(obj), AddBannerPic()]
+        : setGalleryImages(obj);
     });
   };
   //Image of Artist
   const artistImage = artistProfileData?.profile?.image
     ? Utility.getImageUrl(artistProfileData?.profile?.image)
     : null;
-
+  const artistBannerImage = artistProfileData?.profile?.banner
+    ? Utility.getImageUrl(artistProfileData?.profile?.banner)
+    : null;
   const [routes] = useState([
     {key: 'first', title: strings.services},
     {key: 'second', title: strings.gallery},
     {key: 'third', title: strings.review1},
     {key: 'fourth', title: strings.aboutus},
   ]);
+
   const serviceWithCategory = artistProfileData?.services?.reduce(
     (acc, currentItem) => {
       const category = currentItem?.category_detail?.category;
@@ -255,6 +278,18 @@ const ArtistDetails = () => {
   );
   const handleInputChange = (key, text) => {
     setSocialInputs(prev => ({...prev, [key]: text}));
+  };
+  const showDatePicker = () => {
+    setDatePickerVisibility(true);
+  };
+
+  const hideDatePicker = () => {
+    setDatePickerVisibility(false);
+  };
+
+  const handleConfirm = date => {
+    console.warn('A date has been picked: ', date);
+    hideDatePicker();
   };
   // Function to reset all inputs
   const resetSocialInputs = () => {
@@ -518,11 +553,20 @@ const ArtistDetails = () => {
       style={{backgroundColor: Colors.white}}
     />
   );
-
+  console.log(profileBannerImage, 'sdkjfkdsjfsdkfjdsps');
+  artistProfileData;
   ////////// Main Return /////////////////
   return (
     <View style={styles.container}>
-      <ImageBackground style={styles.bgImageStyle} source={Images.profilebg}>
+      <ImageBackground
+        style={styles.bgImageStyle}
+        source={
+          artistProfileData?.profile?.banner
+            ? {uri: artistBannerImage}
+            : profileBannerImage?.uri
+            ? {uri: profileBannerImage?.uri}
+            : Images.profilebg
+        }>
         <TouchableOpacity
           style={styles.backImage}
           activeOpacity={strings.buttonopacity}
@@ -531,9 +575,10 @@ const ArtistDetails = () => {
         </TouchableOpacity>
         <TouchableOpacity
           activeOpacity={strings.buttonopacity}
+          onPress={() => uploadImages('banner')}
           style={styles.editContainer}>
+          <Image style={{marginRight: 4}} source={Images.camera} />
           <CustomText size={14} color={Colors.lightGrey} text={strings.edit} />
-          <Image style={{marginLeft: 4}} source={Images.camera} />
         </TouchableOpacity>
       </ImageBackground>
       <View style={styles.topContainer}>
@@ -660,7 +705,12 @@ const ArtistDetails = () => {
             />
             <View style={styles.divider} />
             {schedule?.map((item, index) => (
-              <View key={index} style={styles.sheetContainer}>
+              <Pressable
+                key={index}
+                style={styles.sheetContainer}
+                onPress={() => {
+                  showDatePicker();
+                }}>
                 <CustomText
                   color={Colors.lightGrey}
                   size={16}
@@ -675,7 +725,7 @@ const ArtistDetails = () => {
 
                   <Image style={{marginLeft: 5}} source={Images.arrow_down} />
                 </View>
-              </View>
+              </Pressable>
             ))}
 
             <FooterTwoButton
@@ -685,6 +735,13 @@ const ArtistDetails = () => {
               onPressRight={() => {
                 AddArtistWorkingHours();
               }}
+            />
+            <DateTimePickerModal
+              isVisible={isDatePickerVisible}
+              mode="time"
+              onConfirm={handleConfirm}
+              confirmTextIOS="Add Start Time"
+              onCancel={hideDatePicker}
             />
           </ScrollView>
         </RBSheet>
@@ -1003,9 +1060,14 @@ const styles = StyleSheet.create({
     position: 'absolute',
     right: 30,
     bottom: 55,
-    borderRadius: 16,
+    // borderRadius: 10,
     paddingHorizontal: 8,
     paddingVertical: 4,
+    width: 57,
+    borderTopRightRadius: 10,
+    borderTopLeftRadius: 10,
+    // borderBottomEndRadius: 10,
+    borderBottomStartRadius: 10,
   },
   backImage: {marginTop: 25, marginRight: 25, alignSelf: 'flex-end'},
   indicatorStyle: {

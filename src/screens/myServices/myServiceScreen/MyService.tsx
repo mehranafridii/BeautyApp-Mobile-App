@@ -7,7 +7,10 @@ import {screenHeight, screenWidth} from '../../../utils/dimensions';
 import CustomText from '../../../components/text/CustomText';
 import ButtonWithImage from '../../../components/buttonWithImage/ButtonWithImage';
 import {useFocusEffect, useNavigation} from '@react-navigation/native';
-import {useLazyArtistGetMyServicesQuery} from '../../../Redux/services/app/AppApi';
+import {
+  useLazyArtistGetMyServicesQuery,
+  useLazyDeleteServiceTypeQuery,
+} from '../../../Redux/services/app/AppApi';
 import CustomeType from '../../../components/CustomType/CustomeType';
 import {
   Alert,
@@ -22,9 +25,11 @@ import {
 import RBSheet from 'react-native-raw-bottom-sheet';
 import FooterTwoButton from '../../../components/footerTwoButton/FooterTwoButton';
 import Utility from '../../../utils/utility/Utility';
+import CustomDeleteType from '../../../components/CustomType/CustomDeleteType';
 const MyService = ({navigation}: {navigation: any}) => {
   //API intialization
   const [artistGetMyServices, {isLoading}] = useLazyArtistGetMyServicesQuery();
+  const [deleteServiceAPI] = useLazyDeleteServiceTypeQuery();
   // States
   const [myServiceData, setMyServiceData] = useState([]);
   const [sheetData, setSheetData] = useState([]);
@@ -53,6 +58,17 @@ const MyService = ({navigation}: {navigation: any}) => {
   console.log(sheetData, 'DJFKDFKDSHETTDAT');
   const services = Object.keys(myServiceData);
   console.log(myServiceData, 'MYSErvie', myServiceData?.data?.length);
+  const handleDeleteItem = id => {
+    Alert.alert(JSON.stringify(id));
+    deleteServiceAPI(id)
+      ?.unwrap()
+      ?.then(response => {
+        console.log(response, 'sdkjfksdjfkdsjfkd');
+      })
+      .catch(error => {
+        console.log(error, 'skdjfksdjfksdjfksdjf');
+      });
+  };
   // Main Return
   return (
     <View style={styles.container}>
@@ -100,7 +116,6 @@ const MyService = ({navigation}: {navigation: any}) => {
           onPress={() => navigation.navigate('AddServicesSelected')}
         />
       </ScrollView>
-      {/* Sheet Component Below */}
       <RBSheet
         ref={bottomSheetRef}
         height={screenHeight / 1.3}
@@ -121,65 +136,16 @@ const MyService = ({navigation}: {navigation: any}) => {
             size={18}
             style={{alignSelf: 'center'}}
           />
-          {/* </TouchableOpacity> */}
-          {/* <View style={styles.divider} /> */}
-          <ScrollView
-            // style={styles.flex}
-            contentContainerStyle={styles.sheetScrollContainer}>
-            {/* <TouchableOpacity
-              activeOpacity={strings.buttonopacity}
-              style={styles.contentContainer}>
-              <View style={styles.row}>
-                <TouchableOpacity style={{marginRight: 20}}>
-                  <Image source={Images.trash} />
-                </TouchableOpacity>
-                <View>
-                  <CustomText size={20} text={strings.mohawk} />
-                  <View style={styles.row}>
-                    <Image
-                      style={{tintColor: Colors.black, marginRight: 3}}
-                      source={Images.duration}
-                    />
-                    <CustomText
-                      color={Colors.lightGrey}
-                      size={14}
-                      text={strings.onehour}
-                    />
-                  </View>
-                </View>
-              </View>
-              <CustomText size={18} text={strings.riyal28} />
-            </TouchableOpacity>
-            <TouchableOpacity
-              activeOpacity={strings.buttonopacity}
-              style={styles.contentContainer}>
-              <View style={styles.row}>
-                <TouchableOpacity style={{marginRight: 20}}>
-                  <Image source={Images.trash} />
-                </TouchableOpacity>
-                <View>
-                  <CustomText size={20} text={strings.mohawk} />
-                  <View style={styles.row}>
-                    <Image
-                      style={{tintColor: Colors.black, marginRight: 3}}
-                      source={Images.duration}
-                    />
-                    <CustomText
-                      color={Colors.lightGrey}
-                      size={14}
-                      text={strings.onehour}
-                    />
-                  </View>
-                </View>
-              </View>
-              <CustomText size={18} text={strings.riyal28} />
-            </TouchableOpacity> */}
+
+          <ScrollView contentContainerStyle={styles.sheetScrollContainer}>
             {sheetData?.map(item => (
-              <CustomeType
-                text={`${item?.rates}  ${strings.$} `}
-                textName={item?.title}
-                path={Images.plus}
-                onPress={() => {}}
+              <CustomDeleteType
+                item={item}
+                rate={item?.rates}
+                title={item?.title}
+                description={item?.description}
+                // path={Images.trash}
+                onPressDelete={() => handleDeleteItem(item?.id)}
               />
             ))}
 

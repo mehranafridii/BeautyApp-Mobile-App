@@ -33,6 +33,7 @@ import {getUserType} from '../../Redux/Reducers/UserTypeSlice';
 import UserBottomStack from '../UserBottomStack/UserBottomStack';
 import BookApointment from '../../screens/UserScreen/artistDetailsScreen/BookApointment';
 import ArtistDetailsUser from '../../screens/UserScreen/artistDetailsScreen/ArtistDetails';
+import ManualLocation from '../../screens/auth/locationScreen/ManualLocation';
 
 // Get user type for stacks management
 
@@ -155,5 +156,9 @@ export const appRoutes = [
   {
     name: 'BookAppointment',
     component: BookApointment,
+  },
+  {
+    name: 'ManualLocation',
+    component: ManualLocation,
   },
 ];

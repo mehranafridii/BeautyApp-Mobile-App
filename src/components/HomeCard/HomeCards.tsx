@@ -6,14 +6,19 @@ import strings from '../../utils/strings/strings';
 import CustomButton from '../button/CustomButton';
 import {Colors} from '../../utils/colors/colors';
 import {screenHeight, screenWidth} from '../../utils/dimensions';
+import Utility from '../../utils/utility/Utility';
 
-const HomeCards = () => {
+const HomeCards = ({data}) => {
+  console.log(data);
+  const {category_detail} = data;
+  const itemImage = Utility.getImageUrl(category_detail?.iconimage);
+  console.log(itemImage);
   return (
     <View style={styling.borderContainer}>
-      <Image source={Images.cuttingImage1} style={{margin: 10}} />
+      <Image source={{uri: itemImage}} style={{width: 110, height: 110}} />
       <View style={styling.center}>
         <CustomText
-          text={strings.hairCut_HairStyling}
+          text={category_detail?.category}
           color={Colors.black}
           size={18}
         />
@@ -69,6 +74,8 @@ const styling = StyleSheet.create({
     width: screenWidth / 1.23,
     backgroundColor: Colors.white,
     borderColor: Colors.grey100,
+    paddingVertical: 10,
+    paddingHorizontal: 10,
   },
   rowFlex: {
     flexDirection: 'row',

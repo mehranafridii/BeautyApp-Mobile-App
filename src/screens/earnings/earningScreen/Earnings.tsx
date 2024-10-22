@@ -5,6 +5,7 @@ import {
   Dimensions,
   ScrollView,
   TouchableOpacity,
+  FlatList,
 } from 'react-native';
 import {TabView, SceneMap, TabBar} from 'react-native-tab-view';
 import Header from '../../../components/header/Header';
@@ -14,118 +15,149 @@ import CustomText from '../../../components/text/CustomText';
 import NamePriceComponent from '../NamePriceComponent';
 import {useNavigation} from '@react-navigation/native';
 import WaletBox from '../WaletBox';
+import {
+  useLazyArtistEarningsQuery,
+  useLazyArtistPendingEarningsQuery,
+} from '../../../Redux/services/app/AppApi';
 
-const FirstRoute = () => (
-  <ScrollView showsVerticalScrollIndicator={false}>
-    <NamePriceComponent
-      priceText={'+ ' + strings.price}
-      textColor={Colors.textColor}
-    />
-    <NamePriceComponent
-      priceText={'+ ' + strings.price}
-      textColor={Colors.textColor}
-    />
-    <NamePriceComponent
-      priceText={'- ' + strings.saudiaPrice}
-      textColor={Colors.textColorRed}
-    />
-    <NamePriceComponent
-      priceText={'+ ' + strings.price}
-      textColor={Colors.textColor}
-    />
-    <NamePriceComponent
-      priceText={'+ ' + strings.price}
-      textColor={Colors.textColorRed}
-    />
-    <NamePriceComponent
-      priceText={'+ ' + strings.price}
-      textColor={Colors.textColor}
-    />
-    <NamePriceComponent
-      priceText={'+ ' + strings.price}
-      textColor={Colors.textColorRed}
-    />
-  </ScrollView>
+const FirstRoute = ({data}) => (
+  // <ScrollView showsVerticalScrollIndicator={false}>
+
+  //   <NamePriceComponent
+  //     priceText={'+ ' + strings.price}
+  //     textColor={Colors.textColor}
+  //   />
+  //   <NamePriceComponent
+  //     priceText={'- ' + strings.saudiaPrice}
+  //     textColor={Colors.textColorRed}
+  //   />
+  //   <NamePriceComponent
+  //     priceText={'+ ' + strings.price}
+  //     textColor={Colors.textColor}
+  //   />
+  //   <NamePriceComponent
+  //     priceText={'+ ' + strings.price}
+  //     textColor={Colors.textColorRed}
+  //   />
+  //   <NamePriceComponent
+  //     priceText={'+ ' + strings.price}
+  //     textColor={Colors.textColor}
+  //   />
+  //   <NamePriceComponent
+  //     priceText={'+ ' + strings.price}
+  //     textColor={Colors.textColorRed}
+  //   />
+  // </ScrollView>
+  <FlatList
+    data={data}
+    renderItem={({item, index}) => (
+      <NamePriceComponent
+        priceText={'+' + item?.total_price + strings.rs}
+        textColor={Colors.textColor}
+        title={item?.title}
+        description={item?.description}
+      />
+    )}
+  />
 );
 
-const SecondRoute = () => (
-  <ScrollView showsVerticalScrollIndicator={false}>
-    <NamePriceComponent
-      priceText={'+ ' + strings.price}
-      textColor={Colors.textColor}
-    />
-    <NamePriceComponent
-      priceText={'+ ' + strings.price}
-      textColor={Colors.textColor}
-    />
-    <NamePriceComponent
-      priceText={'- ' + strings.saudiaPrice}
-      textColor={Colors.textColorRed}
-    />
-    <NamePriceComponent
-      priceText={'+ ' + strings.price}
-      textColor={Colors.textColor}
-    />
-    <NamePriceComponent
-      priceText={'+ ' + strings.price}
-      textColor={Colors.textColorRed}
-    />
-    <NamePriceComponent
-      priceText={'+ ' + strings.price}
-      textColor={Colors.textColor}
-    />
-    <NamePriceComponent
-      priceText={'+ ' + strings.price}
-      textColor={Colors.textColorRed}
-    />
-  </ScrollView>
+const SecondRoute = ({data}) => (
+  // <ScrollView showsVerticalScrollIndicator={false}>
+  //   <NamePriceComponent
+  //     priceText={'+ ' + strings.price}
+  //     textColor={Colors.textColor}
+  //   />
+  //   <NamePriceComponent
+  //     priceText={'+ ' + strings.price}
+  //     textColor={Colors.textColor}
+  //   />
+  //   <NamePriceComponent
+  //     priceText={'- ' + strings.saudiaPrice}
+  //     textColor={Colors.textColorRed}
+  //   />
+  //   <NamePriceComponent
+  //     priceText={'+ ' + strings.price}
+  //     textColor={Colors.textColor}
+  //   />
+  //   <NamePriceComponent
+  //     priceText={'+ ' + strings.price}
+  //     textColor={Colors.textColorRed}
+  //   />
+  //   <NamePriceComponent
+  //     priceText={'+ ' + strings.price}
+  //     textColor={Colors.textColor}
+  //   />
+  //   <NamePriceComponent
+  //     priceText={'+ ' + strings.price}
+  //     textColor={Colors.textColorRed}
+  //   />
+  // </ScrollView>
+  <FlatList
+    data={data}
+    renderItem={({item, index}) => (
+      <NamePriceComponent
+        priceText={'+' + item?.total_price + strings.rs}
+        textColor={Colors.textColor}
+        title={item?.title}
+        description={item?.description}
+      />
+    )}
+  />
 );
-const ThirdRoute = () => (
-  <ScrollView showsVerticalScrollIndicator={false}>
-    <NamePriceComponent
-      priceText={'+ ' + strings.price}
-      textColor={Colors.textColor}
-    />
-    <NamePriceComponent
-      priceText={'+ ' + strings.price}
-      textColor={Colors.textColor}
-    />
-    <NamePriceComponent
-      priceText={'- ' + strings.saudiaPrice}
-      textColor={Colors.textColorRed}
-    />
-    <NamePriceComponent
-      priceText={'+ ' + strings.price}
-      textColor={Colors.textColor}
-    />
-    <NamePriceComponent
-      priceText={'+ ' + strings.price}
-      textColor={Colors.textColorRed}
-    />
-    <NamePriceComponent
-      priceText={'+ ' + strings.price}
-      textColor={Colors.textColor}
-    />
-    <NamePriceComponent
-      priceText={'+ ' + strings.price}
-      textColor={Colors.textColorRed}
-    />
-  </ScrollView>
-);
+// const ThirdRoute = () => (
+//   <ScrollView showsVerticalScrollIndicator={false}>
+//     <NamePriceComponent
+//       priceText={'+ ' + strings.price}
+//       textColor={Colors.textColor}
+//     />
+//     <NamePriceComponent
+//       priceText={'+ ' + strings.price}
+//       textColor={Colors.textColor}
+//     />
+//     <NamePriceComponent
+//       priceText={'- ' + strings.saudiaPrice}
+//       textColor={Colors.textColorRed}
+//     />
+//     <NamePriceComponent
+//       priceText={'+ ' + strings.price}
+//       textColor={Colors.textColor}
+//     />
+//     <NamePriceComponent
+//       priceText={'+ ' + strings.price}
+//       textColor={Colors.textColorRed}
+//     />
+//     <NamePriceComponent
+//       priceText={'+ ' + strings.price}
+//       textColor={Colors.textColor}
+//     />
+//     <NamePriceComponent
+//       priceText={'+ ' + strings.price}
+//       textColor={Colors.textColorRed}
+//     />
+//   </ScrollView>
+// );
 
 const Earnings = () => {
+  const [artistEarningsApi, {data: earningsData}] =
+    useLazyArtistEarningsQuery();
+  const [artistPendingEarnings, {data: pendingEarningsData}] =
+    useLazyArtistPendingEarningsQuery();
+  console.log(earningsData?.Earning, 'earningsData');
   const navigation: any = useNavigation();
   const [index, setIndex] = React.useState(0);
   const [routes] = React.useState([
     {key: 'first', title: strings.earning},
     {key: 'second', title: strings.pendigEarnings},
-    {key: 'third', title: strings.widthraw},
+    // {key: 'third', title: strings.widthraw},
   ]);
-
+  React.useEffect(() => {
+    artistEarningsApi('')?.unwrap();
+    artistPendingEarnings()?.unwrap();
+  }, [navigation]);
   const renderScene = SceneMap({
-    first: FirstRoute,
-    second: SecondRoute,
-    third: ThirdRoute,
+    first: () => <FirstRoute data={earningsData?.Earning} />,
+    second: () => <SecondRoute data={pendingEarningsData?.Earning} />,
+    // third: ThirdRoute,
   });
   const renderTabBar = (props: any) => (
     <TabBar

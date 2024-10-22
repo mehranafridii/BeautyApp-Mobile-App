@@ -6,9 +6,13 @@ import strings from '../../utils/strings/strings';
 const NamePriceComponent = ({
   priceText,
   textColor,
+  title,
+  description,
 }: {
   priceText?: any;
   textColor?: any;
+  title?: any;
+  description?: any;
 }) => {
   return (
     <View style={styles.namePriceContainer}>
